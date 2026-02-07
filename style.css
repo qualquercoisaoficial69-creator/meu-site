@@ -1,0 +1,298 @@
+/* ============================================================
+   1. SISTEMA DE CORES (PALETA ROXO/CIANO/AMARELO)
+   ============================================================ */
+   :root {
+    /* Cores Fixas */
+    --purple-dark: #2d0a4e;    /* Roxo Profundo (Fundo) */
+    --purple-light: #4c1a84;   /* Roxo Médio (Cards) */
+    --cyan: #00ffff;           /* Ciano Neon */
+    --magenta: #ff00ff;        /* Magenta/Rosa */
+    --yellow: #ffff00;         /* Amarelo Vibrante */
+    --white: #ffffff;
+    
+    /* Variáveis de Tema (Escuro - Padrão) */
+    --bg-body: var(--purple-dark);
+    --bg-card: var(--purple-light);
+    --text: #f0f0f0;
+    --text-pure: var(--white);
+    --accent: var(--yellow);   /* Amarelo como destaque */
+    --border: rgba(255, 255, 255, 0.1);
+    
+    /* Redes Sociais */
+    --discord: #5865f2;
+    --instagram: #e1306c;
+    --twitter: #1da1f2;
+}
+
+[data-theme="light"] {
+    /* Variáveis de Tema (Claro) */
+    --bg-body: #f5edff;
+    --bg-card: #ffffff;
+    --text: #2d0a4e;
+    --text-pure: #2d0a4e;
+    --accent: #6200ee;
+    --border: rgba(45, 10, 78, 0.1);
+}
+
+/* ============================================================
+   2. CONFIGURAÇÕES GERAIS
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text);
+    font-family: 'Open Sans', sans-serif;
+    transition: all 0.3s ease;
+    line-height: 1.6;
+}
+
+h1, h2, h3, .site-name { font-family: 'Orbitron', sans-serif; color: var(--text-pure); }
+
+/* ============================================================
+   3. HEADER (FIX DA LOGO)
+   ============================================================ */
+.main-header {
+    background: var(--bg-body);
+    border-bottom: 3px solid var(--yellow); /* Linha amarela igual à imagem */
+    padding: 15px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-wrapper { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+
+/* LOGO SEMPRE PEQUENA */
+.main-logo { 
+    width: 45px !important; 
+    height: 45px !important; 
+    object-fit: contain;
+}
+
+.site-name span { color: var(--yellow); }
+
+.top-nav ul { display: flex; list-style: none; gap: 20px; }
+.top-nav a { 
+    text-decoration: none; 
+    color: var(--text); 
+    font-weight: bold; 
+    font-size: 0.8rem; 
+    text-transform: uppercase;
+}
+
+.theme-btn {
+    background: none;
+    border: 1px solid var(--yellow);
+    color: var(--yellow);
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* ============================================================
+   4. CONTEÚDO (MAIN ARTICLE)
+   ============================================================ */
+.main-container.single-column {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 5%;
+}
+
+.company-hero { text-align: center; padding: 40px 0; }
+.company-hero h1 span { color: var(--yellow); }
+
+.section-header {
+    border-bottom: 2px solid var(--cyan);
+    margin: 40px 0 20px;
+    padding-bottom: 10px;
+    color: var(--cyan);
+}
+
+.main-article p { text-align: justify; margin-bottom: 20px; }
+
+/* Skills - Estilo Botões da Imagem */
+.skills-wrapper { margin: 30px 0; }
+.skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.skills-grid span {
+    background: var(--cyan);
+    color: var(--purple-dark);
+    padding: 8px 15px;
+    border-radius: 4px; /* Mais quadradinho igual na imagem */
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+/* Manifesto Box - Borda Magenta */
+.manifesto-box {
+    text-align: center;
+    margin: 50px 0;
+    padding: 30px;
+    border: 3px solid var(--magenta);
+    background: rgba(255, 0, 255, 0.05);
+    border-radius: 10px;
+}
+
+/* ============================================================
+   5. GRID DE PROJETOS (CARDS)
+   ============================================================ */
+.sections-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.grid-item { padding: 25px; border-radius: 8px; color: #000; font-weight: bold; }
+.grid-item h3 a { color: #000; text-decoration: none; }
+
+.card-cyan { background: var(--cyan); }
+.card-magenta { background: var(--magenta); }
+.card-yellow { background: var(--yellow); }
+
+/* ============================================================
+   6. RODAPÉ (BIG FOOTER)
+   ============================================================ */
+.big-footer {
+    background: var(--bg-card);
+    border-top: 3px solid var(--cyan);
+    padding: 60px 5% 30px;
+    margin-top: 80px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* LOGO DO RODAPÉ TRAVADA */
+.footer-column.brand .logo-wrapper img {
+    width: 50px !important;
+    height: 50px !important;
+}
+
+.footer-column h4 { color: var(--yellow); margin-bottom: 20px; text-transform: uppercase; font-size: 0.9rem; }
+.footer-column.links a { text-decoration: none; color: var(--text); opacity: 0.8; }
+.footer-column.links a:hover { color: var(--yellow); opacity: 1; }
+
+.social-btns { display: flex; flex-direction: column; gap: 10px; }
+.social-btn {
+    text-decoration: none !important; color: #fff !important;
+    padding: 10px; border-radius: 4px; font-size: 0.8rem;
+    display: flex; align-items: center; gap: 10px; font-weight: bold;
+}
+.discord { background: var(--discord); }
+.instagram { background: var(--instagram); }
+.twitter { background: var(--twitter); }
+
+.footer-bottom {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+/* LINK BRENNO EM AMARELO */
+.highlight-link {
+    color: var(--yellow) !important;
+    font-weight: bold;
+    text-decoration: none;
+}
+.highlight-link:hover { text-decoration: underline; }
+
+/* Responsivo */
+@media (max-width: 850px) {
+    .footer-container { grid-template-columns: 1fr; text-align: center; }
+    .footer-column.brand, .social-btns { align-items: center; }
+}
+/* Estilo especial para o link de Apoio */
+.nav-apoie {
+    color: var(--magenta) !important; /* Rosa choque da sua paleta */
+    border: 1px solid var(--magenta);
+    padding: 5px 12px;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.nav-apoie:hover {
+    background: var(--magenta);
+    color: var(--purple-dark) !important; /* Inverte a cor ao passar o mouse */
+    box-shadow: 0 0 10px var(--magenta);
+}
+
+.nav-apoie i {
+    margin-right: 5px;
+    font-size: 0.8rem;
+}
+/* Container dos Cards */
+.sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
+
+/* Estilo Base do Card */
+.grid-item {
+    padding: 30px;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+    /* Força tudo que está dentro a ser escuro para dar contraste */
+    color: #1a1a1a !important; 
+}
+
+.grid-item:hover {
+    transform: translateY(-10px);
+}
+
+/* Alinhamento do Ícone com o Título */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espaço entre o ícone e o texto */
+    margin-bottom: 15px;
+}
+
+.card-header i {
+    font-size: 1.8rem;
+    color: #1a1a1a;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+/* Força os links a serem pretos também */
+.grid-item h3 a {
+    color: #1a1a1a !important;
+    text-decoration: none;
+    border-bottom: 2px solid rgba(0,0,0,0.2);
+}
+
+/* Descrição e Tags */
+.grid-item p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    color: rgba(0, 0, 0, 0.8); /* Preto levemente transparente */
+}
+
+.status-tag {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #1a1a1a;
+}
+.top-nav a:hover { 
+    color: var(--yellow); 
+}

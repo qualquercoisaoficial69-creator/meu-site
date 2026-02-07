@@ -1,0 +1,291 @@
+/* =========================================
+   1. VARIÁVEIS E TEMAS
+   ========================================= */
+   :root {
+    --purple-dark: #2d0a4e;
+    --white: #ffffff;
+    --yellow: #ffff00;
+    --magenta: #ff00ff;
+    --cyan: #00ffff;
+    
+    /* Cores dos Membros */
+    --roxo: #bf40bf;      /* Brenno */
+    --rosa: #ff66cc;      /* Enzo */
+    --azul: #3399ff;      /* Gustavo */
+    --verde: #33ff33;     /* Iza */
+    --laranja: #ff9933;   /* João */
+    --vermelho: #ff3333;  /* Maryssa */
+
+    /* Variáveis Adaptáveis */
+    --bg-header: var(--purple-dark);
+    --text-nav: #ffffff;
+    --bg-main: var(--purple-dark);
+    --linha-divisora: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="light"] {
+    --purple-dark: #ffffff;
+    --white: #1a052e;
+    --bg-header: #f0f0f0;
+    --text-nav: #1a052e;
+    --bg-main: #ffffff;
+    --linha-divisora: rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   2. RESET E ESTRUTURA
+   ========================================= */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: var(--bg-main);
+    font-family: 'Open Sans', sans-serif;
+    transition: background 0.3s ease;
+}
+
+/* =========================================
+   3. HEADER E MENU
+   ========================================= */
+.main-header {
+    background: var(--bg-header);
+    border-bottom: 3px solid var(--yellow);
+    padding: 15px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-wrapper { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    text-decoration: none; 
+    color: var(--text-nav) !important; 
+}
+
+.main-logo { width: 45px; height: 45px; }
+.site-name { font-family: 'Orbitron'; font-size: 1.2rem; }
+.site-name span { color: var(--yellow); }
+
+.top-nav ul { display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; }
+.top-nav a { 
+    text-decoration: none; 
+    color: var(--text-nav) !important; 
+    font-weight: bold; 
+    font-size: 0.8rem; 
+    text-transform: uppercase; 
+}
+
+.theme-btn {
+    background: transparent;
+    border: 2px solid var(--text-nav);
+    color: var(--text-nav);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+/* =========================================
+   4. FAIXAS DOS MEMBROS (IMAGEM LIMPA)
+   ========================================= */
+.genshin-container { width: 100%; display: flex; flex-direction: column; }
+
+.member-banner {
+    position: relative;
+    width: 100%;
+    height: 16.66vh; 
+    min-height: 140px;
+    overflow: hidden;
+    cursor: pointer;
+    border-bottom: 1px solid var(--linha-divisora);
+    margin: 0;
+    transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+    z-index: 5;
+}
+
+.member-banner:hover {
+    height: 25vh; /* Expansão da faixa */
+    z-index: 10;
+}
+
+.member-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    
+    /* FILTROS REMOVIDOS: Agora a imagem começa com cor e brilho normal */
+    filter: none; 
+    
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 1;
+}
+
+.member-banner:hover .member-bg {
+    /* No hover, ela apenas dá o zoom, sem mudar a cor */
+    transform: scale(1.1); 
+    filter: brightness(1.1); /* Dá só um leve brilho extra quando passa o mouse */
+}
+
+.member-banner:hover .member-bg {
+    filter: grayscale(0%) brightness(80%); /* Ficou mais claro para ver a foto melhor */
+    transform: scale(1.1); /* Zoom */
+}
+
+.member-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+    background: transparent; /* REMOVIDO O ROXO TRANSPARENTE */
+    pointer-events: none;
+}
+
+.member-info h3 {
+    font-family: 'Orbitron';
+    font-size: 2.5rem;
+    color: var(--white) !important;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin: 0;
+    transition: 0.4s;
+    /* Sombra para garantir leitura sobre a imagem limpa */
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+}
+
+.member-banner:hover h3 {
+    transform: translateX(20px);
+}
+
+.member-info p {
+    color: var(--accent);
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 5px 0 0 0;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+}
+
+.member-id {
+    color: var(--accent);
+    font-family: 'Orbitron';
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* =========================================
+   5. FOOTER ADAPTÁVEL
+   ========================================= */
+.big-footer {
+    background-color: var(--bg-header) !important; 
+    border-top: 3px solid var(--cyan);
+    padding: 50px 5%;
+    margin-top: 0 !important;
+    transition: background 0.3s ease;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.big-footer h3, .big-footer h4, .big-footer p {
+    color: var(--white) !important;
+}
+
+.footer-logo { width: 40px; height: 40px; object-fit: contain; }
+
+.big-footer h3 span, .highlight-link { 
+    color: var(--yellow) !important; 
+    font-weight: bold;
+}
+
+.social-btns { display: flex; gap: 15px; margin-top: 15px; }
+
+.social-btn {
+    text-decoration: none;
+    color: #ffffff !important;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.discord { background: #5865f2; }
+.instagram { background: #e1306c; }
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--linha-divisora);
+    font-size: 0.9rem;
+    color: var(--white) !important;
+}
+
+/* =========================================
+   6. RESPONSIVIDADE
+   ========================================= */
+@media (max-width: 768px) {
+    .member-info h3 { font-size: 1.6rem; }
+    .member-banner { height: 160px; }
+    .member-banner:hover { height: 180px; }
+}
+/* Configuração da Ilustração (Escondida por padrão) */
+.character-ilus {
+    position: absolute;
+    right: -100px; /* Começa fora da tela na direita */
+    bottom: -20px;
+    height: 120%; /* Fica um pouco maior que a faixa para dar profundidade */
+    z-index: 3;
+    opacity: 0; /* Invisível */
+    pointer-events: none; /* Não atrapalha o clique */
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5)); /* Sombra para destacar do fundo */
+}
+
+/* EFEITO QUANDO PASSA O MOUSE */
+.member-banner:hover .character-ilus {
+    opacity: 1; /* Aparece */
+    right: 5%; /* Desliza para dentro da tela */
+    transform: scale(1.05); /* Dá um leve zoom nela */
+}
+
+/* Ajuste no Content para o texto não ficar embaixo da imagem */
+.member-content {
+    z-index: 4; /* Texto por cima de tudo */
+}
+
+/* Responsividade: Esconder a ilustração no celular para não bagunçar */
+@media (max-width: 768px) {
+    .character-ilus {
+        display: none;
+    }
+}
+.top-nav a:hover { 
+    color: var(--yellow); 
+}

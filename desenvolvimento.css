@@ -1,0 +1,45 @@
+:root {
+    --purple-dark: #2d0a4e; --purple-light: #4c1a84;   
+    --cyan: #00ffff; --magenta: #ff00ff; --yellow: #ffff00; --white: #ffffff;
+    --bg-body: var(--purple-dark); --bg-card: var(--purple-light);
+    --text: #f0f0f0; --text-pure: var(--white); --accent: var(--yellow);   
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] {
+    --bg-body: #f5edff; --bg-card: #ffffff;
+    --text: #2d0a4e; --text-pure: #2d0a4e; --accent: #6200ee;         
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { background-color: var(--bg-body); color: var(--text); font-family: 'Open Sans', sans-serif; line-height: 1.6; }
+
+h1, h2, h3, .site-name { font-family: 'Orbitron', sans-serif; color: var(--text-pure); }
+
+/* HEADER */
+.main-header { background: var(--bg-body); border-bottom: 3px solid var(--yellow); padding: 15px 5%; position: sticky; top: 0; z-index: 1000; }
+.header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+.logo-wrapper { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+.main-logo { width: 45px !important; height: 45px !important; object-fit: contain; flex-shrink: 0; }
+.site-name span { color: var(--yellow); }
+.top-nav ul { display: flex; list-style: none; gap: 20px; align-items: center; }
+.top-nav a { text-decoration: none; color: var(--text); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+.nav-apoie { color: var(--magenta) !important; border: 1px solid var(--magenta); padding: 5px 12px; border-radius: 4px; }
+
+/* CONTEÚDO DEV PAGE */
+.main-container.single-column { max-width: 900px; margin: 0 auto; padding: 40px 5%; }
+.dev-page { text-align: center; padding: 60px 0; }
+.dev-icon { font-size: 5rem; color: var(--yellow); margin-bottom: 20px; animation: wrench 2s infinite ease; }
+@keyframes wrench { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(20deg); } }
+.dev-page h1 span { color: var(--cyan); }
+.progress-container { width: 100%; max-width: 400px; margin: 30px auto; }
+.progress-bar { width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+.progress-fill { width: 75%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--magenta)); box-shadow: 0 0 10px var(--cyan); }
+.back-btn { display: inline-block; margin-top: 30px; text-decoration: none; color: var(--purple-dark); background: var(--yellow); padding: 12px 25px; border-radius: 50px; font-weight: bold; }
+
+/* FOOTER SIMPLES */
+.big-footer { background: var(--bg-card); border-top: 3px solid var(--cyan); padding: 40px 5%; margin-top: 60px; }
+.top-nav a:hover { 
+    color: var(--yellow); 
+}
