@@ -2,37 +2,33 @@
    1. SISTEMA DE CORES E VARIÁVEIS
    ============================================================ */
 :root {
-    /* Cores Fixas */
     --purple-dark: #2d0a4e;
-    --purple-light: #4c1a84;
-    --cyan: #00ffff;
-    --magenta: #ff00ff;
-    --yellow: #ffff00;
     --white: #ffffff;
+    --yellow: #ffff00;
+    --magenta: #ff00ff;
+    --cyan: #00ffff;
     
-    /* Variáveis de Tema (Base) */
+    /* Cores dos Membros (Recuperadas) */
+    --roxo: #bf40bf;      /* Brenno */
+    --rosa: #ff66cc;      /* Enzo */
+    --azul: #3399ff;      /* Gustavo */
+    --verde: #33ff33;     /* Iza */
+    --laranja: #ff9933;   /* João */
+    --vermelho: #ff3333;  /* Maryssa */
+
+    /* Variáveis Adaptáveis */
     --bg-body: var(--purple-dark);
-    --text: #f0f0f0;
-    --text-pure: var(--white);
     --bg-header: var(--purple-dark);
     --text-nav: #ffffff;
+    --text-pure: #ffffff;
     --linha-divisora: rgba(255, 255, 255, 0.15);
-
-    /* Cores dos Membros */
-    --roxo: #bf40bf;
-    --rosa: #ff66cc;
-    --azul: #3399ff;
-    --verde: #33ff33;
-    --laranja: #ff9933;
-    --vermelho: #ff3333;
 }
 
 [data-theme="light"] {
-    --bg-body: #f5edff;
-    --text: #2d0a4e;
-    --text-pure: #2d0a4e;
+    --bg-body: #ffffff;
     --bg-header: #f0f0f0;
-    --text-nav: #2d0a4e;
+    --text-nav: #1a052e;
+    --text-pure: #1a052e;
     --linha-divisora: rgba(0, 0, 0, 0.1);
 }
 
@@ -42,8 +38,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body, html {
-    margin: 0;
-    padding: 0;
     overflow-x: hidden;
     background-color: var(--bg-body);
     font-family: 'Open Sans', sans-serif;
@@ -51,7 +45,7 @@ body, html {
 }
 
 /* ============================================================
-   3. HEADER UNIFICADO (CORRIGIDO)
+   3. HEADER UNIFICADO (COM AS CORREÇÕES QUE VOCÊ PEDIU)
    ============================================================ */
 .main-header {
     background: var(--bg-header);
@@ -60,7 +54,7 @@ body, html {
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: all 0.3s ease;
+    transition: 0.3s;
 }
 
 .header-content {
@@ -82,26 +76,22 @@ body, html {
     width: 45px !important; 
     height: 45px !important; 
     object-fit: contain;
-    flex-shrink: 0;
 }
 
 .site-name { 
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Orbitron', sans-serif; 
     font-size: 1.2rem; 
     color: var(--text-pure);
 }
 
-/* Nome da página/site com detalhe em AMARELO */
-.site-name span { 
-    color: var(--yellow) !important; 
-}
+/* NOME DA PÁGINA EM AMARELO */
+.site-name span { color: var(--yellow) !important; }
 
 .top-nav ul { 
     display: flex; 
     list-style: none; 
     gap: 20px; 
-    align-items: center;
-    margin: 0;
+    align-items: center; 
 }
 
 .top-nav a { 
@@ -114,24 +104,21 @@ body, html {
 }
 
 /* HOVER DOS NOMES EM AMARELO */
-.top-nav a:hover { 
-    color: var(--yellow) !important; 
-}
+.top-nav a:hover { color: var(--yellow) !important; }
 
 /* BOTÃO DE TEMA IGUAL AO OUTRO */
-.theme-btn { 
-    background: none; 
-    border: 1px solid var(--yellow) !important; 
-    color: var(--yellow) !important; 
+.theme-btn {
+    background: transparent;
+    border: 1px solid var(--yellow) !important;
+    color: var(--yellow) !important;
     width: 35px;
     height: 35px;
-    border-radius: 50%; 
-    cursor: pointer; 
+    border-radius: 50%;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: 0.3s;
-    font-size: 0.9rem;
 }
 
 .theme-btn:hover {
@@ -149,6 +136,7 @@ body, html {
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: 0.3s;
 }
 
 .nav-apoie:hover {
@@ -159,7 +147,7 @@ body, html {
 }
 
 /* =========================================
-   4. FAIXAS DOS MEMBROS
+   4. FAIXAS DOS MEMBROS (VOLTANDO AO QUE ERA)
    ========================================= */
 .genshin-container { width: 100%; display: flex; flex-direction: column; }
 
@@ -171,15 +159,11 @@ body, html {
     overflow: hidden;
     cursor: pointer;
     border-bottom: 1px solid var(--linha-divisora);
-    margin: 0;
     transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
     z-index: 5;
 }
 
-.member-banner:hover {
-    height: 25vh;
-    z-index: 10;
-}
+.member-banner:hover { height: 25vh; z-index: 10; }
 
 .member-bg {
     position: absolute;
@@ -187,14 +171,13 @@ body, html {
     width: 100%; height: 100%;
     background-size: cover;
     background-position: center;
-    filter: none; 
     transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
     z-index: 1;
 }
 
 .member-banner:hover .member-bg {
-    transform: scale(1.1); 
-    filter: brightness(0.8);
+    transform: scale(1.1);
+    filter: brightness(80%);
 }
 
 .member-content {
@@ -213,24 +196,16 @@ body, html {
     color: var(--white) !important;
     letter-spacing: 5px;
     text-transform: uppercase;
-    margin: 0;
-    transition: 0.4s;
     text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
 }
 
-.member-banner:hover h3 {
-    transform: translateX(20px);
-}
-
-.member-info p {
-    color: var(--yellow); /* Ajustado para bater com o padrão */
-    font-weight: bold;
-    letter-spacing: 2px;
-    margin: 5px 0 0 0;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
-}
+/* LÓGICA DE CORES DAS FAIXAS (RESTAURADA) */
+.member-banner[style*="--roxo"] .member-info p { color: var(--roxo); }
+.member-banner[style*="--rosa"] .member-info p { color: var(--rosa); }
+.member-banner[style*="--azul"] .member-info p { color: var(--azul); }
+.member-banner[style*="--verde"] .member-info p { color: var(--verde); }
+.member-banner[style*="--laranja"] .member-info p { color: var(--laranja); }
+.member-banner[style*="--vermelho"] .member-info p { color: var(--vermelho); }
 
 .character-ilus {
     position: absolute;
@@ -239,7 +214,6 @@ body, html {
     height: 120%;
     z-index: 3;
     opacity: 0;
-    pointer-events: none;
     transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
 }
@@ -257,7 +231,6 @@ body, html {
     background-color: var(--bg-header) !important; 
     border-top: 3px solid var(--cyan);
     padding: 50px 5%;
-    transition: background 0.3s ease;
 }
 
 .footer-container {
