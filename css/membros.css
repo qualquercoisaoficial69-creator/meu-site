@@ -18,7 +18,7 @@
     --text-nav: #ffffff;
     --linha-divisora: rgba(255, 255, 255, 0.15);
 
-    /* Cores dos Membros (Mantidas para o resto do seu código) */
+    /* Cores dos Membros */
     --roxo: #bf40bf;
     --rosa: #ff66cc;
     --azul: #3399ff;
@@ -32,21 +32,35 @@
     --text: #2d0a4e;
     --text-pure: #2d0a4e;
     --bg-header: #f0f0f0;
-    --text-nav: #1a052e;
+    --text-nav: #2d0a4e;
     --linha-divisora: rgba(0, 0, 0, 0.1);
 }
 
+/* =========================================
+   2. RESET E ESTRUTURA
+   ========================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: var(--bg-body);
+    font-family: 'Open Sans', sans-serif;
+    transition: background 0.3s ease;
+}
+
 /* ============================================================
-   2. HEADER UNIFICADO (CABECALHO)
+   3. HEADER UNIFICADO (CORRIGIDO)
    ============================================================ */
 .main-header {
     background: var(--bg-header);
-    border-bottom: 3px solid var(--yellow); /* Linha amarela característica */
+    border-bottom: 3px solid var(--yellow);
     padding: 15px 5%;
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: background 0.3s ease, border 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .header-content {
@@ -57,7 +71,6 @@
     margin: 0 auto;
 }
 
-/* Logo e Nome do Site */
 .logo-wrapper { 
     display: flex; 
     align-items: center; 
@@ -74,39 +87,59 @@
 
 .site-name { 
     font-family: 'Orbitron', sans-serif;
-    font-size: 1rem; 
+    font-size: 1.2rem; 
     color: var(--text-pure);
 }
 
+/* Nome da página/site com detalhe em AMARELO */
 .site-name span { 
-    color: var(--yellow); 
+    color: var(--yellow) !important; 
 }
 
-/* Navegação */
 .top-nav ul { 
     display: flex; 
     list-style: none; 
     gap: 20px; 
     align-items: center;
     margin: 0;
-    padding: 0;
 }
 
 .top-nav a { 
     text-decoration: none; 
     color: var(--text-nav) !important; 
     font-weight: bold; 
-    font-size: 0.75rem; 
+    font-size: 0.8rem; 
     text-transform: uppercase; 
     transition: 0.3s;
 }
 
-/* Efeito Hover Geral */
+/* HOVER DOS NOMES EM AMARELO */
 .top-nav a:hover { 
     color: var(--yellow) !important; 
 }
 
-/* Botão de Destaque (Apoie) */
+/* BOTÃO DE TEMA IGUAL AO OUTRO */
+.theme-btn { 
+    background: none; 
+    border: 1px solid var(--yellow) !important; 
+    color: var(--yellow) !important; 
+    width: 35px;
+    height: 35px;
+    border-radius: 50%; 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    font-size: 0.9rem;
+}
+
+.theme-btn:hover {
+    background: var(--yellow);
+    color: var(--purple-dark) !important;
+}
+
+/* BOTÃO APOIE */
 .nav-apoie {
     color: var(--magenta) !important; 
     border: 1px solid var(--magenta) !important;
@@ -116,7 +149,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: transparent;
 }
 
 .nav-apoie:hover {
@@ -126,36 +158,128 @@
     transform: scale(1.05);
 }
 
-/* Botão de Tema */
-.theme-btn { 
-    background: none; 
-    border: 1px solid var(--yellow); 
-    color: var(--yellow); 
-    width: 35px;
-    height: 35px;
-    border-radius: 50%; 
-    cursor: pointer; 
+/* =========================================
+   4. FAIXAS DOS MEMBROS
+   ========================================= */
+.genshin-container { width: 100%; display: flex; flex-direction: column; }
+
+.member-banner {
+    position: relative;
+    width: 100%;
+    height: 16.66vh; 
+    min-height: 140px;
+    overflow: hidden;
+    cursor: pointer;
+    border-bottom: 1px solid var(--linha-divisora);
+    margin: 0;
+    transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+    z-index: 5;
+}
+
+.member-banner:hover {
+    height: 25vh;
+    z-index: 10;
+}
+
+.member-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: none; 
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 1;
+}
+
+.member-banner:hover .member-bg {
+    transform: scale(1.1); 
+    filter: brightness(0.8);
+}
+
+.member-content {
+    position: relative;
+    z-index: 4;
+    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: 0.3s;
+    padding-left: 10%;
+    pointer-events: none;
 }
 
-.theme-btn:hover {
-    background: var(--yellow);
-    color: var(--purple-dark);
+.member-info h3 {
+    font-family: 'Orbitron';
+    font-size: 2.5rem;
+    color: var(--white) !important;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin: 0;
+    transition: 0.4s;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
 }
 
-/* Ajuste Responsivo para o Header */
+.member-banner:hover h3 {
+    transform: translateX(20px);
+}
+
+.member-info p {
+    color: var(--yellow); /* Ajustado para bater com o padrão */
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 5px 0 0 0;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+}
+
+.character-ilus {
+    position: absolute;
+    right: -100px;
+    bottom: -20px;
+    height: 120%;
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+}
+
+.member-banner:hover .character-ilus {
+    opacity: 1;
+    right: 5%;
+    transform: scale(1.05);
+}
+
+/* =========================================
+   5. FOOTER
+   ========================================= */
+.big-footer {
+    background-color: var(--bg-header) !important; 
+    border-top: 3px solid var(--cyan);
+    padding: 50px 5%;
+    transition: background 0.3s ease;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--linha-divisora);
+    color: var(--text-pure) !important;
+}
+
+/* Responsividade */
 @media (max-width: 850px) {
-    .header-content {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .top-nav ul {
-        gap: 10px;
-    }
-    .nav-apoie {
-        margin-left: 0;
-    }
+    .header-content { flex-direction: column; gap: 15px; }
+    .top-nav ul { gap: 10px; }
+    .member-info h3 { font-size: 1.6rem; }
+    .character-ilus { display: none; }
 }
