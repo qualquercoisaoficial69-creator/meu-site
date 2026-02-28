@@ -29,3 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+const mobileMenu = document.getElementById('mobile-menu');
+const navMenu = document.querySelector('.top-nav'); // Seleciona seu nav
+
+mobileMenu.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+    navMenu.classList.toggle('active');
+});

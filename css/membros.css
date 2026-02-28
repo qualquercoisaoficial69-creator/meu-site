@@ -65,22 +65,22 @@ body, html {
     margin: 0 auto;
 }
 
+
 .logo-wrapper { 
     display: flex; 
     align-items: center; 
     gap: 15px; 
     text-decoration: none; 
-    color: var(--text-nav) !important; 
 }
 
 .main-logo { width: 45px; height: 45px; }
-.site-name { font-family: 'Orbitron'; font-size: 1.2rem; }
+.site-name { font-family: 'Orbitron'; font-size: 1.2rem; color: var(--text-nav) }
 .site-name span { color: var(--yellow); }
 
 .top-nav ul { display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; }
 .top-nav a { 
     text-decoration: none; 
-    color: var(--text-nav) !important; 
+    color: var(--text-nav); 
     font-weight: bold; 
     font-size: 0.8rem; 
     text-transform: uppercase; 
@@ -88,8 +88,8 @@ body, html {
 
 .theme-btn {
     background: transparent;
-    border: 2px solid var(--text-nav);
-    color: var(--text-nav);
+    border: 2px solid var(--yellow);
+    color: var(--yellow);
     width: 35px;
     height: 35px;
     border-radius: 50%;
@@ -100,6 +100,19 @@ body, html {
     transition: 0.3s;
 }
 
+/* Botão Apoie */
+.nav-apoie {
+    color: var(--magenta) !important;
+    border: 1px solid var(--magenta);
+    padding: 5px 12px;
+    border-radius: 4px;
+}
+
+.nav-apoie:hover {
+    background: var(--magenta);
+    color: var(--purple-dark) !important;
+    box-shadow: 0 0 10px var(--magenta);
+}
 /* =========================================
    4. FAIXAS DOS MEMBROS (IMAGEM LIMPA)
    ========================================= */
@@ -247,6 +260,14 @@ body, html {
     color: var(--white) !important;
 }
 
+/* LINK DO BRENNO EM DESTAQUE (AMARELO) */
+.highlight-link {
+    color: var(--yellow) !important;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0 5px;
+}
+.highlight-link:hover { text-decoration: underline; text-shadow: 0 0 10px var(--yellow); }
 /* =========================================
    6. RESPONSIVIDADE
    ========================================= */
@@ -288,4 +309,49 @@ body, html {
 }
 .top-nav a:hover { 
     color: var(--yellow); 
+}
+/* Botão Hambúrguer (Escondido no Desktop) */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--yellow);
+    transition: 0.3s;
+}
+
+/* Regras de Responsividade */
+@media (max-width: 850px) {
+    .menu-toggle { display: flex; order: 3; } /* Aparece no mobile */
+    .theme-btn { order: 2; margin-left: auto; margin-right: 15px; }
+
+    .top-nav {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Escondido na direita */
+        width: 70%;
+        height: 100vh;
+        background: var(--purple-dark);
+        padding: 100px 30px;
+        transition: 0.4s ease;
+        box-shadow: -10px 0 20px rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+
+    .top-nav.active { right: 0; } /* Entra na tela */
+
+    .top-nav ul { flex-direction: column; align-items: flex-start; gap: 25px; }
+
+    /* Transforma ☰ em X */
+    .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -7px); }
 }

@@ -165,7 +165,7 @@ h1, h2, h3, h4, .site-name {
    6. RODAPÉ (BIG FOOTER)
    ============================================================ */
 .big-footer {
-    background: var(--bg-card);
+    background: var(--bg-body);
     border-top: 3px solid var(--cyan); /* Linha ciano no topo do footer */
     padding: 60px 5% 30px;
     margin-top: 80px;
@@ -409,4 +409,91 @@ h1, h2, h3, h4, .site-name {
 }
 .top-nav a:hover { 
     color: var(--yellow); 
+}
+/* =========================================
+   6. RESPONSIVIDADE
+   ========================================= */
+   @media (max-width: 768px) {
+    .member-info h3 { font-size: 1.6rem; }
+    .member-banner { height: 160px; }
+    .member-banner:hover { height: 180px; }
+}
+/* Configuração da Ilustração (Escondida por padrão) */
+.character-ilus {
+    position: absolute;
+    right: -100px; /* Começa fora da tela na direita */
+    bottom: -20px;
+    height: 120%; /* Fica um pouco maior que a faixa para dar profundidade */
+    z-index: 3;
+    opacity: 0; /* Invisível */
+    pointer-events: none; /* Não atrapalha o clique */
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5)); /* Sombra para destacar do fundo */
+}
+
+/* EFEITO QUANDO PASSA O MOUSE */
+.member-banner:hover .character-ilus {
+    opacity: 1; /* Aparece */
+    right: 5%; /* Desliza para dentro da tela */
+    transform: scale(1.05); /* Dá um leve zoom nela */
+}
+
+/* Ajuste no Content para o texto não ficar embaixo da imagem */
+.member-content {
+    z-index: 4; /* Texto por cima de tudo */
+}
+
+/* Responsividade: Esconder a ilustração no celular para não bagunçar */
+@media (max-width: 768px) {
+    .character-ilus {
+        display: none;
+    }
+}
+.top-nav a:hover { 
+    color: var(--yellow); 
+}
+/* Botão Hambúrguer (Escondido no Desktop) */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--yellow);
+    transition: 0.3s;
+}
+
+/* Regras de Responsividade */
+@media (max-width: 850px) {
+    .menu-toggle { display: flex; order: 3; } /* Aparece no mobile */
+    .theme-btn { order: 2; margin-left: auto; margin-right: 15px; }
+
+    .top-nav {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Escondido na direita */
+        width: 70%;
+        height: 100vh;
+        background: var(--purple-dark);
+        padding: 100px 30px;
+        transition: 0.4s ease;
+        box-shadow: -10px 0 20px rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+
+    .top-nav.active { right: 0; } /* Entra na tela */
+
+    .top-nav ul { flex-direction: column; align-items: flex-start; gap: 25px; }
+
+    /* Transforma ☰ em X */
+    .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -7px); }
 }

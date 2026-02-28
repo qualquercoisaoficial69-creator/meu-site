@@ -13,22 +13,28 @@
 
     <header class="main-header">
         <div class="header-content">
-            <div class="logo-wrapper" id="mobile-menu-trigger">
+            <a href="index.html" class="logo-wrapper">
                 <img src="imagens/logo-s.png" alt="Logo" class="main-logo">
                 <h1 class="site-name">Qualquer <span>Coisa</span></h1>
-            </div>
+            </a>
             
-            <nav class="top-nav">
+            <nav class="top-nav" id="nav-menu">
                 <ul>
                     <li><a href="index.html" style="color: var(--yellow);">Início</a></li>
                     <li><a href="jogo.html">Nosso Jogo</a></li>
-                    <li><a href="membros.html">Membros do projeto</a></li>
-                    <li><a href="desenvolvimento.html" class="nav-apoie"><i class="fas fa-heart"></i> Apoie-nos</a></li>
+                    <li><a href="membros.html">Membros</a></li>
+                    <li><a href="https://www.catarse.me/arrecadacao_para_um_jogo_indie_dba6?ref=user_contributed" class="nav-apoie"><i class="fas fa-heart"></i> Apoie-nos</a></li>
                 </ul>
             </nav>
-
+    
             <button id="theme-toggle" class="theme-btn">
                 <i class="fas fa-moon"></i>
+            </button>
+    
+            <button class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
         </div>
     </header>
@@ -119,26 +125,23 @@
         <div class="footer-container">
             <div class="footer-column brand">
                 <div class="logo-wrapper">
-                    <img src="imagens/logo-s.png" alt="Logo">
+                    <img src="imagens/logo-s.png" alt="Logo" class="footer-logo">
                     <h3>Qualquer Coisa <span>Rápido</span></h3>
                 </div>
-                <p>Inovação e paixão pelo desenvolvimento de jogos independentes no Brasil.</p>
+                <p>Criando experiências únicas através do código e da arte.</p>
             </div>
-
-            <div class="footer-column social">
-                <h4>Redes Sociais</h4>
+    
+            <div class="footer-column">
+                <h4>Acompanhe</h4>
                 <div class="social-btns">
                     <a href="https://discord.gg/qrk3CjQ5HF" class="social-btn discord"><i class="fab fa-discord"></i> Discord</a>
                     <a href="https://www.instagram.com/qualquer_coisas_oficial/" class="social-btn instagram"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="desenvolvimento.html" class="social-btn twitter"><i class="fab fa-twitter"></i> Twitter</a>
                 </div>
             </div>
         </div>
+    
         <div class="footer-bottom">
-            <p>&copy; 2026 Qualquer Coisa Rápido. Site criado por
-                <a href="https://www.instagram.com/b.h_18_01/" target="_blank" class="highlight-link">Brenno</a>. 
-                Todos os direitos reservados.
-            </p>
+            <p>&copy; 2026 Qualquer Coisa Rápido. Site criado por <a href="#" class="highlight-link">Brenno.</a> Todos os direitos reservados..</p>
         </div>
     </footer>
 
