@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo | Qualquer Coisa Rápido</title>
+    <link rel="stylesheet" href="css/style.css"> 
+    
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght=400;700&family=Orbitron:wght=700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="welcome-page-body">
+
+    <div class="login-card">
+        <h1 id="card-title">Acessar <span>Painel</span></h1>
+        <p id="card-desc">Conecte sua conta para acessar o Unique Soul.</p>
+
+        <div id="g_id_onload"
+             data-client_id="826067624292-nqa43nnrhurekir5nhkrr0ti0jt7lbur.apps.googleusercontent.com"
+             data-callback="handleGoogleLogin"
+             data-auto_prompt="false">
+        </div>
+
+        <form class="auth-form" id="authForm" onsubmit="handleEmailAuth(event)">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Seu e-mail" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Sua senha" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            
+            <button type="submit" class="btn-submit" id="submitBtn">ENTRAR NO SITE</button>
+            
+            <button type="button" class="toggle-form-btn" id="toggleFormBtn" onclick="toggleFormMode()">Não tem conta? Cadastre-se</button>
+        </form>
+
+        <div class="divider">ou</div>
+
+        <div class="google-btn-wrapper">
+            <div class="g_id_signin" data-type="icon" data-size="large" data-shape="circle"></div>
+        </div>
+    </div>
+
+    <script type="module" src="scripts/script.js"></script>
+</body>
+</html>

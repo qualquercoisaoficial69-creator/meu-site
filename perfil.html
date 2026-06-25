@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil | Qualquer Coisa Rápido</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght=400;700&family=Orbitron:wght=700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="imagens/logo-s.png">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <a href="#" class="logo-wrapper theme-btn-trigger" id="themeToggle" onclick="return false;">
+                <img src="imagens/logo-s.png" alt="Logo" class="main-logo">
+                <h1 class="site-name">Qualquer Coisa <span>Rápido</span></h1>
+            </a>
+            <nav class="top-nav">
+                <ul>
+                    <li><a href="home.html"><i class="fas fa-home"></i><span>Início</span></a></li>
+                    <li><a href="jogo.html"><i class="fas fa-gamepad"></i><span>Nosso Jogo</span></a></li>
+                    <li><a href="sobre-nos.html"><i class="fas fa-users"></i><span>Membros</span></a></li>
+                    <li><a href="apoie.html" class="nav-apoie"><i class="fas fa-heart"></i><span>Apoie-nos</span></a></li>
+                    <li class="google-auth-item">
+                        <div id="google-btn-container"></div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container single-column">
+        <section class="manifesto-box" style="max-width: 500px; margin: 80px auto; border-color: var(--cyan); background: rgba(0, 255, 255, 0.02);">
+            <h2 style="color: var(--cyan); margin-bottom: 20px; font-family: 'Orbitron';">PAINEL DO USUÁRIO</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <img id="perf-avatar" src="" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--cyan); box-shadow: 0 0 15px var(--cyan); object-fit: cover; margin-bottom: 15px;">
+                <h3 id="perf-name" style="font-size: 1.4rem; color: var(--white);">Carregando...</h3>
+                <p style="font-size: 0.85rem; color: var(--yellow); letter-spacing: 1px; text-transform: uppercase; margin-top: 5px;">Status: Jogador Ativo</p>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--linha-divisora); margin: 20px 0;">
+
+            <button id="btn-logout" class="nav-apoie" style="background: transparent; width: 100%; justify-content: center; cursor: pointer; font-family: 'Orbitron'; font-size: 0.9rem;">
+                <i class="fas fa-sign-out-alt"></i> SAIR DA CONTA
+            </button>
+        </section>
+    </main>
+
+    <script src="scripts/script.js"></script>
+    <script>
+        // Script exclusivo desta página para exibir os dados do painel e fazer o logout
+        document.addEventListener("DOMContentLoaded", () => {
+            const isLogged = localStorage.getItem('userLogged');
+            const savedPhoto = localStorage.getItem('userPhoto');
+            const savedName = localStorage.getItem('userName');
+
+            // Se o cara tentar entrar aqui sem estar logado, chuta ele de volta pro index
+            if (isLogged !== 'true' || !savedPhoto) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Injeta os dados guardados nos elementos da página de perfil
+            document.getElementById('perf-avatar').src = savedPhoto;
+            document.getElementById('perf-name').innerText = savedName;
+
+            // Configura o botão de logout oficial
+            document.getElementById('btn-logout').addEventListener('click', () => {
+                localStorage.clear();
+                window.location.href = 'index.html'; // Desloga e joga pro início
+            });
+        });
+    </script>
+</body>
+</html>

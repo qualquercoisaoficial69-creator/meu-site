@@ -1,0 +1,398 @@
+/* =========================================
+   1. VARIÁVEIS E TEMAS
+   ========================================= */
+   :root {
+    --purple-dark: #2d0a4e;
+    --white: #ffffff;
+    --yellow: #ffff00;
+    --magenta: #ff00ff;
+    --cyan: #00ffff;
+    
+    /* Cores dos Membros */
+    --roxo: #bf40bf;      /* Brenno */
+    --rosa: #ff66cc;      /* Enzo */
+    --azul: #3399ff;      /* Gustavo */
+    --verde: #33ff33;     /* Iza */
+    --laranja: #ff9933;   /* João */
+    --vermelho: #ff3333;  /* Maryssa */
+
+    /* Variáveis Adaptáveis */
+    --bg-header: var(--purple-dark);
+    --text-nav: #ffffff;
+    --bg-main: var(--purple-dark);
+    --linha-divisora: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="light"] {
+    --purple-dark: #ffffff;
+    --white: #1a052e;
+    --bg-header: #f0f0f0;
+    --text-nav: #1a052e;
+    --bg-main: #ffffff;
+    --linha-divisora: rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   2. RESET E ESTRUTURA
+   ========================================= */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: var(--bg-main);
+    font-family: 'Open Sans', sans-serif;
+    transition: background 0.3s ease;
+}
+
+/* =========================================
+   3. HEADER E MENU
+   ========================================= */
+.main-header {
+    background: var(--bg-header);
+    border-bottom: 3px solid var(--yellow);
+    padding: 15px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-wrapper { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    text-decoration: none; 
+    color: var(--text-nav) !important; 
+}
+
+.main-logo { 
+    width: 45px; 
+    height: 45px; 
+}
+
+.site-name { 
+    font-family: 'Orbitron'; 
+    font-size: 1.2rem; 
+}
+
+.site-name span { 
+    color: var(--yellow); 
+}
+
+.top-nav ul { 
+    display: flex; 
+    list-style: none; 
+    gap: 20px; 
+    align-items: center; 
+    margin: 0; 
+    padding: 0; 
+}
+
+.top-nav a { 
+    text-decoration: none; 
+    color: var(--text-nav) !important; 
+    font-weight: bold; 
+    font-size: 0.8rem; 
+    text-transform: uppercase; 
+    transition: color 0.3s ease;
+}
+
+.top-nav a:hover { 
+    color: var(--yellow) !important; 
+}
+
+.theme-btn {
+    background: transparent;
+    border: 2px solid var(--text-nav);
+    color: var(--text-nav);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+/* =========================================
+   4. FAIXAS DOS MEMBROS (IMAGEM LIMPA)
+   ========================================= */
+.genshin-container { 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.member-banner {
+    position: relative;
+    width: 100%;
+    height: 16.66vh; 
+    min-height: 140px;
+    overflow: hidden;
+    cursor: pointer;
+    border-bottom: 1px solid var(--linha-divisora);
+    margin: 0;
+    transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+    z-index: 5;
+}
+
+.member-banner:hover {
+    height: 25vh; /* Expansão da faixa */
+    z-index: 10;
+}
+
+.member-bg {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: none; 
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease;
+    z-index: 1;
+}
+
+.member-banner:hover .member-bg {
+    transform: scale(1.1); /* Zoom */
+    filter: grayscale(0%) brightness(80%); /* Proporciona melhor visualização da foto com leve brilho */
+}
+
+.member-content {
+    position: relative;
+    z-index: 4; /* Texto por cima de tudo */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+    background: transparent; 
+    pointer-events: none;
+}
+
+.member-info h3 {
+    font-family: 'Orbitron';
+    font-size: 2.5rem;
+    color: var(--white) !important;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin: 0;
+    transition: 0.4s;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+}
+
+.member-banner:hover h3 {
+    transform: translateX(20px);
+}
+
+.member-info p {
+    color: var(--white);
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 5px 0 0 0;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+}
+
+.member-id {
+    color: var(--yellow);
+    font-family: 'Orbitron';
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Configuração da Ilustração */
+.character-ilus {
+    position: absolute;
+    right: -100px; /* Começa fora da tela na direita */
+    bottom: -20px;
+    height: 120%; /* Fica um pouco maior que a faixa para dar profundidade */
+    z-index: 3;
+    opacity: 0; /* Invisível */
+    pointer-events: none; /* Não atrapalha o clique */
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5)); /* Sombra para destacar do fundo */
+}
+
+/* EFEITO QUANDO PASSA O MOUSE */
+.member-banner:hover .character-ilus {
+    opacity: 1; /* Aparece */
+    right: 5%; /* Desliza para dentro da tela */
+    transform: scale(1.05); /* Dá um leve zoom nela */
+}
+
+/* =========================================
+   5. FOOTER ADAPTÁVEL (CORRIGIDO)
+   ========================================= */
+.big-footer {
+    background-color: var(--bg-header) !important; 
+    border-top: 3px solid var(--cyan);
+    padding: 40px 5% 20px 5%;
+    margin-top: 0 !important;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+/* Flexbox estruturado para alinhar as seções sem quebrar */
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding-bottom: 30px; 
+}
+
+/* Bloco de identidade (Logo + Texto descritivo) */
+.footer-info-block {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 500px;
+}
+
+.footer-logo { 
+    width: 45px; 
+    height: 45px; 
+    object-fit: contain; 
+}
+
+.footer-text h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    margin: 0 0 5px 0;
+    color: var(--white) !important;
+}
+
+.footer-text p {
+    font-size: 0.85rem;
+    margin: 0;
+    opacity: 0.8;
+    color: var(--white) !important;
+}
+
+.big-footer h3 span, .highlight-link { 
+    color: var(--yellow) !important; 
+    font-weight: bold;
+}
+
+/* Bloco das redes sociais */
+.footer-social-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-social-block h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--white) !important;
+}
+
+/* Alinhamento estruturado dos botões */
+.social-btns { 
+    display: flex; 
+    gap: 12px; 
+}
+
+/* Estilização melhorada dos botões */
+.social-btn {
+    text-decoration: none;
+    color: #ffffff !important;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: inline-flex; /* Garante alinhamento perfeito de ícone + texto */
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.social-btn:hover {
+    transform: translateY(-2px); /* Efeito flutuante clássico */
+    filter: brightness(1.1); /* Realça a cor do botão */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.discord { background: #5865f2; }
+.instagram { background: #e1306c; }
+.twitter { background: #1da1f2; }
+
+/* Direitos Autorais totalmente fixados na base inferior */
+.footer-bottom {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--linha-divisora);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--white) !important;
+    opacity: 0.6;
+    clear: both; /* Evita que flutuações quebrem o posicionamento */
+}
+
+/* =========================================
+   6. RESPONSIVIDADE
+   ========================================= */
+@media (max-width: 768px) {
+    .member-info h3 { 
+        font-size: 1.6rem; 
+    }
+    
+    .member-banner { 
+        height: 160px; 
+    }
+    
+    .member-banner:hover { 
+        height: 180px; 
+    }
+    
+    .character-ilus {
+        display: none; /* Esconde ilustrações pesadas no mobile */
+    }
+    
+    .footer-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+    }
+
+    .footer-info-block {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .social-btns {
+        justify-content: flex-start;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    
+    .social-btn {
+        width: 100%; /* Botões viram blocos de toque completo no celular */
+    }
+}

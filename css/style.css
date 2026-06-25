@@ -1,0 +1,875 @@
+/* ============================================================
+   1. SISTEMA DE CORES E VARIÁVEIS UNIFICADAS
+   ============================================================ */
+   :root {
+    /* Cores Fixas Globais */
+    --purple-dark: #2d0a4edd;    /* Roxo Profundo (Fundo) */
+    --purple-light: #4c1a84e7;   /* Roxo Médio (Cards) */
+    --cyan: #00ffff;           /* Ciano Neon */
+    --magenta: #ff00ff;        /* Magenta/Rosa */
+    --yellow: #ffff00;         /* Amarelo Vibrante */
+    --white: #ffffff;
+    
+    /* Cores dos Membros (Exclusivo Faixas) */
+    --roxo: #bf40bf;      /* Brenno */
+    --rosa: #ff66cc;      /* Enzo */
+    --azul: #3399ff;      /* Gustavo */
+    --verde: #33ff33;     /* Iza */
+    --laranja: #ff9933;   /* João */
+    --vermelho: #ff3333;  /* Maryssa */
+
+    /* Variáveis de Tema (Escuro - Padrão) */
+    --bg-body: var(--purple-dark);
+    --bg-card: var(--purple-light);
+    --text: #f0f0f0;
+    --text-pure: var(--white);
+    --accent: var(--yellow);   
+    --border: rgba(255, 255, 255, 0.1);
+    
+    /* Variáveis Adaptáveis do Cabeçalho/Estrutura */
+    --bg-header: var(--purple-dark);
+    --text-nav: #ffffff;
+    --linha-divisora: rgba(255, 255, 255, 0.15);
+
+    /* Redes Sociais */
+    --discord: #5865f2;
+    --instagram: #e1306c;
+    --twitter: #1da1f2;
+}
+
+[data-theme="light"] {
+    /* Variáveis de Tema (Claro) */
+    --bg-body: #7d7d7dda;
+    --bg-card: #b0afaff5;
+    --text: #2d0a4e;
+    --text-pure: #2d0a4e;
+    --accent: #6200ee;
+    --border: rgba(45, 10, 78, 0.1);
+    
+    /* Sobrecargas do CSS2 para Tema Claro */
+    --bg-header: #b0afaff5;
+    --text-nav: #2d0a4e;
+    --linha-divisora: rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================
+   2. CONFIGURAÇÕES GERAIS E RESET
+   ============================================================ */
+*, *::before, *::after { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body, html {
+    background-color: var(--bg-body);
+    color: var(--text);
+    font-family: 'Open Sans', sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .site-name { 
+    font-family: 'Orbitron', sans-serif; 
+    color: var(--text-pure); 
+}
+
+/* ============================================================
+   3. HEADER / CABEÇALHO (ESTILOS DO TOPO - DESKTOP)
+   ============================================================ */
+.main-header {
+    background: var(--bg-header);
+    border-bottom: 3px solid var(--yellow);
+    padding: 15px 5%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: transform 0.3s ease, background 0.3s ease, width 0.3s ease;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-wrapper { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    text-decoration: none; 
+    color: var(--text-nav) !important;
+}
+
+.main-logo { 
+    width: 45px !important; 
+    height: 45px !important; 
+    object-fit: contain;
+}
+
+.site-name {
+    font-size: 1.2rem;
+}
+
+.site-name span { 
+    color: var(--yellow); 
+}
+
+/* Alinhamento dos itens principais lado a lado */
+.top-nav > ul { 
+    display: flex; 
+    list-style: none; 
+    gap: 20px; 
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.top-nav > ul > li {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.top-nav a, .top-nav .drop-down-button { 
+    text-decoration: none; 
+    color: var(--text-nav) !important; 
+    font-weight: bold; 
+    font-size: 0.8rem; 
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.top-nav a:hover, .top-nav .drop-down-button:hover { 
+    color: var(--yellow) !important; 
+}
+
+/* Botão de Destaque "Apoie-nos" */
+.nav-apoie {
+    color: var(--magenta) !important;
+    border: 1px solid var(--magenta) !important;
+    padding: 6px 15px !important;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease !important;
+}
+
+.nav-apoie:hover {
+    background: var(--magenta);
+    color: var(--purple-dark) !important;
+    box-shadow: 0 0 15px var(--magenta);
+    transform: scale(1.05);
+}
+
+.theme-btn {
+    background: transparent;
+    border: 2px solid var(--text-nav);
+    color: var(--text-nav);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease;
+}
+
+.theme-btn:hover {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--purple-dark);
+}
+
+/* Centraliza o botão de ícone do Google na lista */
+.google-auth-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+}
+
+/* Garante que o iframe do Google não quebre a altura da barra mobile */
+.google-auth-item .g_id_signin {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+/* ============================================================
+   MECÂNICA E ESTRUTURA DO SUBMENU FLUTUANTE (DESKTOP)
+   ============================================================ */
+.top-nav .submenu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1a0933; 
+    border: 2px solid var(--yellow); 
+    border-radius: 8px;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    display: none; /* Oculto por padrão no Desktop */
+}
+
+.top-nav .submenu.show {
+    display: block;
+}
+
+.top-nav .submenu div {
+    padding: 5px 0;
+}
+
+.top-nav .submenu li {
+    width: 100%;
+}
+
+.top-nav .submenu li a {
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    text-transform: none;
+    font-size: 13px;
+    justify-content: flex-start;
+}
+
+.top-nav .submenu li a:hover {
+    background-color: rgba(255, 251, 0, 0.1);
+    color: var(--yellow) !important;
+}
+
+/* Ícones de seta do dropdown */
+.dropdown-icon {
+    transition: transform 0.3s ease;
+    margin-left: 5px;
+}
+
+.drop-down-button.rotate .dropdown-icon {
+    transform: rotate(180deg);
+}
+
+/* Colapso Opcional de Sidebar */
+.main-header.close { width: 80px; }
+.main-header.close .site-name, .main-header.close .top-nav span { display: none; }
+
+/* ============================================================
+   4. CONTEÚDO BASE (ARTIGOS E SKILLS)
+   ============================================================ */
+.main-container.single-column {
+    max-width: 1000px;
+    margin: 110px auto 0 auto;
+    padding: 40px 5%;
+}
+
+.company-hero { 
+    text-align: center; 
+    padding: 40px 0; 
+}
+
+.company-hero h1 {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.company-hero h1 span { 
+    color: var(--yellow); 
+}
+
+.section-header {
+    border-bottom: 2px solid var(--cyan);
+    margin: 40px 0 20px;
+    padding-bottom: 10px;
+    color: var(--cyan);
+}
+
+.main-article p { 
+    text-align: justify; 
+    margin-bottom: 20px; 
+}
+
+/* Skills - Estilo Botões Gamer */
+.skills-wrapper { 
+    margin: 30px 0; 
+}
+
+.skills-wrapper h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.skills-grid { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 15px; 
+}
+
+.skills-grid span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--cyan);
+    color: var(--purple-dark) !important;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+    cursor: default;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.skills-grid span i {
+    font-size: 1.1rem;
+    color: var(--purple-dark);
+}
+
+.skills-grid span:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--magenta);
+    background: var(--white);
+}
+
+/* Manifesto Box */
+.manifesto-box {
+    text-align: center;
+    margin: 50px 0;
+    padding: 30px;
+    border: 3px solid var(--magenta);
+    background: rgba(255, 0, 255, 0.05);
+    border-radius: 10px;
+}
+
+.manifesto-box p { margin-bottom: 10px; }
+
+.founders-footer {
+    margin-top: 30px;
+    padding: 20px;
+    border-left: 3px solid var(--yellow);
+    background: rgba(255, 255, 0, 0.02);
+}
+
+.grid-title {
+    margin: 50px 0 20px 0;
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--yellow);
+    padding-bottom: 10px;
+    color: var(--yellow);
+}
+
+/* ============================================================
+   5. GRID DE PROJETOS / CARDS
+   ============================================================ */
+.sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.grid-item {
+    padding: 30px;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+    color: #1a1a1a !important; 
+    font-weight: bold;
+}
+
+.grid-item:hover { transform: translateY(-10px); }
+.card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+.card-header i { font-size: 1.8rem; color: #1a1a1a; }
+.card-header h3 { margin: 0; font-size: 1.3rem; }
+
+.grid-item h3 a {
+    color: #1a1a1a !important;
+    text-decoration: none;
+    border-bottom: 2px solid rgba(0,0,0,0.2);
+}
+
+.grid-item p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: normal;
+}
+
+.card-cyan { background: var(--cyan); }
+.card-magenta { background: var(--magenta); }
+.card-yellow { background: var(--yellow); }
+
+/* ============================================================
+   6. FAIXAS DOS MEMBROS
+   ============================================================ */
+.genshin-container { width: 100%; display: flex; flex-direction: column; }
+
+.genshin-container .member-banner {
+    position: relative;
+    width: 100%;
+    height: 16.66vh; 
+    min-height: 140px;
+    overflow: hidden;
+    cursor: pointer;
+    border-bottom: 1px solid var(--linha-divisora);
+    margin: 0;
+    transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+    z-index: 5;
+}
+
+.genshin-container .member-banner:hover { height: 25vh; z-index: 10; }
+
+.genshin-container .member-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease;
+    z-index: 1;
+}
+
+.genshin-container .member-banner:hover .member-bg { transform: scale(1.1); filter: brightness(80%); }
+.genshin-container .member-content { position: relative; z-index: 4; height: 100%; display: flex; align-items: center; padding-left: 10%; background: transparent; pointer-events: none; }
+
+.genshin-container .member-info h3 {
+    font-family: 'Orbitron';
+    font-size: 2.5rem;
+    color: var(--white) !important;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin: 0;
+    transition: 0.4s;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+}
+
+.genshin-container .member-banner:hover h3 { transform: translateX(20px); }
+.genshin-container .member-info p { color: var(--white); font-weight: bold; letter-spacing: 2px; margin: 5px 0 0 0; text-transform: uppercase; font-size: 0.9rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
+.genshin-container .member-id { color: var(--yellow); font-family: 'Orbitron'; font-size: 1rem; opacity: 0.8; }
+
+.genshin-container .character-ilus {
+    position: absolute;
+    right: -100px; bottom: -20px; height: 120%; z-index: 3;
+    opacity: 0; pointer-events: none;
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+}
+
+.genshin-container .member-banner:hover .character-ilus { opacity: 1; right: 5%; transform: scale(1.05); }
+
+/* ============================================================
+   7. EXCLUSIVOS DA PÁGINA DE JOGOS / CARROSSEL
+   ============================================================ */
+.game-page-wrapper .game-hero { text-align: center; margin-bottom: 30px; }
+.game-page-wrapper .game-title span { color: var(--cyan); }
+.game-page-wrapper .game-tagline { font-style: italic; margin: 10px 0; opacity: 0.9; }
+.game-page-wrapper .game-status-bar { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+.game-page-wrapper .status-tag { background: var(--bg-card); border: 1px solid var(--border); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; color: var(--text-pure); }
+.game-page-wrapper .game-preview-container { width: 100%; margin-bottom: 40px; border-radius: 12px; overflow: hidden; border: 2px solid var(--cyan); }
+.game-page-wrapper .main-screenshot img { width: 100%; display: block; }
+
+.carousel-container { position: relative; width: 100%; height: 400px; background: var(--purple-light); border-radius: 15px; overflow: hidden; margin-bottom: 50px; border: 2px solid var(--border); }
+.carousel-slide { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.carousel-slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4) saturate(0.5); }
+.carousel-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--purple-dark), transparent); }
+.carousel-caption { position: absolute; text-align: center; z-index: 10; padding: 0 20px; }
+.carousel-caption h2 { font-size: 2rem; color: var(--yellow); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; text-shadow: 0 0 15px rgba(255, 255, 0, 0.5); }
+.carousel-caption p { color: var(--white); font-weight: bold; }
+.loading-bar-mini { width: 100px; height: 4px; background: var(--cyan); margin: 20px auto 0; border-radius: 2px; position: relative; overflow: hidden; }
+.loading-bar-mini::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--white); animation: loading-pulse 2s infinite linear; }
+
+@keyframes loading-pulse {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* ============================================================
+   8. RODAPÉ / FOOTER UNIFICADO
+   ============================================================ */
+.big-footer {
+    background: var(--bg-card) !important;
+    border-top: 3px solid var(--cyan);
+    padding: 40px 5% 25px 5%;
+    margin-top: 80px;
+    width: 100%;
+    transition: background 0.3s ease;
+}
+
+.genshin-container + .big-footer { margin-top: 0 !important; }
+.footer-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; padding-bottom: 30px; }
+.footer-info-block { display: flex; align-items: center; gap: 15px; max-width: 500px; }
+.footer-logo { width: 45px !important; height: 45px !important; object-fit: contain; }
+.footer-text h3 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin: 0 0 5px 0; color: var(--text-pure) !important; }
+.footer-text h3 span { color: var(--yellow) !important; }
+.footer-text p { font-size: 0.85rem; margin: 0; opacity: 0.8; color: var(--text) !important; }
+.footer-social-block { display: flex; flex-direction: column; gap: 10px; }
+.footer-social-block h4 { color: var(--yellow) !important; margin: 0; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
+.social-btns { display: flex; flex-direction: row; gap: 12px; }
+.social-btn { text-decoration: none !important; color: #ffffff !important; padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); cursor: pointer; }
+.social-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); }
+
+.discord { background: #5865f2 !important; }
+.instagram { background: #e1306c !important; }
+.twitter { background: #1da1f2 !important; }
+
+.footer-bottom { width: 100%; max-width: 1200px; margin: 0 auto; padding-top: 20px; border-top: 1px solid var(--linha-divisora); text-align: center; font-size: 0.85rem; clear: both; }
+.footer-bottom p { color: var(--text) !important; opacity: 0.7; }
+.highlight-link { color: var(--yellow) !important; font-weight: bold; text-decoration: none; }
+.highlight-link:hover { text-decoration: underline; text-shadow: 0 0 10px var(--yellow); }
+
+/* ============================================================
+   9. RESPONSIVIDADE EM TELAS MENORES (MOBILE)
+   ============================================================ */
+@media (max-width: 768px) {
+    /* TRANSFORMAÇÃO DO MENU EM BOTTOM NAV */
+    .main-header {
+        height: 60px;
+        width: 100%;
+        top: auto;
+        bottom: 0; 
+        border-bottom: none;
+        border-top: 3px solid var(--yellow); 
+        padding: 0;
+    }
+
+    .header-content {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* CRIAÇÃO DA BARRA DE TÍTULO INDEPENDENTE NO TOPO MOBILE */
+    .logo-wrapper {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: var(--bg-header);
+        border-bottom: 3px solid var(--yellow);
+        padding: 0 5%;
+        justify-content: flex-start;
+        align-items: center;
+        z-index: 1001; 
+    }
+
+    /* Oculta apenas o botão de colapso e as setas irrelevantes no mobile */
+    #toggleButton, .top-nav .dropdown-icon {
+        display: none !important;
+    }
+
+    /* Ajuste fino dos elementos internos da barra inferior */
+    .top-nav {
+        width: 100%;
+    }
+
+    .top-nav > ul {
+        justify-content: space-around;
+        width: 100%;
+        gap: 0;
+    }
+
+    .top-nav a span, .top-nav .drop-down-button span {
+        display: none; /* Mantém apenas os ícones acessíveis na barra de baixo */
+    }
+
+    .top-nav a i, .top-nav .drop-down-button i {
+        font-size: 22px; 
+    }
+
+    /* Ajuste para o submenu abrir de baixo para cima no mobile */
+    .top-nav .submenu {
+        position: absolute;
+        bottom: 100%;
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 10px;
+        margin-top: 0;
+    }
+
+    /* Ajusta o contêiner principal para eliminar o espaço em branco fantasma */
+    .main-container.single-column {
+        margin-top: 80px !important; 
+        padding-bottom: 80px; 
+    }
+
+    /* Responsividade Geral do Conteúdo */
+    .footer-container { flex-direction: column; align-items: flex-start; gap: 25px; }
+    .footer-info-block { flex-direction: row; align-items: center; }
+    .social-btns { flex-wrap: wrap; width: 100%; justify-content: flex-start; }
+    .social-btn { width: 100%; }
+
+    /* Responsividade de Faixas (Membros) */
+    .genshin-container .member-info h3 { font-size: 1.6rem; }
+    .genshin-container .member-banner { height: 160px; }
+    .genshin-container .member-banner:hover { height: 180px; }
+    .genshin-container .character-ilus { display: none; }
+
+    /* Responsividade do Carrossel */
+    .carousel-container { height: 300px; }
+    .carousel-caption h2 { font-size: 1.4rem; }
+}
+
+/* ============================================================
+   10. BARRA DE ROLAGEM MINIMALISTA E ANIMAÇÃO DE SCROLL
+   ============================================================ */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) var(--bg-body);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-body); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; opacity: 0.7; }
+::-webkit-scrollbar-thumb:hover { filter: brightness(1.2); }
+
+.main-header.scroll-down {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+
+.main-header.scroll-up {
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Faz a logo parecer um botão clicável */
+.theme-btn-trigger {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* Efeito sutil ao passar o mouse na logo */
+.theme-btn-trigger:hover {
+    transform: scale(1.05);
+}
+
+/* Estilização da foto de perfil do usuário pós-login */
+.user-profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--cyan); /* Uma bordinha ciano neon para combinar com o site */
+    object-fit: cover;
+    box-shadow: 0 0 10px var(--cyan);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.user-profile-avatar:hover {
+    transform: scale(1.1);
+    border-color: var(--yellow);
+    box-shadow: 0 0 10px var(--yellow);
+}
+
+
+/* ============================================================
+   11. ISOLAMENTO COMPLETO DA PÁGINA DE BOAS-VINDAS (INDEX)
+   ============================================================ */
+
+/* Aplica o fundo e remove barras de rolagem apenas no index */
+body.welcome-page-body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    /* Recriação fiel do fundo de barras de teste da TV analógica por CSS */
+    background: linear-gradient(90deg, 
+        #ffffff 0% 14.28%, 
+        #dcdcdc 14.28% 28.56%, 
+        #00ffff 28.56% 42.84%, 
+        #00ff00 42.84% 57.12%, 
+        #ff00ff 57.12% 71.4%, 
+        #ff0000 71.4% 85.68%, 
+        #0000ff 85.68% 100%
+    ) !important; /* O important garante que o fundo roxo do site não vaze aqui */
+}
+
+/* Barra inferior preta e azul clássica do gerador de barras (Isolado) */
+body.welcome-page-body::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    background: linear-gradient(90deg,
+        #0000ff 0% 14.28%,
+        #000000 14.28% 28.56%,
+        #ff00ff 28.56% 42.84%,
+        #000000 42.84% 57.12%,
+        #00ffff 57.12% 71.4%,
+        #000000 71.4% 85.68%,
+        #ffffff 85.68% 100%
+    );
+    z-index: 1;
+}
+
+body.welcome-page-body::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8%;
+    background: #000000;
+    z-index: 2;
+}
+
+/* Caixa de Login Flutuante Obscurecida */
+.login-card {
+    background: rgba(10, 10, 12, 0.92);
+    border: 3px solid #00ffff;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.4), inset 0 0 15px rgba(0, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    z-index: 10;
+    position: relative;
+    backdrop-filter: blur(8px);
+}
+
+.login-card h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.login-card h1 span {
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+.login-card p {
+    color: #a0a0aa;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+/* Formulário de E-mail */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #60606a;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    background: #16161a;
+    border: 1px solid #30303a;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #00ffff;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.input-group input:focus + i {
+    color: #00ffff;
+}
+
+/* Botões de Ação */
+.btn-submit {
+    background: #00ffff;
+    color: #0a0a0c;
+    border: none;
+    padding: 14px;
+    border-radius: 6px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+}
+
+.btn-submit:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 20px #00ffff;
+}
+
+.toggle-form-btn {
+    background: none;
+    border: none;
+    color: #ff00ff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 5px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #50505a;
+    font-size: 0.8rem;
+    margin: 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #30303a;
+}
+
+.divider:not(:empty)::before { margin-right: .25em; }
+.divider:not(:empty)::after { margin-left: .25em; }
+
+/* Centralizador do Botão do Google */
+.google-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
