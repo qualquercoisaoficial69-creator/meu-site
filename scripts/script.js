@@ -668,3 +668,608 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ============================================================
+// SISTEMA DE CMS E FEED DINÂMICO (ESTILO INSTAGRAM CREATOR STUDIO)
+// Suporta: Criar, Editar, Excluir, Curtir, Upload e Categorias
+// ============================================================
+
+const DEFAULT_POSTS = [
+    {
+        id: 'post-unique-soul-catedral',
+        title: 'Revelação: O Santuário dos Vitrais em Unique Soul',
+        category: 'devlog',
+        author: 'Qualquer Coisa Rápido',
+        authorRole: 'Estúdio Oficial',
+        authorAvatar: 'imagens/Logo_colorida.png',
+        mediaUrl: 'imagens/unique_soul_cenario.png',
+        caption: 'Apresentamos oficialmente os primeiros visuais da Catedral das Cores em Unique Soul! Toda alma tem uma história e os fragmentos de memória serão revelados aqui. Deixe seu like e acompanhe o desenvolvimento! ✨🎮 #UniqueSoul #IndieGame #PixelArt #Gamedev',
+        likes: 42,
+        date: new Date(Date.now() - 3600000 * 4).toISOString()
+    },
+    {
+        id: 'post-mascote-oficial',
+        title: 'Arte Conceitual: O Mascote da Equipe Ganha Vida!',
+        category: 'arte',
+        author: 'Brenno',
+        authorRole: 'Fundador & Dev',
+        authorAvatar: 'imagens/brenno-icon.jpeg',
+        mediaUrl: 'imagens/Qualquer_coisa_corpo_inteiro.png',
+        caption: 'Direto das pranchetas da Qualquer Coisa Rápido, nosso mascote agora tem poses e animações para protótipos de jogos de ação e combate. O que acharam do visual? Comentem aí! 👾🗡️ #QualquerCoisa #Mascote #ArteIndie #Design',
+        likes: 29,
+        date: new Date(Date.now() - 3600000 * 24).toISOString()
+    }
+];
+
+// Carrega postagens do storage ou inicializa com as oficiais
+function getStoredPosts() {
+    try {
+        const stored = localStorage.getItem('qc_posts_v2');
+        if (stored) return JSON.parse(stored);
+    } catch (e) {
+        console.error('Erro ao ler posts:', e);
+    }
+    localStorage.setItem('qc_posts_v2', JSON.stringify(DEFAULT_POSTS));
+    return DEFAULT_POSTS;
+}
+
+function saveStoredPosts(posts) {
+    try {
+        localStorage.setItem('qc_posts_v2', JSON.stringify(posts));
+        // Dispara evento para sincronizar feed e CMS se estiverem em abas diferentes
+        window.dispatchEvent(new Event('qc_posts_updated'));
+    } catch (e) {
+        console.error('Erro ao salvar posts:', e);
+    }
+}
+
+// Lista de posts curtidos pelo usuário atual
+let userLikedPosts = JSON.parse(localStorage.getItem('qc_liked_posts') || '[]');
+
+function isPostLiked(postId) {
+    return userLikedPosts.includes(postId);
+}
+
+// Formatação amigável de tempo ("há 2 horas", "ontem", etc.)
+function formatTimeAgo(isoDate) {
+    try {
+        const diffMs = Date.now() - new Date(isoDate).getTime();
+        const diffMinutes = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMinutes / 60);
+        const diffDays = Math.floor(diffHours / 24);
+
+        if (diffMinutes < 2) return 'Agora mesmo';
+        if (diffMinutes < 60) return `há ${diffMinutes} min`;
+        if (diffHours < 24) return `há ${diffHours} h`;
+        if (diffDays === 1) return 'Ontem';
+        if (diffDays < 30) return `há ${diffDays} dias`;
+        return new Date(isoDate).toLocaleDateString('pt-BR');
+    } catch {
+        return 'Recentemente';
+    }
+}
+
+// Formatação de hashtags e links na legenda
+function formatCaptionText(text) {
+    if (!text) return '';
+    const safeText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return safeText.replace(/#([\wÀ-ÿ]+)/g, '<span class="post-hashtag">#$1</span>');
+}
+
+// --- RENDERIZAÇÃO DO FEED ESTILO INSTAGRAM (home.html) ---
+window.renderHomeFeed = function(filterCategory = 'all', searchQuery = '') {
+    const feedContainer = document.getElementById('homeFeedPosts');
+    const emptyState = document.getElementById('feedEmptyState');
+    if (!feedContainer) return;
+
+    const posts = getStoredPosts();
+    let filtered = posts.filter(post => {
+        const matchCategory = filterCategory === 'all' || post.category === filterCategory;
+        const query = searchQuery.toLowerCase();
+        const matchSearch = !query || 
+            post.title.toLowerCase().includes(query) || 
+            post.caption.toLowerCase().includes(query) || 
+            post.author.toLowerCase().includes(query);
+        return matchCategory && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+        feedContainer.innerHTML = '';
+        if (emptyState) emptyState.style.display = 'flex';
+        return;
+    }
+
+    if (emptyState) emptyState.style.display = 'none';
+
+    feedContainer.innerHTML = filtered.map(post => {
+        const liked = isPostLiked(post.id);
+        const categoryLabels = {
+            devlog: 'Devlog',
+            arte: 'Arte Conceitual',
+            jogo: 'Destaque de Jogo',
+            musica: 'Trilha Sonora',
+            novidade: 'Novidade'
+        };
+        const catLabel = categoryLabels[post.category] || post.category;
+
+        return `
+            <article class="instagram-post-card" id="card-${post.id}">
+                <!-- Header do Post com Autor e 3 Pontinhos -->
+                <header class="ig-post-header">
+                    <div class="ig-author-group">
+                        <img src="${post.authorAvatar || 'imagens/Logo_colorida.png'}" alt="Avatar" class="ig-author-avatar">
+                        <div class="ig-author-meta">
+                            <div class="ig-author-title">
+                                <span class="ig-author-name">${post.author || 'Qualquer Coisa Rápido'}</span>
+                                <i class="fas fa-check-circle verified-badge" title="Canal Oficial"></i>
+                            </div>
+                            <div class="ig-post-info-row">
+                                <span class="ig-post-category-tag">${catLabel}</span>
+                                <span class="ig-bullet">•</span>
+                                <span class="ig-post-time">${formatTimeAgo(post.date)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Menu de 3 Pontinhos com Editar / Excluir / Compartilhar -->
+                    <div class="ig-post-menu-wrap">
+                        <button type="button" class="ig-more-options-btn" onclick="togglePostDropdown('${post.id}')" aria-label="Mais opções">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="ig-dropdown-menu" id="dropdown-${post.id}">
+                            <a href="cms.html?edit=${post.id}"><i class="fas fa-edit"></i> Editar Publicação</a>
+                            <button type="button" class="ig-delete-item" onclick="promptDeletePost('${post.id}')"><i class="fas fa-trash-alt"></i> Excluir</button>
+                            <button type="button" onclick="sharePostLink('${post.id}')"><i class="fas fa-link"></i> Copiar Link</button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Mídia da Publicação (com duplo-toque para curtir estilo Instagram) -->
+                <div class="ig-media-box" ondblclick="handleQuickDoubleTapLike('${post.id}')">
+                    <img src="${post.mediaUrl}" alt="${post.title}" class="ig-media-img" loading="lazy">
+                    <div class="ig-heart-pop" id="heart-pop-${post.id}">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </div>
+
+                <!-- Barra de Ações (Curtir, Comentar, Compartilhar) -->
+                <div class="ig-actions-row">
+                    <div class="ig-actions-left">
+                        <button type="button" class="ig-action-btn like-btn ${liked ? 'liked' : ''}" onclick="togglePostLike('${post.id}', this)" aria-label="Curtir">
+                            <i class="${liked ? 'fas fa-heart' : 'far fa-heart'}"></i>
+                        </button>
+                        <button type="button" class="ig-action-btn" onclick="alert('Comentários em tempo real habilitados! Para o lançamento com Firebase você poderá interagir direto!')" aria-label="Comentar">
+                            <i class="far fa-comment"></i>
+                        </button>
+                        <button type="button" class="ig-action-btn" onclick="sharePostLink('${post.id}')" aria-label="Compartilhar">
+                            <i class="far fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <button type="button" class="ig-action-btn bookmark-btn" onclick="toggleBookmarkPost('${post.id}', this)" aria-label="Salvar">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+
+                <!-- Contagem de Curtidas -->
+                <div class="ig-likes-row">
+                    <span id="likes-count-${post.id}">${post.likes || 0}</span> curtidas
+                </div>
+
+                <!-- Título e Legenda -->
+                <div class="ig-caption-block">
+                    <h4 class="ig-post-headline">${post.title}</h4>
+                    <p class="ig-caption-text">${formatCaptionText(post.caption)}</p>
+                </div>
+            </article>
+        `;
+    }).join('');
+};
+
+// --- RENDERIZAÇÃO NO PAINEL CMS STUDIO (cms.html) ---
+window.renderCmsDashboard = function(filterCategory = 'all', searchQuery = '') {
+    const cmsGrid = document.getElementById('cmsPostsList');
+    const emptyState = document.getElementById('cmsEmptyState');
+    const totalPostsElem = document.getElementById('totalPostsCount');
+    const totalLikesElem = document.getElementById('totalLikesCount');
+    if (!cmsGrid) return;
+
+    const posts = getStoredPosts();
+    let totalLikes = 0;
+    posts.forEach(p => { totalLikes += (p.likes || 0); });
+
+    if (totalPostsElem) totalPostsElem.textContent = posts.length;
+    if (totalLikesElem) totalLikesElem.textContent = totalLikes;
+
+    let filtered = posts.filter(post => {
+        const matchCategory = filterCategory === 'all' || post.category === filterCategory;
+        const query = searchQuery.toLowerCase();
+        const matchSearch = !query || 
+            post.title.toLowerCase().includes(query) || 
+            post.caption.toLowerCase().includes(query) || 
+            post.author.toLowerCase().includes(query);
+        return matchCategory && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+        cmsGrid.innerHTML = '';
+        if (emptyState) emptyState.style.display = 'flex';
+        return;
+    }
+
+    if (emptyState) emptyState.style.display = 'none';
+
+    cmsGrid.innerHTML = filtered.map(post => {
+        return `
+            <div class="cms-post-item-card" id="cms-card-${post.id}">
+                <div class="cms-card-thumb-wrap">
+                    <img src="${post.mediaUrl}" alt="${post.title}" class="cms-card-thumb">
+                    <span class="card-tag-badge">${post.category.toUpperCase()}</span>
+                </div>
+                <div class="cms-card-info">
+                    <span class="cms-meta-date"><i class="far fa-calendar-alt"></i> ${new Date(post.date).toLocaleDateString('pt-BR')} • ${post.author}</span>
+                    <h4 class="cms-card-title">${post.title}</h4>
+                    <p class="cms-card-snippet">${post.caption.substring(0, 95)}...</p>
+                    <div class="cms-card-stats-row">
+                        <span><i class="fas fa-heart" style="color:#ff3366;"></i> ${post.likes || 0} curtidas</span>
+                    </div>
+                </div>
+                <div class="cms-card-actions">
+                    <button type="button" class="btn-cms-edit" onclick="openEditPostModal('${post.id}')" title="Editar postagem">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button type="button" class="btn-cms-delete" onclick="promptDeletePost('${post.id}')" title="Excluir postagem">
+                        <i class="fas fa-trash-alt"></i> Excluir
+                    </button>
+                    <a href="home.html#card-${post.id}" class="btn-cms-view" title="Ver no site público">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+        `;
+    }).join('');
+};
+
+// --- CURTIR / LIKES EM TEMPO REAL ---
+window.togglePostLike = function(postId, button) {
+    const posts = getStoredPosts();
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    const likedIndex = userLikedPosts.indexOf(postId);
+    const counterElem = document.getElementById(`likes-count-${postId}`);
+
+    if (likedIndex > -1) {
+        // Descurte
+        userLikedPosts.splice(likedIndex, 1);
+        post.likes = Math.max(0, (post.likes || 1) - 1);
+        if (button) {
+            button.classList.remove('liked');
+            const icon = button.querySelector('i');
+            if (icon) icon.className = 'far fa-heart';
+        }
+    } else {
+        // Curte
+        userLikedPosts.push(postId);
+        post.likes = (post.likes || 0) + 1;
+        if (button) {
+            button.classList.add('liked');
+            const icon = button.querySelector('i');
+            if (icon) icon.className = 'fas fa-heart';
+        }
+    }
+
+    if (counterElem) counterElem.textContent = post.likes;
+    localStorage.setItem('qc_liked_posts', JSON.stringify(userLikedPosts));
+    saveStoredPosts(posts);
+};
+
+// Duplo clique na imagem (estilo Instagram)
+window.handleQuickDoubleTapLike = function(postId) {
+    const pop = document.getElementById(`heart-pop-${postId}`);
+    if (pop) {
+        pop.classList.add('pop');
+        setTimeout(() => pop.classList.remove('pop'), 850);
+    }
+
+    // Se ainda não tiver curtido, curte
+    if (!isPostLiked(postId)) {
+        const likeBtn = document.querySelector(`#card-${postId} .like-btn`);
+        togglePostLike(postId, likeBtn);
+    }
+};
+
+window.toggleBookmarkPost = function(postId, btn) {
+    if (!btn) return;
+    btn.classList.toggle('bookmarked');
+    const icon = btn.querySelector('i');
+    if (icon) {
+        icon.className = btn.classList.contains('bookmarked') ? 'fas fa-bookmark' : 'far fa-bookmark';
+    }
+};
+
+window.sharePostLink = function(postId) {
+    const url = `${window.location.origin}${window.location.pathname}#card-${postId}`;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Link da publicação copiado para a área de transferência!');
+        });
+    } else {
+        prompt('Copie o link desta publicação:', url);
+    }
+};
+
+// Menu de 3 pontinhos
+window.togglePostDropdown = function(postId) {
+    document.querySelectorAll('.ig-dropdown-menu').forEach(menu => {
+        if (menu.id !== `dropdown-${postId}`) menu.classList.remove('show');
+    });
+    const target = document.getElementById(`dropdown-${postId}`);
+    if (target) target.classList.toggle('show');
+};
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.ig-post-menu-wrap')) {
+        document.querySelectorAll('.ig-dropdown-menu').forEach(menu => menu.classList.remove('show'));
+    }
+});
+
+// --- OPERAÇÕES DO CMS (CRIAR, EDITAR, EXCLUIR) ---
+let postToDeleteId = null;
+
+window.promptDeletePost = function(postId) {
+    postToDeleteId = postId;
+    const modal = document.getElementById('cmsDeleteConfirmModal');
+    if (modal) {
+        modal.classList.add('active');
+    } else {
+        if (confirm('Tem certeza que deseja excluir esta publicação do site?')) {
+            executeDeletePost(postId);
+        }
+    }
+};
+
+window.closeDeleteConfirmModal = function() {
+    const modal = document.getElementById('cmsDeleteConfirmModal');
+    if (modal) modal.classList.remove('active');
+    postToDeleteId = null;
+};
+
+function executeDeletePost(postId) {
+    let posts = getStoredPosts();
+    posts = posts.filter(p => p.id !== postId);
+    saveStoredPosts(posts);
+
+    closeDeleteConfirmModal();
+
+    if (window.renderCmsDashboard) window.renderCmsDashboard();
+    if (window.renderHomeFeed) window.renderHomeFeed();
+}
+
+const confirmDeleteBtn = document.getElementById('confirmDeleteActionBtn');
+if (confirmDeleteBtn) {
+    confirmDeleteBtn.addEventListener('click', () => {
+        if (postToDeleteId) {
+            executeDeletePost(postToDeleteId);
+        }
+    });
+}
+
+// Abrir modal de criação
+window.openNewPostModal = function() {
+    const modal = document.getElementById('cmsPostModal');
+    const form = document.getElementById('cmsPostForm');
+    const titleText = document.getElementById('cmsModalTitleText');
+    const submitBtnText = document.getElementById('cmsSubmitBtnText');
+    const previewImg = document.getElementById('cmsMediaPreviewImg');
+    const editId = document.getElementById('editPostId');
+
+    if (form) form.reset();
+    if (editId) editId.value = '';
+    if (titleText) titleText.textContent = 'Nova Publicação';
+    if (submitBtnText) submitBtnText.textContent = 'Publicar no Feed';
+    if (previewImg) previewImg.src = 'imagens/unique_soul_cenario.png';
+
+    if (modal) modal.classList.add('active');
+};
+
+// Abrir modal de edição com dados pré-carregados
+window.openEditPostModal = function(postId) {
+    const posts = getStoredPosts();
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    const modal = document.getElementById('cmsPostModal');
+    const titleText = document.getElementById('cmsModalTitleText');
+    const submitBtnText = document.getElementById('cmsSubmitBtnText');
+    const editId = document.getElementById('editPostId');
+
+    const titleInput = document.getElementById('postTitleInput');
+    const catSelect = document.getElementById('postCategorySelect');
+    const authorSelect = document.getElementById('postAuthorSelect');
+    const captionTextarea = document.getElementById('postCaptionTextarea');
+    const urlInput = document.getElementById('cmsMediaUrlInput');
+    const previewImg = document.getElementById('cmsMediaPreviewImg');
+
+    if (editId) editId.value = post.id;
+    if (titleText) titleText.textContent = 'Editar Publicação';
+    if (submitBtnText) submitBtnText.textContent = 'Salvar Alterações';
+
+    if (titleInput) titleInput.value = post.title;
+    if (catSelect) catSelect.value = post.category || 'devlog';
+    if (authorSelect) authorSelect.value = post.author || 'Qualquer Coisa Rápido';
+    if (captionTextarea) captionTextarea.value = post.caption;
+    if (urlInput) urlInput.value = post.mediaUrl;
+    if (previewImg) previewImg.src = post.mediaUrl;
+
+    if (modal) modal.classList.add('active');
+};
+
+window.closeCmsPostModal = function() {
+    const modal = document.getElementById('cmsPostModal');
+    if (modal) modal.classList.remove('active');
+};
+
+// Salvar / Atualizar Publicação
+window.handleSavePost = function(e) {
+    e.preventDefault();
+
+    const editId = document.getElementById('editPostId')?.value.trim();
+    const title = document.getElementById('postTitleInput')?.value.trim();
+    const category = document.getElementById('postCategorySelect')?.value;
+    const author = document.getElementById('postAuthorSelect')?.value;
+    const caption = document.getElementById('postCaptionTextarea')?.value.trim();
+    const previewImg = document.getElementById('cmsMediaPreviewImg');
+    const mediaUrl = previewImg?.src || 'imagens/unique_soul_cenario.png';
+
+    if (!title || !caption) {
+        alert('Por favor, preencha o título e a legenda da publicação.');
+        return;
+    }
+
+    const authorAvatars = {
+        'Brenno': 'imagens/brenno-icon.jpeg',
+        'Enzo': 'imagens/en.jpg',
+        'Iza': 'imagens/iz.jpg',
+        'Gustavo': 'imagens/gus.jpg',
+        'João': 'imagens/jo.jpg',
+        'Maryssa': 'imagens/ma.jpg',
+        'Qualquer Coisa Rápido': 'imagens/Logo_colorida.png'
+    };
+
+    let posts = getStoredPosts();
+
+    if (editId) {
+        // MODO EDIÇÃO: Atualiza o post existente
+        const postIndex = posts.findIndex(p => p.id === editId);
+        if (postIndex > -1) {
+            posts[postIndex] = {
+                ...posts[postIndex],
+                title,
+                category,
+                author,
+                authorAvatar: authorAvatars[author] || 'imagens/Logo_colorida.png',
+                mediaUrl,
+                caption,
+                lastEdited: new Date().toISOString()
+            };
+        }
+    } else {
+        // MODO CRIAÇÃO: Adiciona nova postagem no topo
+        const newPost = {
+            id: `post-${Date.now()}`,
+            title,
+            category,
+            author,
+            authorAvatar: authorAvatars[author] || 'imagens/Logo_colorida.png',
+            mediaUrl,
+            caption,
+            likes: 0,
+            date: new Date().toISOString()
+        };
+        posts.unshift(newPost);
+    }
+
+    saveStoredPosts(posts);
+    closeCmsPostModal();
+
+    if (window.renderCmsDashboard) window.renderCmsDashboard();
+    if (window.renderHomeFeed) window.renderHomeFeed();
+
+    alert(editId ? 'Publicação atualizada com sucesso!' : 'Publicação criada e adicionada ao feed com sucesso!');
+};
+
+// Manipulação de mídia (Arquivo local ou URL)
+window.handleMediaFileSelect = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const preview = document.getElementById('cmsMediaPreviewImg');
+            if (preview) preview.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+window.handleMediaUrlInput = function(e) {
+    const url = e.target.value.trim();
+    if (url) {
+        const preview = document.getElementById('cmsMediaPreviewImg');
+        if (preview) preview.src = url;
+    }
+};
+
+window.setPresetMedia = function(path) {
+    const preview = document.getElementById('cmsMediaPreviewImg');
+    const input = document.getElementById('cmsMediaUrlInput');
+    if (preview) preview.src = path;
+    if (input) input.value = path;
+};
+
+// Clique na caixa de dropzone abre o seletor de arquivos
+const dropzone = document.getElementById('cmsMediaDropzone');
+if (dropzone) {
+    dropzone.addEventListener('click', () => {
+        const fileInput = document.getElementById('cmsMediaFileInput');
+        if (fileInput) fileInput.click();
+    });
+}
+
+// Filtros do Feed e do CMS
+window.filterFeedCategory = function(cat, tabBtn) {
+    document.querySelectorAll('.catalog-filter-tabs .catalog-tab').forEach(t => t.classList.remove('active'));
+    if (tabBtn) tabBtn.classList.add('active');
+    const searchInput = document.getElementById('catalogSearch');
+    window.renderHomeFeed(cat, searchInput ? searchInput.value : '');
+};
+
+window.filterCmsPosts = function(cat, tabBtn) {
+    document.querySelectorAll('.cms-filter-group .catalog-tab').forEach(t => t.classList.remove('active'));
+    if (tabBtn) tabBtn.classList.add('active');
+    const searchInput = document.getElementById('cmsSearchInput');
+    window.renderCmsDashboard(cat, searchInput ? searchInput.value : '');
+};
+
+// Inicialização automática do Feed e do CMS
+document.addEventListener('DOMContentLoaded', () => {
+    // Renderiza se os containers existirem na página atual
+    if (document.getElementById('homeFeedPosts')) {
+        window.renderHomeFeed();
+    }
+    if (document.getElementById('cmsPostsList')) {
+        window.renderCmsDashboard();
+    }
+
+    // Busca ao vivo na Home
+    const feedSearch = document.getElementById('catalogSearch');
+    if (feedSearch) {
+        feedSearch.addEventListener('input', (e) => {
+            const activeTab = document.querySelector('.catalog-filter-tabs .catalog-tab.active');
+            const cat = activeTab ? activeTab.getAttribute('data-filter') : 'all';
+            window.renderHomeFeed(cat, e.target.value);
+        });
+    }
+
+    // Busca ao vivo no CMS
+    const cmsSearch = document.getElementById('cmsSearchInput');
+    if (cmsSearch) {
+        cmsSearch.addEventListener('input', (e) => {
+            const activeTab = document.querySelector('.cms-filter-group .catalog-tab.active');
+            const cat = activeTab ? activeTab.getAttribute('data-cms-filter') : 'all';
+            window.renderCmsDashboard(cat, e.target.value);
+        });
+    }
+
+    // Sincronização entre abas
+    window.addEventListener('qc_posts_updated', () => {
+        if (document.getElementById('homeFeedPosts')) window.renderHomeFeed();
+        if (document.getElementById('cmsPostsList')) window.renderCmsDashboard();
+    });
+
+    // Se vier com ?edit=postId na URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const editParam = urlParams.get('edit');
+    if (editParam && window.openEditPostModal) {
+        setTimeout(() => window.openEditPostModal(editParam), 250);
+    }
+});
+

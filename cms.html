@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Studio | Qualquer Coisa Rápido</title>
+    <meta name="description" content="Painel de criação, edição e gerenciamento de publicações oficiais da Qualquer Coisa Rápido.">
+    <meta name="theme-color" content="#2d0a4e">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="imagens/favicon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body class="gamestore-body cms-studio-body">
+
+    <div class="gamestore-wrapper">
+        <div class="gamestore-window">
+            
+            <!-- SIDEBAR GAMESTORE PADRONIZADA -->
+            <aside class="gamestore-sidebar">
+                <button type="button" class="sidebar-mobile-close-btn" onclick="toggleMobileSidebar(false)" aria-label="Fechar menu">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <div>
+                    <a href="home.html" class="sidebar-brand" aria-label="Qualquer Coisa Rápido Início">
+                        <img src="imagens/Logo_colorida.png" alt="Logo da Qualquer Coisa Rápido" class="sidebar-logo">
+                        <div class="sidebar-brand-text">
+                            <h2>QUALQUER COISA</h2>
+                            <span>ESTÚDIO INDIE</span>
+                        </div>
+                    </a>
+
+                    <nav class="sidebar-nav" aria-label="Menu principal">
+                        <span class="sidebar-nav-title">Navegação</span>
+                        <a href="home.html" class="sidebar-link">
+                            <i class="fas fa-home" aria-hidden="true"></i>
+                            <span>Início</span>
+                        </a>
+                        <a href="jogo.html" class="sidebar-link">
+                            <i class="fas fa-th-large" aria-hidden="true"></i>
+                            <span>Catálogo de Jogos</span>
+                        </a>
+                        <a href="sobre.html" class="sidebar-link">
+                            <i class="fas fa-book-open" aria-hidden="true"></i>
+                            <span>Sobre Nós</span>
+                        </a>
+                        <a href="membros.html" class="sidebar-link">
+                            <i class="fas fa-users" aria-hidden="true"></i>
+                            <span>Membros</span>
+                        </a>
+                        <a href="cms.html" class="sidebar-link active" aria-current="page">
+                            <i class="fas fa-feather-alt" aria-hidden="true"></i>
+                            <span>Painel CMS</span>
+                        </a>
+                    </nav>
+
+                    <div class="fast-launch-section">
+                        <span class="sidebar-nav-title">Ações Rápidas</span>
+                        <a href="javascript:void(0)" onclick="openNewPostModal()" class="fast-launch-item" title="Criar Nova Publicação">
+                            <div class="fast-launch-thumb" style="display:flex;align-items:center;justify-content:center;background:var(--cyan);color:#080112;">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="fast-launch-info">
+                                <span class="fast-launch-name">Novo Post</span>
+                                <span class="fast-launch-status">Publicar Mídia</span>
+                            </div>
+                        </a>
+                        <a href="home.html" class="fast-launch-item" title="Ver Feed Público">
+                            <div class="fast-launch-thumb" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);color:#fff;">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="fast-launch-info">
+                                <span class="fast-launch-name">Ver Feed</span>
+                                <span class="fast-launch-status">Visualizar Site</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sidebar-status-widget">
+                    <img src="imagens/Logo_colorida.png" alt="Miniatura Estúdio" class="widget-thumb">
+                    <div class="widget-details">
+                        <div class="widget-title">CMS Creator Studio</div>
+                        <div class="widget-subtitle">Modo Administrador Ativo</div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- CONTEÚDO DO CMS -->
+            <main class="gamestore-main">
+                
+                <!-- TOPBAR CMS -->
+                <header class="gamestore-topbar">
+                    <button type="button" class="mobile-sidebar-toggle" onclick="toggleMobileSidebar()" aria-label="Abrir menu">
+                        <i class="fas fa-bars" aria-hidden="true"></i>
+                    </button>
+
+                    <div class="topbar-search-wrapper">
+                        <i class="fas fa-search topbar-search-icon" aria-hidden="true"></i>
+                        <input type="text" id="cmsSearchInput" class="topbar-search-input" placeholder="Pesquisar publicações por título, texto ou tag..." aria-label="Buscar posts">
+                    </div>
+
+                    <div class="topbar-actions">
+                        <button type="button" class="btn-cms-new" onclick="openNewPostModal()">
+                            <i class="fas fa-plus-circle"></i> <span>Nova Publicação</span>
+                        </button>
+
+                        <button type="button" class="topbar-btn" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">
+                            <i class="fas fa-moon" aria-hidden="true"></i>
+                        </button>
+
+                        <div class="topbar-profile" title="Admin QC Rápido">
+                            <img src="imagens/Logo_colorida.png" alt="Perfil Admin" class="profile-avatar">
+                            <span class="profile-name">Criador</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- HEADER DASHBOARD COM ESTATÍSTICAS -->
+                <section class="cms-dashboard-header">
+                    <div class="cms-hero-banner">
+                        <div class="cms-hero-text">
+                            <span class="about-store-badge"><i class="fas fa-sparkles"></i> CREATOR STUDIO</span>
+                            <h2>Gerenciador de <span>Publicações & Mídias</span></h2>
+                            <p>Crie, edite ou exclua posts com mídia no feed do site estilo Instagram. As mídias ficam vinculadas ao seu repositório.</p>
+                        </div>
+                        <button type="button" class="btn-spotlight-play" onclick="openNewPostModal()" style="display:inline-flex;align-items:center;gap:8px;">
+                            <i class="fas fa-camera"></i> PUBLICAR NOVIDADE
+                        </button>
+                    </div>
+
+                    <!-- Métricas do CMS -->
+                    <div class="cms-stats-bar">
+                        <div class="cms-stat-item">
+                            <i class="fas fa-newspaper"></i>
+                            <div>
+                                <span class="cms-stat-num" id="totalPostsCount">0</span>
+                                <span class="cms-stat-lbl">Publicações Criadas</span>
+                            </div>
+                        </div>
+                        <div class="cms-stat-item">
+                            <i class="fas fa-heart" style="color:#ff3366;"></i>
+                            <div>
+                                <span class="cms-stat-num" id="totalLikesCount">0</span>
+                                <span class="cms-stat-lbl">Curtidas Recebidas</span>
+                            </div>
+                        </div>
+                        <div class="cms-stat-item">
+                            <i class="fas fa-database" style="color:var(--yellow);"></i>
+                            <div>
+                                <span class="cms-stat-num">Pronto</span>
+                                <span class="cms-stat-lbl">Banco & Sincronização</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- LISTA GERENCIÁVEL DE PUBLICAÇÕES (TABELA / CARDS CRUD) -->
+                <section class="cms-posts-manager-section">
+                    <div class="cms-section-header">
+                        <div class="catalog-title-group">
+                            <h3>SUAS PUBLICAÇÕES</h3>
+                            <p>Clique em <strong>Editar</strong> para alterar mídia e texto, ou <strong>Excluir</strong> para remover do site.</p>
+                        </div>
+
+                        <div class="cms-filter-group">
+                            <button type="button" class="catalog-tab active" data-cms-filter="all" onclick="filterCmsPosts('all', this)">Todas</button>
+                            <button type="button" class="catalog-tab" data-cms-filter="devlog" onclick="filterCmsPosts('devlog', this)">Devlog</button>
+                            <button type="button" class="catalog-tab" data-cms-filter="arte" onclick="filterCmsPosts('arte', this)">Artes</button>
+                            <button type="button" class="catalog-tab" data-cms-filter="jogo" onclick="filterCmsPosts('jogo', this)">Jogos</button>
+                            <button type="button" class="catalog-tab" data-cms-filter="musica" onclick="filterCmsPosts('musica', this)">Música</button>
+                        </div>
+                    </div>
+
+                    <!-- GRID DOS POSTS NO CMS -->
+                    <div class="cms-posts-grid" id="cmsPostsList">
+                        <!-- Renderizado via script.js -->
+                    </div>
+
+                    <!-- ESTADO VAZIO CASO NÃO HAJA POSTS -->
+                    <div class="cms-empty-state" id="cmsEmptyState" style="display:none;">
+                        <i class="fas fa-photo-video"></i>
+                        <h4>Nenhuma publicação encontrada</h4>
+                        <p>Comece publicando o primeiro conteúdo sobre Unique Soul ou o estúdio!</p>
+                        <button type="button" class="btn-spotlight-play" onclick="openNewPostModal()">
+                            <i class="fas fa-plus"></i> Criar Primeira Publicação
+                        </button>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         MODAL DE CRIAÇÃO E EDIÇÃO DE PUBLICAÇÃO (ESTILO INSTAGRAM)
+         ============================================================ -->
+    <div class="game-modal-overlay" id="cmsPostModal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="game-modal-box cms-modal-box">
+            <button type="button" class="modal-close-btn" onclick="closeCmsPostModal()" aria-label="Fechar janela">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+
+            <div class="cms-modal-header">
+                <div class="cms-modal-title-wrap">
+                    <i class="fas fa-feather-alt" style="color:var(--cyan);font-size:1.4rem;"></i>
+                    <h3 id="cmsModalTitleText">Nova Publicação</h3>
+                </div>
+                <span class="spotlight-cat" id="cmsModalSubtitleText">Estilo Instagram • feed público</span>
+            </div>
+
+            <form id="cmsPostForm" onsubmit="handleSavePost(event)" class="cms-form-grid">
+                <input type="hidden" id="editPostId" value="">
+
+                <!-- Lado Esquerdo: Upload e Prévia da Mídia -->
+                <div class="cms-form-media-col">
+                    <label class="cms-form-label">Mídia da Publicação (Imagem / GIF / Banner)</label>
+                    
+                    <div class="cms-media-preview-box" id="cmsMediaDropzone">
+                        <img src="imagens/unique_soul_cenario.png" alt="Prévia da Mídia" id="cmsMediaPreviewImg" class="cms-preview-image">
+                        <div class="cms-media-overlay" id="cmsMediaDropPrompt">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Clique para carregar mídia ou arraste aqui</span>
+                            <small>PNG, JPG, GIF ou WebP</small>
+                        </div>
+                        <input type="file" id="cmsMediaFileInput" accept="image/*" style="display:none;" onchange="handleMediaFileSelect(event)">
+                    </div>
+
+                    <div class="cms-url-input-wrap">
+                        <span class="cms-input-icon"><i class="fas fa-link"></i></span>
+                        <input type="text" id="cmsMediaUrlInput" class="cms-input-field" placeholder="Ou cole o link direto da imagem..." oninput="handleMediaUrlInput(event)">
+                    </div>
+
+                    <!-- Mídias Rápidas do Repositório para Seleção Rápida com 1 clique -->
+                    <div class="cms-quick-media-presets">
+                        <span class="cms-sublabel">Ou escolha uma mídia rápida do estúdio:</span>
+                        <div class="quick-media-chips">
+                            <button type="button" class="quick-chip" onclick="setPresetMedia('imagens/unique_soul_capa.png')">Capa Unique Soul</button>
+                            <button type="button" class="quick-chip" onclick="setPresetMedia('imagens/unique_soul_cenario.png')">Cenário Catedral</button>
+                            <button type="button" class="quick-chip" onclick="setPresetMedia('imagens/Qualquer_coisa_corpo_inteiro.png')">Mascote</button>
+                            <button type="button" class="quick-chip" onclick="setPresetMedia('imagens/preview.png')">Preview</button>
+                            <button type="button" class="quick-chip" onclick="setPresetMedia('imagens/Logo_colorida.png')">Logo Colorida</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lado Direito: Informações e Texto -->
+                <div class="cms-form-details-col">
+                    <div class="cms-form-group">
+                        <label for="postTitleInput" class="cms-form-label">Título da Publicação *</label>
+                        <input type="text" id="postTitleInput" class="cms-input-field" placeholder="Ex: Revelação de Cenário: Os Vitrais da Catedral" required>
+                    </div>
+
+                    <div class="cms-form-row">
+                        <div class="cms-form-group" style="flex:1;">
+                            <label for="postCategorySelect" class="cms-form-label">Categoria / Tag</label>
+                            <select id="postCategorySelect" class="cms-select-field">
+                                <option value="devlog">Devlog • Progresso</option>
+                                <option value="arte">Arte Conceitual</option>
+                                <option value="jogo">Destaque de Jogo</option>
+                                <option value="musica">Trilha Sonora</option>
+                                <option value="novidade">Anúncio Geral</option>
+                            </select>
+                        </div>
+
+                        <div class="cms-form-group" style="flex:1;">
+                            <label for="postAuthorSelect" class="cms-form-label">Autor da Postagem</label>
+                            <select id="postAuthorSelect" class="cms-select-field">
+                                <option value="Qualquer Coisa Rápido">Qualquer Coisa Rápido (Oficial)</option>
+                                <option value="Brenno">Brenno (Fundador / Dev)</option>
+                                <option value="Enzo">Enzo (Fundador / Game Design)</option>
+                                <option value="Iza">Iza (Fundadora / Arte)</option>
+                                <option value="João">João (Sound Design)</option>
+                                <option value="Maryssa">Maryssa (Roteiro / Arte)</option>
+                                <option value="Gustavo">Gustavo (Web / Suporte)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="cms-form-group">
+                        <label for="postCaptionTextarea" class="cms-form-label">Legenda / Texto da Publicação (Estilo Instagram) *</label>
+                        <textarea id="postCaptionTextarea" class="cms-textarea-field" rows="5" placeholder="Escreva aqui a descrição, novidades, detalhes do desenvolvimento, hashtags... Ex: Finalmente concluímos a paleta de cores dos vitrais góticos! O que acharam? #UniqueSoul #IndieDev" required></textarea>
+                    </div>
+
+                    <div class="cms-form-actions">
+                        <button type="button" class="btn-cms-cancel" onclick="closeCmsPostModal()">Cancelar</button>
+                        <button type="submit" class="btn-spotlight-play" id="cmsSubmitBtn">
+                            <i class="fas fa-check"></i> <span id="cmsSubmitBtnText">Publicar no Feed</span>
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div class="game-modal-overlay" id="cmsDeleteConfirmModal" aria-hidden="true" role="dialog">
+        <div class="game-modal-box" style="max-width:440px;padding:32px 28px;text-align:center;">
+            <i class="fas fa-exclamation-triangle" style="font-size:3rem;color:var(--yellow);margin-bottom:16px;"></i>
+            <h3 style="font-family:'Orbitron',sans-serif;color:#fff;margin-bottom:8px;">Excluir Publicação?</h3>
+            <p style="color:rgba(255,255,255,0.7);font-size:0.9rem;margin-bottom:24px;">Esta ação removerá a publicação do feed público do site imediatamente. Você tem certeza?</p>
+            <div style="display:flex;gap:12px;justify-content:center;">
+                <button type="button" class="btn-cms-cancel" onclick="closeDeleteConfirmModal()">Cancelar</button>
+                <button type="button" class="btn-cms-danger" id="confirmDeleteActionBtn">
+                    <i class="fas fa-trash"></i> Sim, Excluir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/script.js"></script>
+</body>
+</html>

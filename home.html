@@ -53,6 +53,10 @@
                             <i class="fas fa-users" aria-hidden="true"></i>
                             <span>Membros</span>
                         </a>
+                        <a href="cms.html" class="sidebar-link" title="Painel de Criação e Edição de Posts">
+                            <i class="fas fa-feather-alt" aria-hidden="true"></i>
+                            <span>Painel CMS</span>
+                        </a>
                     </nav>
 
                     <div class="fast-launch-section">
@@ -217,106 +221,39 @@
                     </div>
                 </section>
 
-                <!-- CATÁLOGO DE JOGOS & PROJETOS COM CAPINHAS (INSPIRADO NA SEÇÃO "GAMES WITH DISCOUNTS") -->
-                <section class="gamestore-catalog-section" aria-label="Catálogo de Jogos">
+                <!-- FEED DINÂMICO DE PUBLICAÇÕES (ESTILO INSTAGRAM GERENCIADO PELO CMS) -->
+                <section class="gamestore-catalog-section" aria-label="Feed de Publicações e Devlog">
                     <div class="catalog-header-bar">
                         <div class="catalog-title-group">
-                            <h3>NOSSOS JOGOS & PROJETOS</h3>
-                            <p>Clique em qualquer projeto para ver sinopse, mecânicas e artes exclusivas</p>
+                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                                <h3>FEED DE PUBLICAÇÕES & DEVLOG</h3>
+                                <span class="spotlight-cat" style="font-size:0.68rem;padding:3px 10px;"><i class="fas fa-broadcast-tower" style="color:var(--cyan);margin-right:4px;"></i> FEED AO VIVO</span>
+                            </div>
+                            <p>Novidades, artes conceituais e devlogs de Unique Soul. Curta, comente e acompanhe tudo!</p>
                         </div>
 
                         <div class="catalog-filter-tabs">
-                            <button type="button" class="catalog-tab active" data-filter="all">Todos</button>
-                            <button type="button" class="catalog-tab" data-filter="rpg">RPG</button>
-                            <button type="button" class="catalog-tab" data-filter="cenario">Cenários</button>
-                            <button type="button" class="catalog-tab" data-filter="acao">Ação</button>
-                            <button type="button" class="catalog-tab" data-filter="musica">Música</button>
+                            <button type="button" class="catalog-tab active" data-filter="all" onclick="filterFeedCategory('all', this)">Todas</button>
+                            <button type="button" class="catalog-tab" data-filter="devlog" onclick="filterFeedCategory('devlog', this)">Devlog</button>
+                            <button type="button" class="catalog-tab" data-filter="arte" onclick="filterFeedCategory('arte', this)">Artes</button>
+                            <button type="button" class="catalog-tab" data-filter="jogo" onclick="filterFeedCategory('jogo', this)">Jogos</button>
+                            <button type="button" class="catalog-tab" data-filter="musica" onclick="filterFeedCategory('musica', this)">Música</button>
                         </div>
                     </div>
 
-                    <!-- GRID DE CARDS COM AS CAPINHAS DOS JOGOS -->
-                    <div class="catalog-games-grid">
-                        
-                        <!-- CARD 1: UNIQUE SOUL (CAPA OFICIAL) -->
-                        <article class="catalog-game-card" data-category="rpg" onclick="openGameModal('unique-soul')">
-                            <div class="card-media-wrapper">
-                                <img src="imagens/unique_soul_capa.png" alt="Capa Oficial de Unique Soul" class="card-cover-img" loading="lazy">
-                                <span class="card-tag-badge">ALPHA 0.1</span>
-                                <button type="button" class="card-fav-btn" onclick="event.stopPropagation(); toggleWishlist('unique-soul', this);" title="Favoritar Unique Soul" aria-label="Favoritar">
-                                    <i class="fas fa-heart" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            <div class="card-content-block">
-                                <span class="card-genre-text">RPG / Investigação 2D</span>
-                                <h4 class="card-game-title">Unique Soul</h4>
-                                <p class="card-game-desc">O projeto principal do estúdio. Enfrente julgamentos e desvende os fragmentos de sua memória.</p>
-                                <div class="card-bottom-row">
-                                    <span class="card-status-pill"><i class="fas fa-circle" style="font-size:0.5rem;color:var(--cyan);vertical-align:middle;margin-right:4px;"></i> Em Produção</span>
-                                    <span class="card-action-btn"><i class="fas fa-info-circle"></i> Detalhes</span>
-                                </div>
-                            </div>
-                        </article>
+                    <!-- CONTAINER DO FEED DE POSTS DINÂMICOS ESTILO INSTAGRAM -->
+                    <div class="instagram-feed-container" id="homeFeedPosts">
+                        <!-- Renderizado dinamicamente via JS -->
+                    </div>
 
-                        <!-- CARD 2: A CATEDRAL DAS CORES -->
-                        <article class="catalog-game-card" data-category="cenario rpg" onclick="openGameModal('catedral-almas')">
-                            <div class="card-media-wrapper">
-                                <img src="imagens/unique_soul_cenario.png" alt="Cenário dos Vitrais" class="card-cover-img" loading="lazy">
-                                <span class="card-tag-badge" style="color:var(--cyan);">CENÁRIO</span>
-                                <button type="button" class="card-fav-btn" onclick="event.stopPropagation(); toggleWishlist('catedral-almas', this);" title="Favoritar Cenário" aria-label="Favoritar">
-                                    <i class="fas fa-heart" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            <div class="card-content-block">
-                                <span class="card-genre-text">Atmosfera & Lore</span>
-                                <h4 class="card-game-title">A Catedral das Cores</h4>
-                                <p class="card-game-desc">A arquitetura sacra dos vitrais góticos que representam a alma dos personagens.</p>
-                                <div class="card-bottom-row">
-                                    <span class="card-status-pill"><i class="fas fa-palette" style="color:var(--magenta);margin-right:4px;"></i> Arte Autoral</span>
-                                    <span class="card-action-btn"><i class="fas fa-info-circle"></i> Detalhes</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <!-- CARD 3: QUALQUER COISA QUEST -->
-                        <article class="catalog-game-card" data-category="acao" onclick="openGameModal('qualquer-coisa-quest')">
-                            <div class="card-media-wrapper" style="background:#1d0733;">
-                                <img src="imagens/Qualquer_coisa_corpo_inteiro.png" alt="Mascote Qualquer Coisa" class="card-cover-img" style="object-fit:contain;padding:12px;" loading="lazy">
-                                <span class="card-tag-badge" style="color:var(--magenta);">PROTÓTIPO</span>
-                                <button type="button" class="card-fav-btn" onclick="event.stopPropagation(); toggleWishlist('qualquer-coisa-quest', this);" title="Favoritar Mascote" aria-label="Favoritar">
-                                    <i class="fas fa-heart" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            <div class="card-content-block">
-                                <span class="card-genre-text">Ação / Roguelite 2D</span>
-                                <h4 class="card-game-title">Qualquer Coisa Quest</h4>
-                                <p class="card-game-desc">O mascote oficial em um desafio veloz com múltiplas habilidades e combos.</p>
-                                <div class="card-bottom-row">
-                                    <span class="card-status-pill"><i class="fas fa-gamepad" style="color:var(--yellow);margin-right:4px;"></i> Spin-off</span>
-                                    <span class="card-action-btn"><i class="fas fa-info-circle"></i> Detalhes</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <!-- CARD 4: UNIQUE SOUL SOUNDTRACK -->
-                        <article class="catalog-game-card" data-category="musica rpg" onclick="openGameModal('soundtrack')">
-                            <div class="card-media-wrapper">
-                                <img src="imagens/preview.png" alt="Trilha Sonora Unique Soul" class="card-cover-img" loading="lazy">
-                                <span class="card-tag-badge" style="color:#d8c2ff;">ÁUDIO</span>
-                                <button type="button" class="card-fav-btn" onclick="event.stopPropagation(); toggleWishlist('soundtrack', this);" title="Favoritar Trilha" aria-label="Favoritar">
-                                    <i class="fas fa-heart" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            <div class="card-content-block">
-                                <span class="card-genre-text">Sound Design & Músicas</span>
-                                <h4 class="card-game-title">Unique Soul: OST</h4>
-                                <p class="card-game-desc">Trilha sonora original composta para acompanhar a imersão e os combates da narrativa.</p>
-                                <div class="card-bottom-row">
-                                    <span class="card-status-pill"><i class="fas fa-music" style="color:var(--cyan);margin-right:4px;"></i> Em Produção</span>
-                                    <span class="card-action-btn"><i class="fas fa-info-circle"></i> Detalhes</span>
-                                </div>
-                            </div>
-                        </article>
-
+                    <!-- ESTADO VAZIO CASO NENHUM POST EXISTA -->
+                    <div class="cms-empty-state" id="feedEmptyState" style="display: none;">
+                        <i class="fas fa-feather-alt"></i>
+                        <h4>Nenhuma publicação encontrada</h4>
+                        <p>Fique de olho! Em breve novas artes conceituais e novidades de Unique Soul serão postadas aqui.</p>
+                        <a href="cms.html" class="btn-spotlight-play" style="display:inline-flex;align-items:center;gap:8px;">
+                            <i class="fas fa-plus-circle"></i> Criar Nova Publicação no CMS
+                        </a>
                     </div>
                 </section>
                 </div> <!-- Fim de #view-home -->

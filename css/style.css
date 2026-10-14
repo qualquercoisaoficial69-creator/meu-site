@@ -3572,4 +3572,884 @@ html, body {
     }
 }
 
+/* ============================================================
+   17. ESTILOS DO FEED DE PUBLICAÇÕES (ESTILO INSTAGRAM) & CMS STUDIO
+   ============================================================ */
+
+/* --- FEED DE PUBLICAÇÕES (home.html) --- */
+.instagram-feed-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 24px;
+    width: 100%;
+}
+
+.instagram-post-card {
+    background: rgba(22, 6, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 22px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.instagram-post-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 255, 255, 0.15);
+}
+
+/* Header do Post */
+.ig-post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(15, 3, 28, 0.6);
+}
+
+.ig-author-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ig-author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.ig-author-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.ig-author-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ig-author-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.verified-badge {
+    color: var(--cyan);
+    font-size: 0.8rem;
+}
+
+.ig-post-info-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.ig-post-category-tag {
+    background: rgba(0, 255, 255, 0.12);
+    color: var(--cyan);
+    padding: 1px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+}
+
+.ig-bullet {
+    opacity: 0.5;
+}
+
+/* Menu de 3 Pontinhos e Dropdown */
+.ig-post-menu-wrap {
+    position: relative;
+}
+
+.ig-more-options-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.ig-more-options-btn:hover {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.ig-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #18062b;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    display: none;
+    flex-direction: column;
+    min-width: 170px;
+    z-index: 50;
+    overflow: hidden;
+}
+
+.ig-dropdown-menu.show {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+}
+
+.ig-dropdown-menu a,
+.ig-dropdown-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: background 0.2s ease;
+}
+
+.ig-dropdown-menu a:hover,
+.ig-dropdown-menu button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+}
+
+.ig-dropdown-menu .ig-delete-item {
+    color: #ff4d6d;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ig-dropdown-menu .ig-delete-item:hover {
+    background: rgba(255, 77, 109, 0.15);
+    color: #ff3366;
+}
+
+/* Mídia da Publicação */
+.ig-media-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: #0d0118;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.ig-media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.instagram-post-card:hover .ig-media-img {
+    transform: scale(1.02);
+}
+
+/* Animação de coração duplo toque (estilo Instagram) */
+.ig-heart-pop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    color: #ff3366;
+    font-size: 5rem;
+    opacity: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 0 25px rgba(255, 51, 102, 0.8));
+    z-index: 10;
+}
+
+.ig-heart-pop.pop {
+    animation: igHeartPop 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes igHeartPop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    40% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    70% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+    100% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+}
+
+/* Barra de Ações (Curtir, Comentar, Salvar) */
+.ig-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px 6px;
+}
+
+.ig-actions-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ig-action-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.ig-action-btn:hover {
+    transform: scale(1.15);
+    color: var(--cyan);
+}
+
+.ig-action-btn.like-btn.liked {
+    color: #ff3366;
+    animation: heartBounce 0.3s ease;
+}
+
+@keyframes heartBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+.ig-action-btn.bookmark-btn.bookmarked {
+    color: var(--yellow);
+}
+
+/* Linha de Curtidas */
+.ig-likes-row {
+    padding: 0 18px 6px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--white);
+}
+
+/* Título e Legenda com Hashtags */
+.ig-caption-block {
+    padding: 0 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ig-post-headline {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+}
+
+.ig-caption-text {
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.82);
+    white-space: pre-line;
+}
+
+.post-hashtag {
+    color: var(--cyan);
+    font-weight: 700;
+}
+
+/* --- ESTILOS DO CMS CREATOR STUDIO (cms.html) --- */
+.cms-studio-body {
+    background: radial-gradient(ellipse at 50% 10%, #350c5a 0%, #17042b 60%, #0d0118 100%) !important;
+}
+
+.btn-cms-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--cyan), #00bbcc);
+    color: #080112;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    padding: 10px 18px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+    transition: all 0.25s ease;
+}
+
+.btn-cms-new:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.6);
+}
+
+.cms-dashboard-header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cms-hero-banner {
+    background: radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.15) 0%, rgba(45, 10, 78, 0.8) 100%), #140428;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 22px;
+    padding: 32px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.cms-hero-text h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 900;
+    color: var(--white);
+    margin: 8px 0;
+}
+
+.cms-hero-text h2 span {
+    color: var(--cyan);
+}
+
+.cms-hero-text p {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+}
+
+.cms-stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.cms-stat-item {
+    background: rgba(25, 7, 44, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.cms-stat-item i {
+    font-size: 1.8rem;
+    color: var(--cyan);
+}
+
+.cms-stat-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--white);
+    display: block;
+    line-height: 1.1;
+}
+
+.cms-stat-lbl {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 600;
+}
+
+/* Seção de Gerenciamento de Posts */
+.cms-posts-manager-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cms-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cms-filter-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cms-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.cms-post-item-card {
+    background: rgba(22, 6, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.cms-post-item-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 255, 255, 0.35);
+}
+
+.cms-card-thumb-wrap {
+    position: relative;
+    width: 100%;
+    height: 170px;
+    background: #0d0118;
+    overflow: hidden;
+}
+
+.cms-card-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cms-card-info {
+    padding: 16px 18px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.cms-meta-date {
+    font-size: 0.72rem;
+    color: var(--yellow);
+    font-weight: 600;
+}
+
+.cms-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.3;
+}
+
+.cms-card-snippet {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.45;
+}
+
+.cms-card-stats-row {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 4px;
+}
+
+.cms-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    background: rgba(15, 3, 28, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btn-cms-edit {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: rgba(0, 255, 255, 0.12);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cms-edit:hover {
+    background: var(--cyan);
+    color: #080112;
+}
+
+.btn-cms-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: rgba(255, 77, 109, 0.12);
+    border: 1px solid #ff4d6d;
+    color: #ff4d6d;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cms-delete:hover {
+    background: #ff4d6d;
+    color: #fff;
+}
+
+.btn-cms-view {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-cms-view:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Modal Form Styles */
+.cms-modal-box {
+    max-width: 900px !important;
+    padding: 32px 36px !important;
+}
+
+.cms-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cms-modal-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cms-modal-title-wrap h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--white);
+}
+
+.cms-form-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 28px;
+}
+
+.cms-form-media-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cms-media-preview-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 11;
+    background: #0d0118;
+    border: 2px dashed rgba(0, 255, 255, 0.4);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cms-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cms-media-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 1, 24, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    color: var(--white);
+}
+
+.cms-media-preview-box:hover .cms-media-overlay {
+    opacity: 1;
+}
+
+.cms-media-overlay i {
+    font-size: 2rem;
+    color: var(--cyan);
+}
+
+.cms-media-overlay span {
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.cms-media-overlay small {
+    font-size: 0.68rem;
+    opacity: 0.7;
+}
+
+.cms-url-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cms-input-icon {
+    position: absolute;
+    left: 14px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+}
+
+.cms-input-field,
+.cms-select-field,
+.cms-textarea-field {
+    width: 100%;
+    background: rgba(15, 3, 28, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cms-url-input-wrap .cms-input-field {
+    padding-left: 40px;
+    font-size: 0.8rem;
+}
+
+.cms-input-field:focus,
+.cms-select-field:focus,
+.cms-textarea-field:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);
+    background: rgba(15, 3, 28, 0.95);
+}
+
+.cms-select-field {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+.cms-select-field option {
+    background: #19062e;
+    color: #fff;
+}
+
+.cms-quick-media-presets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.cms-sublabel {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+}
+
+.quick-media-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.quick-chip {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-chip:hover {
+    background: rgba(0, 255, 255, 0.15);
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.cms-form-details-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cms-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cms-form-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
+}
+
+.cms-form-row {
+    display: flex;
+    gap: 14px;
+}
+
+.cms-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btn-cms-cancel {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.85);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cms-cancel:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.btn-cms-danger {
+    background: #ff3366;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cms-danger:hover {
+    background: #e61c50;
+    transform: translateY(-2px);
+}
+
+/* Estado Vazio */
+.cms-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(20, 5, 36, 0.6);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 22px;
+    gap: 12px;
+}
+
+.cms-empty-state i {
+    font-size: 3rem;
+    color: rgba(0, 255, 255, 0.4);
+}
+
+.cms-empty-state h4 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: var(--white);
+}
+
+.cms-empty-state p {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 440px;
+    margin-bottom: 8px;
+}
+
+/* Responsividade do CMS e Feed */
+@media (max-width: 768px) {
+    .instagram-feed-container {
+        grid-template-columns: 1fr;
+        max-width: 540px;
+        margin: 0 auto;
+    }
+
+    .cms-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cms-hero-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cms-form-row {
+        flex-direction: column;
+    }
+
+    .cms-modal-box {
+        padding: 24px 18px !important;
+    }
+}
+
+
 
