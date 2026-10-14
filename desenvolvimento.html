@@ -4,65 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Em Desenvolvimento | Qualquer Coisa Rápido</title>
+    <meta name="description" content="Página temporária da Qualquer Coisa Rápido para recursos e conteúdos que ainda estão em desenvolvimento.">
+    <meta name="theme-color" content="#2d0a4e">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Em Desenvolvimento | Qualquer Coisa Rápido">
+    <meta property="og:description" content="Novidades da Qualquer Coisa Rápido e de Unique Soul chegarão em breve.">
+    <meta property="og:image" content="imagens/preview.png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/desenvolvimento.css">
     
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght=400;700&family=Orbitron:wght=700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="imagens/logo-s.png">
-
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="icon" type="image/png" href="imagens/favicon.png">
+    <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
 
     <header class="main-header">
         <div class="header-content">
-            <a href="#" class="logo-wrapper theme-btn-trigger" id="themeToggle" onclick="return false;">
-                <img src="imagens/logo-s.png" alt="Logo" class="main-logo">
+            <a href="home.html" class="logo-wrapper" aria-label="Ir para o início">
+                <img src="imagens/Logo_colorida.png" alt="Logo da Qualquer Coisa Rápido" class="main-logo">
                 <h1 class="site-name">Qualquer Coisa <span>Rápido</span></h1>
             </a>
             
-            <nav class="top-nav">
-                <ul>
-                    <li>
-                        <a href="home.html">
-                            <i class="fas fa-home"></i><span>Início</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="jogo.html">
-                            <i class="fas fa-gamepad"></i><span>Nosso Jogo</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="membros.html">
-                            <i class="fas fa-users"></i><span>Membros</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="apoie.html" class="nav-apoie">
-                            <i class="fas fa-heart"></i><span>Apoie-nos</span>
-                        </a>
-                    </li>
-                <li class="google-auth-item">
-                    <div id="g_id_onload"
-                        data-client_id="826067624292-nqa43nnrhurekir5nhkrr0ti0jt7lbur.apps.googleusercontent.com"
-                        data-callback="handleCredentialResponse"
-                        data-auto_prompt="false">
-                    </div>
-                    <div id="google-btn-container">
-                        <div class="g_id_signin" data-type="icon" data-size="large"></div>
-                    </div>
-                </li>
-                </ul>
-            </nav>
+            <div class="header-actions">
+                <nav class="top-nav" aria-label="Navegação principal">
+                    <ul>
+                        <li>
+                            <a href="home.html">
+                                <i class="fas fa-home" aria-hidden="true"></i><span>Início</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="jogo.html">
+                                <i class="fas fa-gamepad" aria-hidden="true"></i><span>Jogos</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="sobre.html">
+                                <i class="fas fa-info-circle" aria-hidden="true"></i><span>Sobre Nós</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="membros.html">
+                                <i class="fas fa-users" aria-hidden="true"></i><span>Membros</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <button type="button" class="theme-btn" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                </button>
+            </div>
         </div>
     </header>
 
     <main class="main-container single-column">
         <section class="dev-page">
             <div class="dev-icon">
-                <i class="fas fa-tools"></i>
+                <i class="fas fa-tools" aria-hidden="true"></i>
             </div>
             <h1>Página em <span>Desenvolvimento</span></h1>
             <p>Estamos trabalhando duro para trazer essa funcionalidade o mais rápido possível. Em breve, você poderá apoiar o projeto <strong>Unique Soul</strong> diretamente por aqui!</p>
@@ -75,7 +75,7 @@
                 <span class="percentage">75% concluído</span>
             </div>
 
-            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Voltar para o Início</a>
+            <a href="home.html" class="back-btn"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar para o Início</a>
         </section>
     </main>
 

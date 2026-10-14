@@ -3,49 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo | Qualquer Coisa Rápido</title>
-    <link rel="stylesheet" href="css/style.css"> 
-    
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght=400;700&family=Orbitron:wght=700;900&display=swap" rel="stylesheet">
+    <title>Qualquer Coisa Rápido | Estúdio Indie</title>
+    <meta name="description" content="Site oficial da Qualquer Coisa Rápido, estúdio indie por trás do jogo Unique Soul.">
+    <meta name="theme-color" content="#2d0a4e">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Qualquer Coisa Rápido | Estúdio Indie">
+    <meta property="og:description" content="Conheça o estúdio indie Qualquer Coisa Rápido e acompanhe o desenvolvimento de Unique Soul.">
+    <meta property="og:image" content="imagens/preview.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="icon" type="image/png" href="imagens/favicon.png">
+    <link rel="shortcut icon" href="favicon.ico">
 </head>
-<body class="welcome-page-body">
+<body class="splash-body">
 
-    <div class="login-card">
-        <h1 id="card-title">Acessar <span>Painel</span></h1>
-        <p id="card-desc">Conecte sua conta para acessar o Unique Soul.</p>
-
-        <div id="g_id_onload"
-             data-client_id="826067624292-nqa43nnrhurekir5nhkrr0ti0jt7lbur.apps.googleusercontent.com"
-             data-callback="handleGoogleLogin"
-             data-auto_prompt="false">
-        </div>
-
-        <form class="auth-form" id="authForm" onsubmit="handleEmailAuth(event)">
-            <div class="input-group">
-                <input type="email" id="email" placeholder="Seu e-mail" required>
-                <i class="fas fa-envelope"></i>
-            </div>
-            
-            <div class="input-group">
-                <input type="password" id="password" placeholder="Sua senha" required>
-                <i class="fas fa-lock"></i>
-            </div>
-            
-            <button type="submit" class="btn-submit" id="submitBtn">ENTRAR NO SITE</button>
-            
-            <button type="button" class="toggle-form-btn" id="toggleFormBtn" onclick="toggleFormMode()">Não tem conta? Cadastre-se</button>
-        </form>
-
-        <div class="divider">ou</div>
-
-        <div class="google-btn-wrapper">
-            <div class="g_id_signin" data-type="icon" data-size="large" data-shape="circle"></div>
+    <!-- Tela de Carregamento: Logo com Spinner -->
+    <div class="site-intro" id="siteIntro" aria-live="polite" aria-label="Carregando Qualquer Coisa Rápido">
+        <div class="intro-loading-stage" data-intro-loading-stage>
+            <img src="imagens/Logo_colorida.png" alt="Logo da Qualquer Coisa Rápido" class="intro-loading-logo">
+            <div class="intro-spinner" aria-hidden="true"></div>
+            <p class="intro-loading-text">Carregando...</p>
         </div>
     </div>
 
-    <script type="module" src="scripts/script.js"></script>
+    <!-- Tela com Logo e Botão Press for Start -->
+    <main class="splash-container">
+        <div class="splash-card">
+            <div class="splash-logo">
+                <img src="imagens/Logo_colorida.png" alt="Logo da Qualquer Coisa Rápido" class="splash-logo-img">
+            </div>
+
+            <h1 class="splash-title">Qualquer Coisa <span>Rápido</span></h1>
+            <p class="splash-subtitle">Estúdio Indie de Games</p>
+
+            <div class="splash-divider"></div>
+
+            <a href="home.html" class="btn-start" aria-label="Entrar no site da Qualquer Coisa Rápido">
+                <i class="fas fa-play" aria-hidden="true"></i> PRESS FOR START
+            </a>
+        </div>
+    </main>
+
+    <script src="scripts/script.js"></script>
 </body>
 </html>

@@ -4,55 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipe | Unique Soul</title>
+    <meta name="description" content="Conheça os membros da Qualquer Coisa Rápido, equipe indie responsável pelo desenvolvimento de Unique Soul.">
+    <meta name="theme-color" content="#2d0a4e">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Equipe | Qualquer Coisa Rápido">
+    <meta property="og:description" content="Brenno, Enzo, Iza, João, Gustavo e Maryssa criando Unique Soul.">
+    <meta property="og:image" content="imagens/preview.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="imagens/favicon.png">
+    <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
 
     <header class="main-header">
         <div class="header-content">
-            <a href="#" class="logo-wrapper theme-btn-trigger" id="themeToggle" onclick="return false;">
-                <img src="imagens/logo-s.png" alt="Logo" class="main-logo">
+            <a href="home.html" class="logo-wrapper" aria-label="Ir para o início">
+                <img src="imagens/Logo_colorida.png" alt="Logo da Qualquer Coisa Rápido" class="main-logo">
                 <h1 class="site-name">Qualquer Coisa <span>Rápido</span></h1>
             </a>
             
-            <nav class="top-nav">
-                <ul>
-                    <li>
-                        <a href="home.html">
-                            <i class="fas fa-home"></i><span>Início</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="jogo.html">
-                            <i class="fas fa-gamepad"></i><span>Nosso Jogo</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="membros.html">
-                            <i class="fas fa-users"></i><span>Membros</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="apoie.html" class="nav-apoie">
-                            <i class="fas fa-heart"></i><span>Apoie-nos</span>
-                        </a>
-                    </li>
-                    <li class="google-auth-item">
-                        <div id="g_id_onload"
-                             data-client_id="826067624292-nqa43nnrhurekir5nhkrr0ti0jt7lbur.apps.googleusercontent.com"
-                             data-callback="handleCredentialResponse"
-                             data-auto_prompt="false">
-                        </div>
-                        <div id="google-btn-container">
-                            <div class="g_id_signin" data-type="icon" data-size="large"></div>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
+            <div class="header-actions">
+                <nav class="top-nav" aria-label="Navegação principal">
+                    <ul>
+                        <li>
+                            <a href="home.html">
+                                <i class="fas fa-home" aria-hidden="true"></i><span>Início</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="jogo.html">
+                                <i class="fas fa-gamepad" aria-hidden="true"></i><span>Jogos</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="sobre.html">
+                                <i class="fas fa-info-circle" aria-hidden="true"></i><span>Sobre Nós</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="membros.html" class="active" aria-current="page">
+                                <i class="fas fa-users" aria-hidden="true"></i><span>Membros</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <button type="button" class="theme-btn" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -68,11 +70,11 @@
                         <p>Desenvolvedor Full Stack</p>
                     </div>
                 </div>
-                <img src="imagens/icon brenno.jpeg" class="character-ilus" alt="Ilustração Brenno">
+                <img src="imagens/brenno-icon.jpeg" class="character-ilus" alt="Retrato de Brenno" loading="lazy" decoding="async">
             </div>
 
             <div class="member-banner" style="--accent: var(--rosa);">
-                <div class="member-bg" style="background-image: url('imagens/niggar.jpg');"></div>
+                <div class="member-bg" style="background-image: url('imagens/enzo-bg.jpg');"></div>
                 <div class="member-content">
                     <div class="member-info">
                         <span class="member-id">02</span>
@@ -80,7 +82,7 @@
                         <p>Programador</p>
                     </div>
                 </div>
-                <img src="imagens/en.jpg" class="character-ilus" alt="Ilustração Enzo">
+                <img src="imagens/en.jpg" class="character-ilus" alt="Retrato de Enzo" loading="lazy" decoding="async">
             </div>
 
             <div class="member-banner" style="--accent: var(--azul);">
@@ -89,10 +91,10 @@
                     <div class="member-info">
                         <span class="member-id">03</span>
                         <h3>Gustavo</h3>
-                        <p>Desenvolvedor de mecancas & Programador</p>
+                        <p>Desenvolvedor de mecânicas & Programador</p>
                     </div>
                 </div>
-                <img src="imagens/gus.jpg" class="character-ilus" alt="Ilustração Gustavo">
+                <img src="imagens/gus.jpg" class="character-ilus" alt="Retrato de Gustavo" loading="lazy" decoding="async">
             </div>
 
             <div class="member-banner" style="--accent: var(--verde);">
@@ -104,19 +106,19 @@
                         <p>Artes Visuais & Cenários</p>
                     </div>
                 </div>
-                <img src="imagens/iz.jpg" class="character-ilus" alt="Ilustração Iza">
+                <img src="imagens/iz.jpg" class="character-ilus" alt="Retrato de Iza" loading="lazy" decoding="async">
             </div>
 
             <div class="member-banner" style="--accent: var(--laranja);">
-                <div class="member-bg" style="background-image: url('imagens/joão.jpg');"></div>
+                <div class="member-bg" style="background-image: url('imagens/joao-banner.jpg');"></div>
                 <div class="member-content">
                     <div class="member-info">
                         <span class="member-id">05</span>
                         <h3>João</h3>
-                        <p>Sonorização, Sound Design, programador & Trilhas sonoras</p>
+                        <p>Sonorização, Sound Design, Programador & Trilhas sonoras</p>
                     </div>
                 </div>
-                <img src="imagens/jo.jpg" class="character-ilus" alt="Ilustração João">
+                <img src="imagens/jo.jpg" class="character-ilus" alt="Retrato de João" loading="lazy" decoding="async">
             </div>
 
             <div class="member-banner" style="--accent: var(--vermelho);">
@@ -128,7 +130,7 @@
                         <p>Artes Visuais, Cenários, Roteirista, Sound Design & Social Media</p>
                     </div>
                 </div>
-                <img src="imagens/ma.jpg" class="character-ilus" alt="Ilustração Maryssa">
+                <img src="imagens/ma.jpg" class="character-ilus" alt="Retrato de Maryssa" loading="lazy" decoding="async">
             </div>
 
         </div>
@@ -138,7 +140,7 @@
         <div class="footer-container">
             
             <div class="footer-info-block">
-                <img src="imagens/logo-s.png" alt="Logo" class="footer-logo">
+                <img src="imagens/Logo_colorida.png" alt="Logo da Qualquer Coisa Rápido" class="footer-logo" loading="lazy" decoding="async">
                 <div class="footer-text">
                     <h3>Qualquer Coisa <span>Rápido</span></h3>
                     <p>Criando experiências únicas através do código e da arte.</p>
@@ -148,14 +150,14 @@
             <div class="footer-social-block">
                 <h4>Redes Sociais</h4>
                 <div class="social-btns">
-                    <a href="https://discord.gg/qrk3CjQ5HF" class="social-btn discord"><i class="fab fa-discord"></i> Discord</a>
-                    <a href="https://www.instagram.com/qualquer_coisas_oficial/" class="social-btn instagram"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="desenvolvimento.html" class="social-btn twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="https://discord.gg/qrk3CjQ5HF" target="_blank" rel="noopener noreferrer" class="social-btn discord"><i class="fab fa-discord" aria-hidden="true"></i> Discord</a>
+                    <a href="https://www.instagram.com/qualquer_coisas_oficial/" target="_blank" rel="noopener noreferrer" class="social-btn instagram"><i class="fab fa-instagram" aria-hidden="true"></i> Instagram</a>
+                    <span class="social-btn twitter social-btn-disabled" aria-disabled="true" title="Twitter em breve"><i class="fab fa-twitter" aria-hidden="true"></i> Twitter em breve</span>
                 </div>
             </div> </div>
     
         <div class="footer-bottom">
-            <p>&copy; 2026 Qualquer Coisa Rápido. Site criado por <a href="#" class="highlight-link">Brenno</a>. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Qualquer Coisa Rápido. Site criado por <a href="https://www.instagram.com/b.h_18_01/" target="_blank" rel="noopener noreferrer" class="highlight-link">Brenno</a>. Todos os direitos reservados.</p>
         </div>
     </footer>
 
