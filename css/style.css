@@ -2489,87 +2489,7 @@ html {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ============================================================
-   RESPONSIVIDADE GAMESTORE
-   ============================================================ */
-@media (max-width: 1024px) {
-    .gamestore-window {
-        grid-template-columns: 220px 1fr;
-    }
 
-    .fanned-carousel {
-        height: 340px;
-    }
-
-    .fanned-card {
-        height: 310px;
-    }
-}
-
-@media (max-width: 700px) {
-    .gamestore-window {
-        grid-template-columns: 1fr;
-        border-radius: 20px;
-    }
-
-    .gamestore-sidebar {
-        display: none;
-    }
-
-    .gamestore-sidebar.mobile-open {
-        display: flex;
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        overflow-y: auto;
-    }
-
-    .mobile-sidebar-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .gamestore-main {
-        padding: 20px 16px 30px;
-    }
-
-    .fanned-card.card-prev {
-        transform: translateX(-60px) scale(0.85) translateZ(-40px);
-        opacity: 0.35;
-    }
-
-    .fanned-card.card-next {
-        transform: translateX(60px) scale(0.85) translateZ(-40px);
-        opacity: 0.35;
-    }
-
-    .fanned-card-overlay {
-        padding: 20px;
-    }
-
-    .spotlight-title {
-        font-size: 1.4rem;
-    }
-
-    .modal-body {
-        padding: 0 20px 24px;
-    }
-
-    .about-story-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .about-store-hero {
-        flex-direction: column;
-        padding: 30px 24px;
-        text-align: center;
-    }
-
-    .about-store-badge {
-        margin: 0 auto;
-    }
-}
 
 /* ============================================================
    15. ESTILOS DO SOBRE NÓS NO PADRÃO GAMESTORE
@@ -2945,6 +2865,646 @@ html {
     margin-top: 8px;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+/* ============================================================
+   16. ARQUITETURA MESTRA DE RESPONSIVIDADE GAMESTORE & SITE
+   Suporte Completo: Desktop, Laptops, Tablets, Celulares & Telas Pequenas
+   ============================================================ */
+
+/* --- BACKDROP MOBILE E CONTROLE DE SCROLL --- */
+.sidebar-mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 2, 16, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-mobile-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body.mobile-drawer-open {
+    overflow: hidden !important;
+}
+
+.sidebar-mobile-close-btn {
+    display: none;
+}
+
+/* --- REFINAMENTOS FLUIDOS GERAIS --- */
+html, body {
+    max-width: 100vw;
+    overflow-x: clip;
+}
+
+.gamestore-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ============================================================
+   BREAKPOINT: LAPTOPS & TELAS MÉDIAS (<= 1200px)
+   ============================================================ */
+@media (max-width: 1200px) {
+    .gamestore-wrapper {
+        padding: 0 16px 36px;
+        margin: 20px auto;
+    }
+
+    .fanned-carousel {
+        height: 360px;
+    }
+
+    .fanned-card {
+        height: 330px;
+        width: min(580px, 88%);
+    }
+
+    .catalog-games-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 18px;
+    }
+}
+
+/* ============================================================
+   BREAKPOINT: TABLETS EM LANDSCAPE & LAPTOPS PEQUENOS (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+    .gamestore-window {
+        grid-template-columns: 220px 1fr;
+    }
+
+    .gamestore-sidebar {
+        width: 220px;
+        padding: 22px 16px;
+    }
+
+    .fanned-carousel {
+        height: 350px;
+    }
+
+    .fanned-card {
+        height: 320px;
+    }
+
+    .about-store-hero {
+        padding: 34px 28px;
+    }
+
+    .about-store-hero-mascot {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+/* ============================================================
+   BREAKPOINT: TABLETS EM PORTRAIT & PHABLETS (<= 860px)
+   A Sidebar se transforma na Gaveta Mobile Off-Canvas de Vidro
+   ============================================================ */
+@media (max-width: 860px) {
+    .gamestore-window {
+        display: flex;
+        flex-direction: column;
+        border-radius: 22px;
+        min-height: auto;
+    }
+
+    /* Sidebar vira gaveta retrátil suave que desliza da esquerda */
+    .gamestore-sidebar {
+        display: flex;
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: min(320px, 86vw);
+        height: 100vh;
+        max-height: 100vh;
+        z-index: 9999;
+        border-radius: 0 24px 24px 0;
+        border-left: none;
+        border-right: 1px solid rgba(0, 255, 255, 0.3);
+        transform: translateX(-105%);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+        box-shadow: 25px 0 70px rgba(0, 0, 0, 0.85);
+        background: rgba(14, 3, 26, 0.98);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        overflow-y: auto;
+        padding: 26px 20px 36px;
+        top: 0;
+    }
+
+    .gamestore-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    /* Botão X para fechar a gaveta no mobile */
+    .gamestore-sidebar .sidebar-mobile-close-btn {
+        display: flex;
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--white);
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.2s ease;
+    }
+
+    .gamestore-sidebar .sidebar-mobile-close-btn:hover {
+        background: var(--magenta);
+        border-color: var(--magenta);
+        transform: scale(1.08);
+    }
+
+    /* Botão Hambúrguer visível na Topbar */
+    .mobile-sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        color: var(--white);
+        font-size: 1.2rem;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+    }
+
+    .mobile-sidebar-toggle:hover {
+        background: rgba(0, 255, 255, 0.15);
+        color: var(--cyan);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    }
+
+    .gamestore-main {
+        padding: 22px 20px 34px;
+        gap: 26px;
+    }
+
+    /* Topbar compacta e fluida */
+    .gamestore-topbar {
+        gap: 12px;
+    }
+
+    .topbar-search-wrapper {
+        max-width: none;
+        flex: 1;
+        min-width: 140px;
+    }
+
+    /* Carrossel 3D Adaptado */
+    .fanned-carousel {
+        height: 360px;
+    }
+
+    .fanned-card {
+        width: min(600px, 92%);
+        height: 330px;
+    }
+
+    .fanned-card.card-prev {
+        transform: translateX(-40px) scale(0.88) translateZ(-30px);
+        opacity: 0.3;
+    }
+
+    .fanned-card.card-next {
+        transform: translateX(40px) scale(0.88) translateZ(-30px);
+        opacity: 0.3;
+    }
+
+    .fanned-card-overlay {
+        padding: 24px 22px;
+    }
+
+    .spotlight-title {
+        font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    }
+
+    .spotlight-desc {
+        font-size: 0.88rem;
+        line-height: 1.45;
+    }
+
+    /* Catálogo em 2 colunas */
+    .catalog-games-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    /* Seção Sobre Nós */
+    .about-story-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .about-store-hero {
+        flex-direction: column;
+        padding: 30px 24px;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .about-store-badge {
+        margin: 0 auto;
+    }
+
+    .about-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .founders-grid-store {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .skills-matrix-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================================
+   BREAKPOINT: SMARTPHONES PADRÃO & GRANDES (<= 640px)
+   ============================================================ */
+@media (max-width: 640px) {
+    .gamestore-wrapper {
+        margin: 10px auto;
+        padding: 0 10px 24px;
+    }
+
+    .gamestore-window {
+        border-radius: 18px;
+    }
+
+    .gamestore-main {
+        padding: 16px 12px 28px;
+        gap: 22px;
+    }
+
+    /* Topbar: ícones organizados e legíveis */
+    .topbar-actions {
+        gap: 8px;
+    }
+
+    .topbar-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+
+    .topbar-profile {
+        padding: 4px 10px 4px 4px;
+        gap: 6px;
+    }
+
+    .topbar-profile .profile-name {
+        font-size: 0.75rem;
+    }
+
+    /* Carrossel 100% largura para leitura perfeita em celulares */
+    .fanned-carousel {
+        height: 380px;
+    }
+
+    .fanned-card {
+        width: 100% !important;
+        height: 350px;
+        border-radius: 20px;
+    }
+
+    .fanned-card.card-prev,
+    .fanned-card.card-next {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.92) translateZ(-40px);
+    }
+
+    .fanned-card-overlay {
+        padding: 20px 16px;
+        gap: 8px;
+    }
+
+    .spotlight-title {
+        font-size: 1.35rem;
+        line-height: 1.15;
+    }
+
+    .spotlight-desc {
+        font-size: 0.82rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .spotlight-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .btn-spotlight-play {
+        font-size: 0.78rem;
+        padding: 10px 18px;
+        flex: 1;
+        justify-content: center;
+        min-width: 130px;
+    }
+
+    .btn-spotlight-details {
+        font-size: 0.74rem;
+        padding: 10px 14px;
+    }
+
+    .btn-spotlight-heart {
+        width: 38px;
+        height: 38px;
+    }
+
+    .carousel-nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+    }
+
+    /* Barra de filtros com rolagem suave horizontal (Touch friendly) */
+    .catalog-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .catalog-filter-tabs {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .catalog-filter-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .catalog-tab {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 6px 14px;
+        font-size: 0.75rem;
+    }
+
+    /* Modal estilo Bottom-Sheet moderno no celular */
+    .game-modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .game-modal-box {
+        max-width: 100%;
+        width: 100%;
+        max-height: 92vh;
+        border-radius: 24px 24px 0 0;
+        border-bottom: none;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-banner {
+        height: 180px;
+    }
+
+    .modal-body {
+        padding: 0 16px 24px;
+        margin-top: -45px;
+        gap: 16px;
+    }
+
+    .modal-cover-thumb {
+        width: 85px;
+        height: 115px;
+        border-radius: 12px;
+    }
+
+    .modal-title {
+        font-size: 1.35rem;
+    }
+
+    .modal-mechanics-grid,
+    .modal-gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Fundadores e Cards Sobre Nós em 2 colunas */
+    .founders-grid-store {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .founder-avatar-circle {
+        width: 52px;
+        height: 52px;
+    }
+
+    .about-story-card {
+        padding: 22px 18px;
+    }
+
+    .about-manifesto-store {
+        padding: 26px 18px;
+    }
+
+    .about-manifesto-store h3 {
+        font-size: 1.2rem;
+    }
+
+    .about-manifesto-store p {
+        font-size: 0.92rem;
+    }
+}
+
+/* ============================================================
+   BREAKPOINT: SMARTPHONES PEQUENOS (<= 420px - iPhone SE, Galaxy Fold)
+   ============================================================ */
+@media (max-width: 420px) {
+    .gamestore-wrapper {
+        margin: 4px auto;
+        padding: 0 4px 16px;
+    }
+
+    .gamestore-window {
+        border-radius: 14px;
+    }
+
+    .gamestore-main {
+        padding: 14px 10px 22px;
+        gap: 18px;
+    }
+
+    /* Topbar ultra compacta */
+    .topbar-profile .profile-name {
+        display: none;
+    }
+
+    .topbar-profile {
+        padding: 3px;
+        border-radius: 50%;
+    }
+
+    .profile-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .topbar-search-input {
+        font-size: 0.8rem;
+        padding: 10px 12px 10px 38px;
+    }
+
+    .topbar-search-icon {
+        left: 14px;
+        font-size: 0.85rem;
+    }
+
+    /* Catálogo em 1 coluna super limpa ou 2 colunas fluidas */
+    .catalog-games-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .card-media-wrapper {
+        aspect-ratio: 16 / 10;
+    }
+
+    /* Carrossel */
+    .fanned-carousel {
+        height: 390px;
+    }
+
+    .fanned-card {
+        height: 360px;
+    }
+
+    .spotlight-title {
+        font-size: 1.25rem;
+    }
+
+    .btn-spotlight-play,
+    .btn-spotlight-details {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* Sobre Nós */
+    .about-store-hero-mascot {
+        width: 110px;
+        height: 110px;
+    }
+
+    .about-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .skills-matrix-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .founders-grid-store {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   RESPONSIVIDADE PARA PÁGINA DE MEMBROS (membros.html)
+   ============================================================ */
+@media (max-width: 768px) {
+    .member-banner {
+        overflow: hidden;
+        position: relative;
+        padding: 24px 20px;
+    }
+
+    .character-ilus {
+        max-height: 160px;
+        opacity: 0.35;
+        right: -15px;
+        bottom: 0;
+        filter: grayscale(20%);
+        pointer-events: none;
+    }
+
+    .member-info {
+        position: relative;
+        z-index: 2;
+        max-width: 85%;
+    }
+
+    .member-info h3 {
+        font-size: 1.4rem;
+    }
+
+    .member-info p {
+        font-size: 0.85rem;
+    }
+}
+
+/* ============================================================
+   RESPONSIVIDADE PARA PÁGINA DO JOGO (jogo.html - Inspetor)
+   ============================================================ */
+@media (max-width: 768px) {
+    .game-inspector-section > div:first-child {
+        height: 180px !important;
+    }
+
+    .game-inspector-section > div:last-child {
+        padding: 0 18px 24px !important;
+        margin-top: -45px !important;
+    }
+
+    #inspectorCover {
+        width: 95px !important;
+        height: 130px !important;
+    }
+
+    #inspectorTitle {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* ============================================================
+   OTIMIZAÇÕES DE TOQUE (TOUCH DEVICES - APPLE & ANDROID)
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+    .btn-spotlight-play:active,
+    .btn-spotlight-details:active,
+    .btn-spotlight-heart:active,
+    .topbar-btn:active,
+    .catalog-tab:active,
+    .catalog-game-card:active {
+        transform: scale(0.96) !important;
+        transition: transform 0.1s ease !important;
+    }
+
+    .fanned-card:hover {
+        transform: none;
+    }
 }
 
 

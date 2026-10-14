@@ -320,6 +320,36 @@ function initFannedCarousel() {
         });
     });
 
+    // Suporte a gestos de deslize por toque (Swipe Mobile)
+    const carouselElem = document.querySelector('.fanned-carousel-container') || document.querySelector('.fanned-carousel');
+    if (carouselElem) {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        carouselElem.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        carouselElem.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+
+            // Se o movimento horizontal for maior que o vertical e maior que 40px
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+                if (diffX < 0) {
+                    window.nextCarouselCard();
+                } else {
+                    window.prevCarouselCard();
+                }
+            }
+        }, { passive: true });
+    }
+
     updateCarousel();
 }
 
@@ -467,13 +497,41 @@ window.toggleWishlist = function(gameId, buttonElement) {
     updateWishlistBadge();
 };
 
-// --- TOGGLE SIDEBAR MOBILE ---
-window.toggleMobileSidebar = function() {
+// --- TOGGLE SIDEBAR MOBILE (COM BACKDROP E BLOQUEIO DE SCROLL) ---
+window.toggleMobileSidebar = function(forceState) {
     const sidebar = document.querySelector('.gamestore-sidebar');
-    if (sidebar) {
-        sidebar.classList.toggle('mobile-open');
+    if (!sidebar) return;
+
+    let backdrop = document.querySelector('.sidebar-mobile-backdrop');
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'sidebar-mobile-backdrop';
+        backdrop.setAttribute('aria-hidden', 'true');
+        backdrop.addEventListener('click', () => window.toggleMobileSidebar(false));
+        document.body.appendChild(backdrop);
+    }
+
+    const isCurrentlyOpen = sidebar.classList.contains('mobile-open');
+    const shouldOpen = typeof forceState === 'boolean' ? forceState : !isCurrentlyOpen;
+
+    if (shouldOpen) {
+        sidebar.classList.add('mobile-open');
+        backdrop.classList.add('active');
+        document.body.classList.add('mobile-drawer-open');
+    } else {
+        sidebar.classList.remove('mobile-open');
+        backdrop.classList.remove('active');
+        document.body.classList.remove('mobile-drawer-open');
     }
 };
+
+// Fecha gaveta ou modal com tecla ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        window.toggleMobileSidebar(false);
+        window.closeGameModal();
+    }
+});
 
 // --- TROCA DE VISUALIZAÇÃO INTERNA (INÍCIO / CATÁLOGO / SOBRE NÓS) ---
 window.switchGameStoreView = function(viewName, event) {
@@ -523,8 +581,8 @@ function initMorphingSidebar() {
     sidebar.addEventListener('mouseleave', () => { isHovered = false; });
 
     window.addEventListener('scroll', () => {
-        // Ignora apenas no mobile estrito (< 700px)
-        if (window.innerWidth <= 700) {
+        // Ignora em tablets e smartphones (<= 860px), onde funciona como gaveta off-canvas
+        if (window.innerWidth <= 860) {
             sidebar.classList.remove('sidebar-orb-mode');
             return;
         }
