@@ -4805,6 +4805,259 @@ html, body {
     line-height: 1.5;
 }
 
+/* ============================================================
+   20. PADRÃO GAMESTORE: PÁGINA E BANNERS DE MEMBROS
+   ============================================================ */
+
+.gamestore-members-section {
+    padding: 10px 0 30px;
+    width: 100%;
+}
+
+.members-store-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(30, 8, 55, 0.75), rgba(15, 3, 30, 0.85));
+    border: 1px solid rgba(0, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 30px 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+    gap: 20px;
+}
+
+.members-store-hero::after {
+    content: '';
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.members-store-hero-content {
+    max-width: 620px;
+}
+
+.members-stats-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.member-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--white);
+    white-space: nowrap;
+}
+
+.member-chip i {
+    color: var(--cyan);
+}
+
+.gamestore-members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    width: 100%;
+}
+
+.gamestore-member-banner {
+    position: relative;
+    width: 100%;
+    min-height: 170px;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: #0f031e;
+}
+
+.gamestore-member-banner:hover {
+    transform: translateY(-4px);
+    border-color: var(--member-accent, var(--cyan));
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 255, 255, 0.2);
+}
+
+.member-banner-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.55) saturate(1.2);
+    transition: transform 0.6s ease, filter 0.6s ease;
+    z-index: 1;
+}
+
+.gamestore-member-banner:hover .member-banner-bg {
+    transform: scale(1.05);
+    filter: brightness(0.7) saturate(1.3);
+}
+
+.member-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(14, 3, 28, 0.94) 0%, rgba(18, 4, 36, 0.85) 50%, rgba(18, 4, 36, 0.35) 100%);
+    z-index: 2;
+}
+
+.member-banner-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    max-width: 70%;
+}
+
+.member-banner-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--member-accent, var(--cyan));
+    opacity: 0.65;
+    line-height: 1;
+    min-width: 50px;
+    text-shadow: 0 0 15px var(--member-accent, var(--cyan));
+}
+
+.member-banner-text h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.member-banner-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.member-tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+}
+
+.member-banner-bio {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    margin: 0 0 12px;
+    max-width: 580px;
+}
+
+.member-skill-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.member-skill-tags span {
+    padding: 3px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 600;
+}
+
+.member-banner-avatar-wrap {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.member-banner-avatar {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--member-accent, var(--cyan));
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6), 0 0 18px var(--member-accent, var(--cyan));
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.gamestore-member-banner:hover .member-banner-avatar {
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 0 0 35px var(--member-accent, var(--cyan));
+}
+
+@media (max-width: 860px) {
+    .members-store-hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px 20px;
+    }
+
+    .members-stats-chips {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .gamestore-member-banner {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        padding: 20px;
+        min-height: auto;
+    }
+
+    .member-banner-content {
+        max-width: 100%;
+        gap: 16px;
+    }
+
+    .member-banner-avatar-wrap {
+        margin: 0 0 16px auto;
+    }
+
+    .member-banner-avatar {
+        width: 85px;
+        height: 85px;
+    }
+}
+
+
 
 
 

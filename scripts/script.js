@@ -1258,6 +1258,22 @@ window.filterCmsPosts = function(cat, tabBtn) {
     window.renderCmsDashboard(cat, searchInput ? searchInput.value : '');
 };
 
+// Filtro e Busca ao Vivo para Página de Membros
+window.filterMembers = function(query) {
+    const q = (query || '').toLowerCase().trim();
+    const banners = document.querySelectorAll('.gamestore-member-banner');
+    banners.forEach(b => {
+        const name = (b.getAttribute('data-name') || '').toLowerCase();
+        const role = (b.getAttribute('data-role') || '').toLowerCase();
+        const text = b.textContent.toLowerCase();
+        if (!q || name.includes(q) || role.includes(q) || text.includes(q)) {
+            b.style.display = 'flex';
+        } else {
+            b.style.display = 'none';
+        }
+    });
+};
+
 // --- VERIFICAÇÃO DE SEGURANÇA E ACESSO AO CMS ---
 window.verifyCmsAccess = function() {
     const isCmsPage = document.body.classList.contains('cms-studio-body') || window.location.pathname.includes('cms.html');
