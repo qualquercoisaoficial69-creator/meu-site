@@ -1053,8 +1053,22 @@ if (confirmDeleteBtn) {
     });
 }
 
-// Abrir modal de criação
-window.openNewPostModal = function() {
+// Abrir modal de criação (Verifica se é criador autorizado)
+window.openNewPostModal = async function() {
+    const user = window.getCurrentUser ? window.getCurrentUser() : null;
+
+    if (!user) {
+        if (confirm("Você precisa estar conectado com o Google para publicar no site. Deseja fazer login agora?")) {
+            await window.loginWithGoogle();
+        }
+        return;
+    }
+
+    if (window.isUserCreator && !window.isUserCreator(user)) {
+        alert("Atenção: A sua conta Google (" + user.email + ") é de Membro da Comunidade. Apenas e-mails autorizados da equipe de desenvolvimento podem publicar novidades no site.");
+        return;
+    }
+
     const modal = document.getElementById('cmsPostModal');
     const form = document.getElementById('cmsPostForm');
     const titleText = document.getElementById('cmsModalTitleText');

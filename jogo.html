@@ -129,9 +129,8 @@
                             <i class="fas fa-moon" aria-hidden="true"></i>
                         </button>
 
-                        <div class="topbar-profile" title="Qualquer Coisa Rápido">
-                            <img src="imagens/Logo_colorida.png" alt="Perfil do Estúdio" class="profile-avatar">
-                            <span class="profile-name">QC Rápido</span>
+                        <div class="topbar-profile-container">
+                            <!-- Atualizado dinamicamente pelo firebase-config.js -->
                         </div>
                     </div>
                 </header>
@@ -398,6 +397,11 @@
             selectGameInInspector(initialGame);
         });
     </script>
+    <!-- FIREBASE SDK & CONFIGURAÇÃO AUTH GOOGLE -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="scripts/firebase-config.js"></script>
     <script src="scripts/script.js"></script>
 </body>
 </html>
