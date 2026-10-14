@@ -4693,6 +4693,119 @@ html, body {
     }
 }
 
+/* ============================================================
+   19. TELA DE ACESSO RESTRITO (CMS STUDIO GUARD) & EMPTY STATES
+   ============================================================ */
+
+.cms-access-denied {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 40px 20px;
+    width: 100%;
+}
+
+.access-denied-box {
+    background: linear-gradient(135deg, rgba(20, 4, 40, 0.95), rgba(35, 8, 65, 0.92));
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 0, 128, 0.15);
+    border-radius: 24px;
+    padding: 48px 36px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    backdrop-filter: blur(16px);
+}
+
+.access-shield-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 51, 102, 0.12);
+    border: 2px solid rgba(255, 51, 102, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 25px rgba(255, 51, 102, 0.25);
+}
+
+.access-shield-icon i {
+    font-size: 2.2rem;
+    color: #ff3366;
+}
+
+.access-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.access-desc {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.access-prompt {
+    font-size: 0.85rem;
+    color: rgba(0, 255, 255, 0.9);
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.btn-back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    margin-top: 14px;
+}
+
+.btn-back-home:hover {
+    color: var(--cyan);
+}
+
+/* Empty State Modernizado */
+.empty-feed-icon-box {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(0, 255, 255, 0.08);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.empty-feed-icon-box i {
+    font-size: 1.8rem;
+    color: var(--cyan);
+}
+
+.empty-feed-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.empty-feed-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 440px;
+    line-height: 1.5;
+}
+
+
 
 
 

@@ -673,48 +673,23 @@ document.addEventListener('DOMContentLoaded', () => {
 // Suporta: Criar, Editar, Excluir, Curtir, Upload e Categorias
 // ============================================================
 
-const DEFAULT_POSTS = [
-    {
-        id: 'post-unique-soul-catedral',
-        title: 'Revelação: O Santuário dos Vitrais em Unique Soul',
-        category: 'devlog',
-        author: 'Qualquer Coisa Rápido',
-        authorRole: 'Estúdio Oficial',
-        authorAvatar: 'imagens/Logo_colorida.png',
-        mediaUrl: 'imagens/unique_soul_cenario.png',
-        caption: 'Apresentamos oficialmente os primeiros visuais da Catedral das Cores em Unique Soul! Toda alma tem uma história e os fragmentos de memória serão revelados aqui. Deixe seu like e acompanhe o desenvolvimento! ✨🎮 #UniqueSoul #IndieGame #PixelArt #Gamedev',
-        likes: 42,
-        date: new Date(Date.now() - 3600000 * 4).toISOString()
-    },
-    {
-        id: 'post-mascote-oficial',
-        title: 'Arte Conceitual: O Mascote da Equipe Ganha Vida!',
-        category: 'arte',
-        author: 'Brenno',
-        authorRole: 'Fundador & Dev',
-        authorAvatar: 'imagens/brenno-icon.jpeg',
-        mediaUrl: 'imagens/Qualquer_coisa_corpo_inteiro.png',
-        caption: 'Direto das pranchetas da Qualquer Coisa Rápido, nosso mascote agora tem poses e animações para protótipos de jogos de ação e combate. O que acharam do visual? Comentem aí! 👾🗡️ #QualquerCoisa #Mascote #ArteIndie #Design',
-        likes: 29,
-        date: new Date(Date.now() - 3600000 * 24).toISOString()
-    }
-];
+const DEFAULT_POSTS = [];
 
-// Carrega postagens do storage ou inicializa com as oficiais
+// Carrega postagens do storage (inicia vazio para o CMS ser utilizado)
 function getStoredPosts() {
     try {
-        const stored = localStorage.getItem('qc_posts_v2');
-        if (stored) return JSON.parse(stored);
+        const stored = localStorage.getItem('qc_posts_v3');
+        if (stored !== null) return JSON.parse(stored);
     } catch (e) {
         console.error('Erro ao ler posts:', e);
     }
-    localStorage.setItem('qc_posts_v2', JSON.stringify(DEFAULT_POSTS));
-    return DEFAULT_POSTS;
+    localStorage.setItem('qc_posts_v3', JSON.stringify([]));
+    return [];
 }
 
 function saveStoredPosts(posts) {
     try {
-        localStorage.setItem('qc_posts_v2', JSON.stringify(posts));
+        localStorage.setItem('qc_posts_v3', JSON.stringify(posts));
         // Dispara evento para sincronizar feed e CMS se estiverem em abas diferentes
         window.dispatchEvent(new Event('qc_posts_updated'));
     } catch (e) {
@@ -772,9 +747,25 @@ window.renderHomeFeed = function(filterCategory = 'all', searchQuery = '') {
         return matchCategory && matchSearch;
     });
 
+    const isCreator = (typeof window.isUserCreator === 'function') && window.isUserCreator();
+
     if (filtered.length === 0) {
         feedContainer.innerHTML = '';
-        if (emptyState) emptyState.style.display = 'flex';
+        if (emptyState) {
+            emptyState.style.display = 'flex';
+            emptyState.innerHTML = `
+                <div class="empty-feed-icon-box">
+                    <i class="fas fa-feather-alt"></i>
+                </div>
+                <h4 class="empty-feed-title">Ainda não há postagens</h4>
+                <p class="empty-feed-desc">Fique de olho! Em breve novas artes conceituais, devlogs e novidades da equipe serão postadas aqui.</p>
+                ${isCreator ? `
+                    <a href="cms.html" class="btn-spotlight-play" style="display:inline-flex;align-items:center;gap:8px;margin-top:16px;">
+                        <i class="fas fa-plus"></i> Criar Primeira Publicação no CMS
+                    </a>
+                ` : ''}
+            `;
+        }
         return;
     }
 
@@ -810,14 +801,16 @@ window.renderHomeFeed = function(filterCategory = 'all', searchQuery = '') {
                         </div>
                     </div>
 
-                    <!-- Menu de 3 Pontinhos com Editar / Excluir / Compartilhar -->
+                    <!-- Menu de 3 Pontinhos (Ações Administrativas restritas a Criadores) -->
                     <div class="ig-post-menu-wrap">
                         <button type="button" class="ig-more-options-btn" onclick="togglePostDropdown('${post.id}')" aria-label="Mais opções">
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
                         <div class="ig-dropdown-menu" id="dropdown-${post.id}">
-                            <a href="cms.html?edit=${post.id}"><i class="fas fa-edit"></i> Editar Publicação</a>
-                            <button type="button" class="ig-delete-item" onclick="promptDeletePost('${post.id}')"><i class="fas fa-trash-alt"></i> Excluir</button>
+                            ${isCreator ? `
+                                <a href="cms.html?edit=${post.id}"><i class="fas fa-edit"></i> Editar Publicação</a>
+                                <button type="button" class="ig-delete-item" onclick="promptDeletePost('${post.id}')"><i class="fas fa-trash-alt"></i> Excluir</button>
+                            ` : ''}
                             <button type="button" onclick="sharePostLink('${post.id}')"><i class="fas fa-link"></i> Copiar Link</button>
                         </div>
                     </div>
@@ -1016,6 +1009,11 @@ document.addEventListener('click', (e) => {
 let postToDeleteId = null;
 
 window.promptDeletePost = function(postId) {
+    const user = window.getCurrentUser ? window.getCurrentUser() : null;
+    if (!window.isUserCreator || !window.isUserCreator(user)) {
+        alert("Atenção: Apenas administradores e criadores autorizados podem excluir publicações!");
+        return;
+    }
     postToDeleteId = postId;
     const modal = document.getElementById('cmsDeleteConfirmModal');
     if (modal) {
@@ -1034,6 +1032,11 @@ window.closeDeleteConfirmModal = function() {
 };
 
 function executeDeletePost(postId) {
+    const user = window.getCurrentUser ? window.getCurrentUser() : null;
+    if (!window.isUserCreator || !window.isUserCreator(user)) {
+        alert("Atenção: Apenas administradores e criadores autorizados podem excluir publicações!");
+        return;
+    }
     let posts = getStoredPosts();
     posts = posts.filter(p => p.id !== postId);
     saveStoredPosts(posts);
@@ -1085,8 +1088,14 @@ window.openNewPostModal = async function() {
     if (modal) modal.classList.add('active');
 };
 
-// Abrir modal de edição com dados pré-carregados
+// Abrir modal de edição com dados pré-carregados (Restrito a criadores)
 window.openEditPostModal = function(postId) {
+    const user = window.getCurrentUser ? window.getCurrentUser() : null;
+    if (!window.isUserCreator || !window.isUserCreator(user)) {
+        alert("Atenção: Apenas administradores e criadores autorizados podem editar publicações!");
+        return;
+    }
+
     const posts = getStoredPosts();
     const post = posts.find(p => p.id === postId);
     if (!post) return;
@@ -1125,6 +1134,12 @@ window.closeCmsPostModal = function() {
 // Salvar / Atualizar Publicação
 window.handleSavePost = function(e) {
     e.preventDefault();
+
+    const user = window.getCurrentUser ? window.getCurrentUser() : null;
+    if (!window.isUserCreator || !window.isUserCreator(user)) {
+        alert("Atenção: Apenas administradores e criadores autorizados podem salvar publicações!");
+        return;
+    }
 
     const editId = document.getElementById('editPostId')?.value.trim();
     const title = document.getElementById('postTitleInput')?.value.trim();
@@ -1243,8 +1258,37 @@ window.filterCmsPosts = function(cat, tabBtn) {
     window.renderCmsDashboard(cat, searchInput ? searchInput.value : '');
 };
 
+// --- VERIFICAÇÃO DE SEGURANÇA E ACESSO AO CMS ---
+window.verifyCmsAccess = function() {
+    const isCmsPage = document.body.classList.contains('cms-studio-body') || window.location.pathname.includes('cms.html');
+    if (!isCmsPage) return;
+
+    const u = (typeof window.getCurrentUser === 'function') ? window.getCurrentUser() : null;
+    const isCreator = (typeof window.isUserCreator === 'function') && window.isUserCreator(u);
+
+    const lockedView = document.getElementById('cmsAccessDenied');
+    const unlockedView = document.getElementById('cmsStudioUnlocked');
+    const newPostTopBtn = document.querySelector('.btn-cms-new');
+
+    if (isCreator) {
+        if (lockedView) lockedView.style.display = 'none';
+        if (unlockedView) unlockedView.style.display = 'block';
+        if (newPostTopBtn) newPostTopBtn.style.display = 'inline-flex';
+        if (window.renderCmsDashboard) window.renderCmsDashboard();
+    } else {
+        if (lockedView) lockedView.style.display = 'flex';
+        if (unlockedView) unlockedView.style.display = 'none';
+        if (newPostTopBtn) newPostTopBtn.style.display = 'none';
+    }
+};
+
 // Inicialização automática do Feed e do CMS
 document.addEventListener('DOMContentLoaded', () => {
+    // Validação de acesso restrito caso esteja no CMS
+    if (typeof window.verifyCmsAccess === 'function') {
+        window.verifyCmsAccess();
+    }
+
     // Renderiza se os containers existirem na página atual
     if (document.getElementById('homeFeedPosts')) {
         window.renderHomeFeed();

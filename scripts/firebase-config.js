@@ -206,6 +206,25 @@ window.updateAuthUI = function(user) {
             `;
         }
     });
+
+    // Controla visibilidade de todos os elementos exclusivos de criadores/admins no site
+    const isCreator = window.isUserCreator(u);
+    document.querySelectorAll('.creator-only, .creator-only-nav').forEach(el => {
+        el.style.display = isCreator ? '' : 'none';
+    });
+
+    // Se estiver na página do CMS, executa verificação de segurança
+    if (typeof window.verifyCmsAccess === 'function') {
+        window.verifyCmsAccess();
+    }
+
+    // Se estiver na home com feed de posts, atualiza para refletir permissões
+    if (typeof window.renderHomeFeed === 'function' && document.getElementById('homeFeedPosts')) {
+        const activeTab = document.querySelector('.catalog-filter-tabs .catalog-tab.active');
+        const cat = activeTab ? activeTab.getAttribute('data-filter') : 'all';
+        const searchInput = document.getElementById('catalogSearch');
+        window.renderHomeFeed(cat, searchInput ? searchInput.value : '');
+    }
 };
 
 window.toggleUserProfileDropdown = function(e) {

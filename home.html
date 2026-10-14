@@ -53,7 +53,7 @@
                             <i class="fas fa-users" aria-hidden="true"></i>
                             <span>Membros</span>
                         </a>
-                        <a href="cms.html" class="sidebar-link" title="Painel de Criação e Edição de Posts">
+                        <a href="cms.html" class="sidebar-link creator-only" title="Painel de Criação e Edição de Posts" style="display: none;">
                             <i class="fas fa-feather-alt" aria-hidden="true"></i>
                             <span>Painel CMS</span>
                         </a>
@@ -247,11 +247,13 @@
 
                     <!-- ESTADO VAZIO CASO NENHUM POST EXISTA -->
                     <div class="cms-empty-state" id="feedEmptyState" style="display: none;">
-                        <i class="fas fa-feather-alt"></i>
-                        <h4>Nenhuma publicação encontrada</h4>
-                        <p>Fique de olho! Em breve novas artes conceituais e novidades de Unique Soul serão postadas aqui.</p>
-                        <a href="cms.html" class="btn-spotlight-play" style="display:inline-flex;align-items:center;gap:8px;">
-                            <i class="fas fa-plus-circle"></i> Criar Nova Publicação no CMS
+                        <div class="empty-feed-icon-box">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <h4 class="empty-feed-title">Ainda não há postagens</h4>
+                        <p class="empty-feed-desc">Fique de olho! Em breve novas postagens, artes conceituais e novidades de Unique Soul aparecerão aqui.</p>
+                        <a href="cms.html" class="btn-spotlight-play creator-only" style="display:none;align-items:center;gap:8px;margin-top:14px;">
+                            <i class="fas fa-plus-circle"></i> Criar Primeira Publicação no CMS
                         </a>
                     </div>
                 </section>
