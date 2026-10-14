@@ -903,6 +903,11 @@ window.renderCmsDashboard = function(filterCategory = 'all', searchQuery = '') {
                     <p class="cms-card-snippet">${post.caption.substring(0, 95)}...</p>
                     <div class="cms-card-stats-row">
                         <span><i class="fas fa-heart" style="color:#ff3366;"></i> ${post.likes || 0} curtidas</span>
+                        ${post.githubCommit ? `
+                            <a href="https://github.com/qualquercoisaoficial69-creator/meu-site/commit/${post.githubCommit}" target="_blank" rel="noopener noreferrer" class="github-commit-badge" title="Ver commit real no GitHub">
+                                <i class="fab fa-github"></i> Commit ${post.githubCommit.substring(0, 7)}
+                            </a>
+                        ` : ''}
                     </div>
                 </div>
                 <div class="cms-card-actions">
@@ -1131,8 +1136,159 @@ window.closeCmsPostModal = function() {
     if (modal) modal.classList.remove('active');
 };
 
+// --- INTEGRAÇÃO COM GITHUB REST API (COMMITS REAIS NO REPOSITÓRIO) ---
+const GITHUB_REPO_OWNER = 'qualquercoisaoficial69-creator';
+const GITHUB_REPO_NAME = 'meu-site';
+const GITHUB_REPO_BRANCH = 'main';
+let pendingMediaFile = null;
+
+// Recupera ou define o token do GitHub
+window.getGitHubToken = function() {
+    try {
+        return localStorage.getItem('qc_github_token') || '';
+    } catch {
+        return '';
+    }
+};
+
+window.setGitHubToken = function(token) {
+    if (token) {
+        localStorage.setItem('qc_github_token', token.trim());
+    } else {
+        localStorage.removeItem('qc_github_token');
+    }
+    window.updateGitHubStatusUI();
+};
+
+window.updateGitHubStatusUI = function() {
+    const btn = document.getElementById('githubStatusBtn');
+    const text = document.getElementById('githubStatusText');
+    const token = window.getGitHubToken();
+    if (!btn || !text) return;
+
+    if (token) {
+        btn.className = 'btn-github-status connected';
+        text.innerHTML = '<i class="fas fa-check-circle"></i> GitHub Conectado';
+        btn.title = 'GitHub Token ativo. Imagens postadas serão commitadas no repositório.';
+    } else {
+        btn.className = 'btn-github-status disconnected';
+        text.innerHTML = '<i class="fab fa-github"></i> Conectar GitHub (Commits)';
+        btn.title = 'Configure seu token para enviar commits reais ao repositório.';
+    }
+};
+
+window.openGitHubTokenModal = function() {
+    const modal = document.getElementById('githubTokenModal');
+    const input = document.getElementById('githubTokenInput');
+    if (input) input.value = window.getGitHubToken();
+    if (modal) modal.classList.add('active');
+};
+
+window.closeGitHubTokenModal = function() {
+    const modal = document.getElementById('githubTokenModal');
+    if (modal) modal.classList.remove('active');
+};
+
+window.handleSaveGitHubToken = async function() {
+    const input = document.getElementById('githubTokenInput');
+    const token = input ? input.value.trim() : '';
+
+    if (!token) {
+        if (confirm('Deseja desconectar o token do GitHub?')) {
+            window.setGitHubToken('');
+            window.closeGitHubTokenModal();
+        }
+        return;
+    }
+
+    try {
+        const testRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json'
+            }
+        });
+
+        if (testRes.ok) {
+            window.setGitHubToken(token);
+            window.closeGitHubTokenModal();
+            alert('✅ GitHub conectado com sucesso! Agora o CMS enviará commits reais de cada imagem postada para o repositório.');
+        } else {
+            alert('❌ Erro ao validar o token com o GitHub. Verifique se o token foi copiado corretamente e se possui a permissão "repo".');
+        }
+    } catch (e) {
+        window.setGitHubToken(token);
+        window.closeGitHubTokenModal();
+        alert('Token salvo no navegador!');
+    }
+};
+
+// Converte arquivo para Base64 puro
+function fileToBase64Pure(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = reader.result;
+            const base64Index = result.indexOf(';base64,');
+            if (base64Index > -1) {
+                resolve(result.substring(base64Index + 8));
+            } else {
+                resolve(result);
+            }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// Envia a mídia para a API do GitHub criando um commit real
+async function commitMediaToGitHub(file, postTitle) {
+    const token = window.getGitHubToken();
+    if (!token) {
+        window.openGitHubTokenModal();
+        throw new Error('Configure seu Personal Access Token do GitHub para que o site possa criar commits reais.');
+    }
+
+    const base64Content = await fileToBase64Pure(file);
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const sanitizedTitle = (postTitle || 'post').toLowerCase().replace(/[^a-z0-9_-]/g, '_').substring(0, 20);
+    const filename = `post_${Date.now()}_${sanitizedTitle}.${ext}`;
+    const filePath = `imagens/posts/${filename}`;
+
+    const apiUrl = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${filePath}`;
+    const commitMessage = `cms: upload da midia '${filename}' via Creator Studio [skip ci]`;
+
+    const res = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            message: commitMessage,
+            content: base64Content,
+            branch: GITHUB_REPO_BRANCH
+        })
+    });
+
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || `Erro no commit da API do GitHub: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return {
+        filename: filename,
+        path: filePath,
+        rawUrl: `https://raw.githubusercontent.com/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/${GITHUB_REPO_BRANCH}/${filePath}`,
+        commitSha: data.commit ? data.commit.sha : '',
+        commitHtmlUrl: data.commit ? data.commit.html_url : `https://github.com/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/commits/${GITHUB_REPO_BRANCH}`
+    };
+}
+
 // Salvar / Atualizar Publicação
-window.handleSavePost = function(e) {
+window.handleSavePost = async function(e) {
     e.preventDefault();
 
     const user = window.getCurrentUser ? window.getCurrentUser() : null;
@@ -1147,11 +1303,41 @@ window.handleSavePost = function(e) {
     const author = document.getElementById('postAuthorSelect')?.value;
     const caption = document.getElementById('postCaptionTextarea')?.value.trim();
     const previewImg = document.getElementById('cmsMediaPreviewImg');
-    const mediaUrl = previewImg?.src || 'imagens/unique_soul_cenario.png';
+    const submitBtn = document.getElementById('cmsSubmitBtn');
+
+    let mediaUrl = previewImg?.src || 'imagens/unique_soul_cenario.png';
+    let commitData = null;
 
     if (!title || !caption) {
         alert('Por favor, preencha o título e a legenda da publicação.');
         return;
+    }
+
+    // Se o criador selecionou uma imagem local do computador, envia o commit real pro GitHub!
+    if (pendingMediaFile) {
+        const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+        try {
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando commit para o GitHub...';
+            }
+
+            commitData = await commitMediaToGitHub(pendingMediaFile, title);
+            mediaUrl = commitData.rawUrl;
+            pendingMediaFile = null;
+        } catch (err) {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+            }
+            alert('Aviso sobre o envio para o GitHub:\n' + err.message);
+            return;
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+            }
+        }
     }
 
     const authorAvatars = {
@@ -1180,6 +1366,10 @@ window.handleSavePost = function(e) {
                 caption,
                 lastEdited: new Date().toISOString()
             };
+            if (commitData) {
+                posts[postIndex].githubCommit = commitData.commitSha;
+                posts[postIndex].githubCommitUrl = commitData.commitHtmlUrl;
+            }
         }
     } else {
         // MODO CRIAÇÃO: Adiciona nova postagem no topo
@@ -1194,6 +1384,10 @@ window.handleSavePost = function(e) {
             likes: 0,
             date: new Date().toISOString()
         };
+        if (commitData) {
+            newPost.githubCommit = commitData.commitSha;
+            newPost.githubCommitUrl = commitData.commitHtmlUrl;
+        }
         posts.unshift(newPost);
     }
 
@@ -1203,35 +1397,48 @@ window.handleSavePost = function(e) {
     if (window.renderCmsDashboard) window.renderCmsDashboard();
     if (window.renderHomeFeed) window.renderHomeFeed();
 
-    alert(editId ? 'Publicação atualizada com sucesso!' : 'Publicação criada e adicionada ao feed com sucesso!');
+    if (commitData) {
+        alert(`🎉 Publicação postada com sucesso!\n\n🚀 COMMIT REALIZADO NO GITHUB:\n• Arquivo: ${commitData.path}\n• Commit SHA: ${commitData.commitSha.substring(0, 7)}\n• Mensagem: cms: upload da mídia via Creator Studio\n\nAcesse o repositório para conferir o novo commit!`);
+    } else {
+        alert(editId ? 'Publicação atualizada com sucesso!' : 'Publicação criada e adicionada ao feed com sucesso!');
+    }
 };
 
 // Manipulação de mídia (Arquivo local ou URL)
 window.handleMediaFileSelect = function(e) {
     const file = e.target.files[0];
     if (file) {
+        pendingMediaFile = file;
         const reader = new FileReader();
         reader.onload = function(evt) {
             const preview = document.getElementById('cmsMediaPreviewImg');
             if (preview) preview.src = evt.target.result;
+            const syncIndicator = document.getElementById('githubSyncIndicator');
+            if (syncIndicator) syncIndicator.classList.add('active');
         };
         reader.readAsDataURL(file);
     }
 };
 
 window.handleMediaUrlInput = function(e) {
+    pendingMediaFile = null;
     const url = e.target.value.trim();
     if (url) {
         const preview = document.getElementById('cmsMediaPreviewImg');
         if (preview) preview.src = url;
+        const syncIndicator = document.getElementById('githubSyncIndicator');
+        if (syncIndicator) syncIndicator.classList.remove('active');
     }
 };
 
 window.setPresetMedia = function(path) {
+    pendingMediaFile = null;
     const preview = document.getElementById('cmsMediaPreviewImg');
     const input = document.getElementById('cmsMediaUrlInput');
     if (preview) preview.src = path;
     if (input) input.value = path;
+    const syncIndicator = document.getElementById('githubSyncIndicator');
+    if (syncIndicator) syncIndicator.classList.remove('active');
 };
 
 // Clique na caixa de dropzone abre o seletor de arquivos
@@ -1300,6 +1507,11 @@ window.verifyCmsAccess = function() {
 
 // Inicialização automática do Feed e do CMS
 document.addEventListener('DOMContentLoaded', () => {
+    // Atualiza status do GitHub Token no CMS
+    if (typeof window.updateGitHubStatusUI === 'function') {
+        window.updateGitHubStatusUI();
+    }
+
     // Validação de acesso restrito caso esteja no CMS
     if (typeof window.verifyCmsAccess === 'function') {
         window.verifyCmsAccess();

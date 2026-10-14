@@ -153,9 +153,14 @@
                             <h2>Gerenciador de <span>Publicações & Mídias</span></h2>
                             <p>Crie, edite ou exclua posts com mídia no feed do site estilo Instagram. As mídias ficam vinculadas ao seu repositório.</p>
                         </div>
-                        <button type="button" class="btn-spotlight-play" onclick="openNewPostModal()" style="display:inline-flex;align-items:center;gap:8px;">
-                            <i class="fas fa-camera"></i> PUBLICAR NOVIDADE
-                        </button>
+                        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                            <button type="button" class="btn-github-status disconnected" id="githubStatusBtn" onclick="openGitHubTokenModal()" title="Configurar Token do GitHub para commits reais">
+                                <i class="fab fa-github"></i> <span id="githubStatusText">Conectar GitHub (Commits)</span>
+                            </button>
+                            <button type="button" class="btn-spotlight-play" onclick="openNewPostModal()" style="display:inline-flex;align-items:center;gap:8px;">
+                                <i class="fas fa-camera"></i> PUBLICAR NOVIDADE
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Métricas do CMS -->
@@ -256,6 +261,11 @@
                         <input type="file" id="cmsMediaFileInput" accept="image/*" style="display:none;" onchange="handleMediaFileSelect(event)">
                     </div>
 
+                    <div class="github-sync-indicator" id="githubSyncIndicator">
+                        <i class="fab fa-github"></i>
+                        <span>A mídia selecionada será <strong>commitada no repositório</strong> em <code>imagens/posts/</code></span>
+                    </div>
+
                     <div class="cms-url-input-wrap">
                         <span class="cms-input-icon"><i class="fas fa-link"></i></span>
                         <input type="text" id="cmsMediaUrlInput" class="cms-input-field" placeholder="Ou cole o link direto da imagem..." oninput="handleMediaUrlInput(event)">
@@ -334,6 +344,45 @@
                 <button type="button" class="btn-cms-cancel" onclick="closeDeleteConfirmModal()">Cancelar</button>
                 <button type="button" class="btn-cms-danger" id="confirmDeleteActionBtn">
                     <i class="fas fa-trash"></i> Sim, Excluir
+                </button>
+            </div>
+    <!-- MODAL DE CONFIGURAÇÃO DO GITHUB TOKEN (PARA COMMITS REAIS) -->
+    <div class="game-modal-overlay" id="githubTokenModal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="game-modal-box" style="max-width:540px;padding:32px;">
+            <button type="button" class="modal-close-btn" onclick="closeGitHubTokenModal()" aria-label="Fechar janela">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                <i class="fab fa-github" style="font-size:2.2rem;color:var(--cyan);"></i>
+                <div>
+                    <h3 style="font-family:'Orbitron',sans-serif;color:#fff;margin:0;font-size:1.25rem;">Conectar GitHub (Commits Reais)</h3>
+                    <span style="font-size:0.8rem;color:rgba(255,255,255,0.6);">qualquercoisaoficial69-creator/meu-site • branch main</span>
+                </div>
+            </div>
+            
+            <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);line-height:1.5;">
+                Para o CMS criar <strong>commits de verdade</strong> de cada imagem no repositório, conecte seu <strong>Personal Access Token (PAT)</strong> do GitHub com permissão de escrita.
+            </p>
+
+            <div class="github-token-instruction-box">
+                <strong>Passo a passo rápido para gerar o token:</strong>
+                <ol>
+                    <li>Acesse: <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">github.com/settings/tokens/new</a></li>
+                    <li>Dê um nome para a nota (ex: <code>CMS-Unique-Soul</code>) e marque a caixinha <strong>repo</strong>.</li>
+                    <li>Role até o final da página e clique em <strong>Generate token</strong>.</li>
+                    <li>Copie o código gerado (começa com <code>ghp_</code>) e cole abaixo:</li>
+                </ol>
+            </div>
+
+            <div class="cms-form-group" style="margin-bottom:20px;">
+                <label for="githubTokenInput" class="cms-form-label">Cole seu GitHub Personal Access Token (PAT):</label>
+                <input type="password" id="githubTokenInput" class="cms-input-field" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+            </div>
+
+            <div style="display:flex;gap:12px;justify-content:flex-end;">
+                <button type="button" class="btn-cms-cancel" onclick="closeGitHubTokenModal()">Cancelar</button>
+                <button type="button" class="btn-spotlight-play" onclick="handleSaveGitHubToken()" style="display:inline-flex;align-items:center;gap:8px;">
+                    <i class="fas fa-check"></i> Salvar e Conectar
                 </button>
             </div>
         </div>
