@@ -5,19 +5,22 @@
 
 // Cole aqui as configurações do seu projeto do Firebase Console:
 // (Vá em Console do Firebase > Configurações do Projeto > Seus Aplicativos > Web)
-const FIREBASE_CONFIG = {
-    apiKey: "SUA_API_KEY_DO_FIREBASE",
-    authDomain: "seu-projeto.firebaseapp.com",
-    projectId: "seu-projeto",
-    storageBucket: "seu-projeto.appspot.com",
-    messagingSenderId: "1234567890",
-    appId: "1:1234567890:web:abcdef123456"
+const firebaseConfig = {
+  apiKey: "AIzaSyDvT5k1sdN_Pa9nhg-iBJrDmIo00mk8JZ8",
+  authDomain: "qualquer-coisa-oficial.firebaseapp.com",
+  projectId: "qualquer-coisa-oficial",
+  storageBucket: "qualquer-coisa-oficial.firebasestorage.app",
+  messagingSenderId: "336827977956",
+  appId: "1:336827977956:web:ca30a2a28e9124a7eadcf1",
+  measurementId: "G-N5X21NHP72"
 };
+
+const FIREBASE_CONFIG = firebaseConfig;
 
 // Lista de e-mails da equipe autorizados a postar, editar e excluir no CMS:
 const AUTHORIZED_CREATOR_EMAILS = [
     'qualquercoisaoficial69@gmail.com',
-    'brennohugo85@gmail.com'
+    'brennofirminodejesus@gmail.com'
     // Adicione os outros e-mails da equipe aqui
 ];
 
@@ -29,8 +32,9 @@ let currentUserProfile = null;
 
 // Inicializa o Firebase
 try {
-    if (typeof firebase !== 'undefined' && FIREBASE_CONFIG.apiKey !== "SUA_API_KEY_DO_FIREBASE") {
-        firebase.initializeApp(FIREBASE_CONFIG);
+    const configToUse = typeof firebaseConfig !== 'undefined' ? firebaseConfig : (typeof FIREBASE_CONFIG !== 'undefined' ? FIREBASE_CONFIG : null);
+    if (typeof firebase !== 'undefined' && configToUse && configToUse.apiKey && configToUse.apiKey !== "SUA_API_KEY_DO_FIREBASE") {
+        firebase.initializeApp(configToUse);
         auth = firebase.auth();
         db = firebase.firestore();
         googleProvider = new firebase.auth.GoogleAuthProvider();
