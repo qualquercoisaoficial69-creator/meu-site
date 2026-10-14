@@ -502,13 +502,21 @@ window.toggleMobileSidebar = function(forceState) {
     const sidebar = document.querySelector('.gamestore-sidebar');
     if (!sidebar) return;
 
+    // Desativa modo bolinha imediatamente no mobile
+    sidebar.classList.remove('sidebar-orb-mode');
+
     let backdrop = document.querySelector('.sidebar-mobile-backdrop');
     if (!backdrop) {
         backdrop = document.createElement('div');
         backdrop.className = 'sidebar-mobile-backdrop';
         backdrop.setAttribute('aria-hidden', 'true');
         backdrop.addEventListener('click', () => window.toggleMobileSidebar(false));
-        document.body.appendChild(backdrop);
+        // Insere o backdrop antes da sidebar para compartilharem exatamente o mesmo stacking context
+        if (sidebar.parentElement) {
+            sidebar.parentElement.insertBefore(backdrop, sidebar);
+        } else {
+            document.body.appendChild(backdrop);
+        }
     }
 
     const isCurrentlyOpen = sidebar.classList.contains('mobile-open');
