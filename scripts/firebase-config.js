@@ -25,8 +25,9 @@ const GITHUB_ACCESS_TOKEN = "";
 // Lista de e-mails da equipe autorizados a postar, editar e excluir no CMS:
 const AUTHORIZED_CREATOR_EMAILS = [
     'qualquercoisaoficial69@gmail.com',
-    'brennofirminodejesus@gmail.com'
-    // Adicione os outros e-mails da equipe aqui
+    'brennofirminodejesus@gmail.com',
+    'izam20027@gmail.com',
+    'gtofrazatto@gmail.com'
 ];
 
 let isFirebaseInitialized = false;
@@ -111,12 +112,14 @@ window.logoutUser = async function() {
 // Salva os dados básicos do perfil (Nome, Foto, E-mail) no Firestore
 async function saveUserProfileToDatabase(user) {
     if (!user) return;
+    const isCreator = window.isUserCreator(user);
     const profile = {
         uid: user.uid,
         name: user.displayName || 'Usuário Sem Nome',
         email: user.email,
         photoURL: user.photoURL || 'imagens/Logo_colorida.png',
         emailVerified: user.emailVerified || false,
+        role: isCreator ? 'creator' : 'member',
         lastLogin: new Date().toISOString()
     };
 
