@@ -1089,7 +1089,7 @@ window.openNewPostModal = async function() {
     if (titleText) titleText.textContent = 'Nova Publicação';
     if (submitBtnText) submitBtnText.textContent = 'Publicar no Feed';
     if (previewImg) previewImg.src = 'imagens/unique_soul_cenario.png';
-
+    if (typeof window.updateGitHubStatusUI === 'function') window.updateGitHubStatusUI();
     if (modal) modal.classList.add('active');
 };
 
@@ -1142,9 +1142,12 @@ const GITHUB_REPO_NAME = 'meu-site';
 const GITHUB_REPO_BRANCH = 'main';
 let pendingMediaFile = null;
 
-// Recupera ou define o token do GitHub
+// Recupera ou define o token do GitHub (lê de GITHUB_ACCESS_TOKEN no código OU do localStorage)
 window.getGitHubToken = function() {
     try {
+        if (typeof GITHUB_ACCESS_TOKEN !== 'undefined' && GITHUB_ACCESS_TOKEN && GITHUB_ACCESS_TOKEN.trim() !== '') {
+            return GITHUB_ACCESS_TOKEN.trim();
+        }
         return localStorage.getItem('qc_github_token') || '';
     } catch {
         return '';
@@ -1160,10 +1163,27 @@ window.setGitHubToken = function(token) {
     window.updateGitHubStatusUI();
 };
 
+window.saveDirectGitHubToken = function() {
+    const input = document.getElementById('cmsDirectGitHubTokenInput');
+    const token = input ? input.value.trim() : '';
+    if (!token) {
+        alert('Por favor, cole seu token ghp_... no campo antes de salvar.');
+        return;
+    }
+    window.setGitHubToken(token);
+    alert('✅ Token do GitHub salvo com sucesso!\n\nAgora qualquer foto selecionada será commitada de verdade no seu repositório no GitHub ao publicar.');
+};
+
 window.updateGitHubStatusUI = function() {
     const btn = document.getElementById('githubStatusBtn');
     const text = document.getElementById('githubStatusText');
+    const directInput = document.getElementById('cmsDirectGitHubTokenInput');
     const token = window.getGitHubToken();
+
+    if (directInput && token) {
+        directInput.value = token;
+    }
+
     if (!btn || !text) return;
 
     if (token) {

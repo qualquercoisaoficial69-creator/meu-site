@@ -266,6 +266,24 @@
                         <span>A mídia selecionada será <strong>commitada no repositório</strong> em <code>imagens/posts/</code></span>
                     </div>
 
+                    <!-- CAMPO VISÍVEL PARA COLAR O TOKEN DO GITHUB -->
+                    <div class="github-token-inline-card" style="background:rgba(20,4,40,0.85);border:1px solid rgba(0,255,255,0.25);border-radius:14px;padding:12px;margin:12px 0;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <label for="cmsDirectGitHubTokenInput" style="font-size:0.8rem;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:6px;margin:0;">
+                                <i class="fab fa-github"></i> Token do GitHub (Para Commits):
+                            </label>
+                            <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:var(--yellow);text-decoration:underline;">
+                                <i class="fas fa-external-link-alt"></i> Gerar Token
+                            </a>
+                        </div>
+                        <div style="display:flex;gap:8px;">
+                            <input type="password" id="cmsDirectGitHubTokenInput" class="cms-input-field" placeholder="Cole seu token ghp_... aqui" style="padding:6px 12px;font-size:0.82rem;" onchange="window.setGitHubToken(this.value)">
+                            <button type="button" class="btn-spotlight-play" style="padding:6px 14px;font-size:0.8rem;white-space:nowrap;" onclick="window.saveDirectGitHubToken()">
+                                Salvar
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="cms-url-input-wrap">
                         <span class="cms-input-icon"><i class="fas fa-link"></i></span>
                         <input type="text" id="cmsMediaUrlInput" class="cms-input-field" placeholder="Ou cole o link direto da imagem..." oninput="handleMediaUrlInput(event)">
@@ -346,6 +364,9 @@
                     <i class="fas fa-trash"></i> Sim, Excluir
                 </button>
             </div>
+        </div>
+    </div>
+
     <!-- MODAL DE CONFIGURAÇÃO DO GITHUB TOKEN (PARA COMMITS REAIS) -->
     <div class="game-modal-overlay" id="githubTokenModal" aria-hidden="true" role="dialog" aria-modal="true">
         <div class="game-modal-box" style="max-width:540px;padding:32px;">

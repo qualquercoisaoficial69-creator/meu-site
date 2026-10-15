@@ -17,6 +17,11 @@ const firebaseConfig = {
 
 const FIREBASE_CONFIG = firebaseConfig;
 
+// Token do GitHub para commits reais de imagens postadas via CMS:
+// (Você pode colar seu token ghp_... aqui OU digitar na tela do CMS)
+// Gere o token em: https://github.com/settings/tokens/new (marque a caixinha 'repo')
+const GITHUB_ACCESS_TOKEN = ""; 
+
 // Lista de e-mails da equipe autorizados a postar, editar e excluir no CMS:
 const AUTHORIZED_CREATOR_EMAILS = [
     'qualquercoisaoficial69@gmail.com',
