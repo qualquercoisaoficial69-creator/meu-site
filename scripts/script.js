@@ -673,18 +673,39 @@ document.addEventListener('DOMContentLoaded', () => {
 // Suporta: Criar, Editar, Excluir, Curtir, Upload e Categorias
 // ============================================================
 
-const DEFAULT_POSTS = [];
+const DEFAULT_POSTS = [
+    {
+        id: 'post-1792027411289',
+        title: 'Teste de Publicações',
+        category: 'devlog',
+        author: 'Brenno',
+        authorRole: 'Fundador & Dev',
+        authorAvatar: 'imagens/brenno-icon.jpeg',
+        mediaUrl: 'imagens/posts/post_1792027411289_teste_de_publica__es.jpg',
+        caption: 'Publicação oficial de teste! A mídia foi commitada e salva diretamente no repositório do GitHub. 🎮✨ #UniqueSoul #IndieDev',
+        likes: 1,
+        githubCommit: '7c8a6a9a69f2cc5b4483aa565263c84f3fa76c43',
+        githubCommitUrl: 'https://github.com/qualquercoisaoficial69-creator/meu-site/commit/7c8a6a9a69f2cc5b4483aa565263c84f3fa76c43',
+        date: '2026-10-14T22:23:32.000Z'
+    }
+];
 
-// Carrega postagens do storage (inicia vazio para o CMS ser utilizado)
+// Carrega postagens do storage ou inicializa com as oficiais
 function getStoredPosts() {
     try {
         const stored = localStorage.getItem('qc_posts_v3');
-        if (stored !== null) return JSON.parse(stored);
+        if (stored !== null) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
     } catch (e) {
         console.error('Erro ao ler posts:', e);
     }
-    localStorage.setItem('qc_posts_v3', JSON.stringify([]));
-    return [];
+    localStorage.setItem('qc_posts_v3', JSON.stringify(DEFAULT_POSTS));
+    if (DEFAULT_POSTS.length > 0 && typeof window.savePostToFirestore === 'function') {
+        DEFAULT_POSTS.forEach(p => window.savePostToFirestore(p));
+    }
+    return DEFAULT_POSTS;
 }
 
 function saveStoredPosts(posts) {
@@ -958,6 +979,10 @@ window.togglePostLike = function(postId, button) {
     if (counterElem) counterElem.textContent = post.likes;
     localStorage.setItem('qc_liked_posts', JSON.stringify(userLikedPosts));
     saveStoredPosts(posts);
+
+    if (typeof window.updatePostLikesInFirestore === 'function') {
+        window.updatePostLikesInFirestore(postId, post.likes);
+    }
 };
 
 // Duplo clique na imagem (estilo Instagram)
@@ -1045,6 +1070,10 @@ function executeDeletePost(postId) {
     let posts = getStoredPosts();
     posts = posts.filter(p => p.id !== postId);
     saveStoredPosts(posts);
+
+    if (typeof window.deletePostFromFirestore === 'function') {
+        window.deletePostFromFirestore(postId);
+    }
 
     closeDeleteConfirmModal();
 
@@ -1412,6 +1441,13 @@ window.handleSavePost = async function(e) {
     }
 
     saveStoredPosts(posts);
+
+    // Sincroniza o post salvo no Firestore para persistência global em tempo real
+    const postToSync = editId ? posts.find(p => p.id === editId) : posts[0];
+    if (postToSync && typeof window.savePostToFirestore === 'function') {
+        window.savePostToFirestore(postToSync);
+    }
+
     closeCmsPostModal();
 
     if (window.renderCmsDashboard) window.renderCmsDashboard();

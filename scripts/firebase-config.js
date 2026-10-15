@@ -260,3 +260,88 @@ if (isFirebaseInitialized && auth) {
         window.updateAuthUI(window.getCurrentUser());
     });
 }
+
+// ==========================================
+// SINCRONIZAÇÃO DE POSTS NO FIRESTORE (BANCO DE DADOS EM TEMPO REAL)
+// ==========================================
+
+// Salva ou atualiza um post na coleção 'posts' do Firestore
+window.savePostToFirestore = async function(post) {
+    if (!post || !post.id) return;
+    if (isFirebaseInitialized && db) {
+        try {
+            await db.collection('posts').doc(post.id).set(post, { merge: true });
+            console.log("🔥 Post sincronizado no Firestore com sucesso:", post.id);
+        } catch (e) {
+            console.error("Erro ao salvar post no Firestore:", e);
+        }
+    }
+};
+
+// Exclui um post da coleção 'posts' do Firestore
+window.deletePostFromFirestore = async function(postId) {
+    if (!postId) return;
+    if (isFirebaseInitialized && db) {
+        try {
+            await db.collection('posts').doc(postId).delete();
+            console.log("🔥 Post excluído do Firestore com sucesso:", postId);
+        } catch (e) {
+            console.error("Erro ao excluir post no Firestore:", e);
+        }
+    }
+};
+
+// Atualiza likes no Firestore
+window.updatePostLikesInFirestore = async function(postId, newLikesCount) {
+    if (!postId) return;
+    if (isFirebaseInitialized && db) {
+        try {
+            await db.collection('posts').doc(postId).update({
+                likes: newLikesCount
+            });
+        } catch (e) {
+            console.warn("Erro ao atualizar likes no Firestore:", e);
+        }
+    }
+};
+
+// Inicia escuta em tempo real da coleção 'posts' do Firestore
+window.initFirestorePostsListener = function() {
+    if (isFirebaseInitialized && db) {
+        try {
+            db.collection('posts').onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    console.log("ℹ️ Firestore: coleção 'posts' ainda não possui documentos.");
+                    return;
+                }
+                const firestorePosts = [];
+                snapshot.forEach((doc) => {
+                    firestorePosts.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Ordena por data decrescente (mais recente primeiro)
+                firestorePosts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+                localStorage.setItem('qc_posts_v3', JSON.stringify(firestorePosts));
+
+                if (typeof window.renderHomeFeed === 'function' && document.getElementById('homeFeedPosts')) {
+                    window.renderHomeFeed();
+                }
+                if (typeof window.renderCmsDashboard === 'function' && document.getElementById('cmsPostsList')) {
+                    window.renderCmsDashboard();
+                }
+                window.dispatchEvent(new Event('qc_posts_updated'));
+            }, (err) => {
+                console.warn("Aviso ao sincronizar posts do Firestore:", err);
+            });
+        } catch (e) {
+            console.warn("Erro ao registrar snapshot listener de posts no Firestore:", e);
+        }
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof window.initFirestorePostsListener === 'function') {
+        window.initFirestorePostsListener();
+    }
+});
