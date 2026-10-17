@@ -43,6 +43,9 @@ try {
         firebase.initializeApp(configToUse);
         auth = firebase.auth();
         db = firebase.firestore();
+        db.settings({
+            experimentalForceLongPolling: true
+        });
         googleProvider = new firebase.auth.GoogleAuthProvider();
         googleProvider.setCustomParameters({ prompt: 'select_account' });
         isFirebaseInitialized = true;
