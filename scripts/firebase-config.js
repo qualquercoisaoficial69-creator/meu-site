@@ -27,7 +27,6 @@ const AUTHORIZED_CREATOR_EMAILS = [
 
 let isFirebaseInitialized = false;
 let auth = null;
-let db = null;
 let googleProvider = null;
 let currentUserProfile = null;
 
@@ -37,7 +36,6 @@ try {
     if (typeof firebase !== 'undefined' && configToUse && configToUse.apiKey && configToUse.apiKey !== "SUA_API_KEY_DO_FIREBASE") {
         firebase.initializeApp(configToUse);
         auth = firebase.auth();
-        db = firebase.firestore();
         googleProvider = new firebase.auth.GoogleAuthProvider();
         googleProvider.setCustomParameters({ prompt: 'select_account' });
         isFirebaseInitialized = true;
@@ -69,24 +67,8 @@ window.loginWithGoogle = async function() {
             return null;
         }
     } else {
-        // MODO DEMO / SIMULAÇÃO ATÉ CONFIGURAR AS CHAVES DO FIREBASE
-        const mockName = prompt("Como você ainda não colou as chaves do Firebase, digite seu nome para simular o login com o Google:", "Brenno");
-        if (!mockName) return null;
-        const mockEmail = prompt("Digite seu e-mail:", "qualquercoisaoficial69@gmail.com") || "visitante@gmail.com";
-
-        const simulatedUser = {
-            uid: 'demo-' + Date.now(),
-            displayName: mockName,
-            email: mockEmail,
-            photoURL: 'imagens/brenno-icon.jpeg',
-            emailVerified: true
-        };
-
-        localStorage.setItem('qc_current_user', JSON.stringify(simulatedUser));
-        window.updateAuthUI(simulatedUser);
-        window.dispatchEvent(new CustomEvent('qc_auth_changed', { detail: simulatedUser }));
-        alert("✅ Login simulado como: " + mockName + " (" + mockEmail + ")");
-        return simulatedUser;
+        alert('O login está indisponível. Verifique a configuração do Firebase e tente novamente.');
+        return null;
     }
 };
 
@@ -120,13 +102,6 @@ async function saveUserProfileToDatabase(user) {
 
     localStorage.setItem('qc_current_user', JSON.stringify(profile));
 
-    if (isFirebaseInitialized && db) {
-        try {
-            await db.collection('users').doc(user.uid).set(profile, { merge: true });
-        } catch (e) {
-            console.warn("Erro ao salvar perfil no Firestore:", e);
-        }
-    }
 }
 
 // Verifica se o usuário logado tem permissão para postar no CMS
@@ -135,12 +110,13 @@ window.isUserCreator = function(user) {
     if (!targetUser || !targetUser.email) return false;
     
     // É criador se o e-mail estiver na lista de autorizados e for verificado
-    return AUTHORIZED_CREATOR_EMAILS.some(e => e.toLowerCase() === targetUser.email.toLowerCase()) || 
-           targetUser.email.endsWith('@qualquercoisa.com');
+    return AUTHORIZED_CREATOR_EMAILS.some(e => e.toLowerCase() === targetUser.email.toLowerCase());
 };
 
 // Retorna o usuário logado atualmente
 window.getCurrentUser = function() {
+    if (auth?.currentUser) return auth.currentUser;
+    if (isFirebaseInitialized) return null;
     try {
         const stored = localStorage.getItem('qc_current_user');
         if (stored) return JSON.parse(stored);
@@ -221,6 +197,8 @@ window.updateAuthUI = function(user) {
         window.verifyCmsAccess();
     }
 
+    if (typeof window.renderCmsCarousel === 'function') window.renderCmsCarousel();
+
     // Se estiver na home com feed de posts, atualiza para refletir permissões
     if (typeof window.renderHomeFeed === 'function' && document.getElementById('homeFeedPosts')) {
         const activeTab = document.querySelector('.catalog-filter-tabs .catalog-tab.active');
@@ -247,7 +225,6 @@ document.addEventListener('click', (e) => {
 if (isFirebaseInitialized && auth) {
     auth.onAuthStateChanged(async (user) => {
         if (user) {
-            await saveUserProfileToDatabase(user);
             window.updateAuthUI(user);
         } else {
             window.updateAuthUI(null);
@@ -255,91 +232,43 @@ if (isFirebaseInitialized && auth) {
     });
 } else {
     document.addEventListener('DOMContentLoaded', () => {
-        window.updateAuthUI(window.getCurrentUser());
+        window.updateAuthUI(null);
     });
 }
 
 // ==========================================
-// SINCRONIZAÇÃO DE POSTS NO FIRESTORE (BANCO DE DADOS EM TEMPO REAL)
+// ACESSO A PUBLICAÇÕES PELA API DE SERVIDOR
 // ==========================================
+async function requestPostsApi(method, body, authenticated = true) {
+    const activeUser = auth?.currentUser;
+    const headers = { 'Content-Type': 'application/json' };
+    if (authenticated && activeUser) headers.Authorization = `Bearer ${await activeUser.getIdToken()}`;
+    const response = await fetch('/api/posts', {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || 'Falha ao acessar as publicações.');
+    return result;
+}
 
-// Salva ou atualiza um post na coleção 'posts' do Firestore
-window.savePostToFirestore = async function(post) {
-    if (!post || !post.id) return;
-    if (isFirebaseInitialized && db) {
-        try {
-            await db.collection('posts').doc(post.id).set(post, { merge: true });
-            console.log("🔥 Post sincronizado no Firestore com sucesso:", post.id);
-        } catch (e) {
-            console.error("Erro ao salvar post no Firestore:", e);
-        }
-    }
+window.savePostToFirestore = post => {
+    if (!post?.id) throw new Error('Publicação inválida.');
+    return requestPostsApi('POST', { post });
 };
 
-// Exclui um post da coleção 'posts' do Firestore
-window.deletePostFromFirestore = async function(postId) {
-    if (!postId) return;
-    if (isFirebaseInitialized && db) {
-        try {
-            await db.collection('posts').doc(postId).delete();
-            console.log("🔥 Post excluído do Firestore com sucesso:", postId);
-        } catch (e) {
-            console.error("Erro ao excluir post no Firestore:", e);
-        }
-    }
+window.deletePostFromFirestore = postId => postId
+    ? requestPostsApi('DELETE', { postId })
+    : Promise.resolve();
+
+window.updatePostLikesInFirestore = postId => postId
+    ? requestPostsApi('PATCH', { postId })
+    : Promise.resolve();
+
+window.loadPostsFromApi = async function() {
+    const posts = await requestPostsApi('GET', null, false);
+    if (!Array.isArray(posts)) throw new Error('Resposta inválida do servidor.');
+    window.dispatchEvent(new CustomEvent('qc_posts_loaded', { detail: posts }));
+    return posts;
 };
-
-// Atualiza likes no Firestore
-window.updatePostLikesInFirestore = async function(postId, newLikesCount) {
-    if (!postId) return;
-    if (isFirebaseInitialized && db) {
-        try {
-            await db.collection('posts').doc(postId).update({
-                likes: newLikesCount
-            });
-        } catch (e) {
-            console.warn("Erro ao atualizar likes no Firestore:", e);
-        }
-    }
-};
-
-// Inicia escuta em tempo real da coleção 'posts' do Firestore
-window.initFirestorePostsListener = function() {
-    if (isFirebaseInitialized && db) {
-        try {
-            db.collection('posts').onSnapshot((snapshot) => {
-                if (snapshot.empty) {
-                    console.log("ℹ️ Firestore: coleção 'posts' ainda não possui documentos.");
-                    return;
-                }
-                const firestorePosts = [];
-                snapshot.forEach((doc) => {
-                    firestorePosts.push({ id: doc.id, ...doc.data() });
-                });
-
-                // Ordena por data decrescente (mais recente primeiro)
-                firestorePosts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
-                localStorage.setItem('qc_posts_v3', JSON.stringify(firestorePosts));
-
-                if (typeof window.renderHomeFeed === 'function' && document.getElementById('homeFeedPosts')) {
-                    window.renderHomeFeed();
-                }
-                if (typeof window.renderCmsDashboard === 'function' && document.getElementById('cmsPostsList')) {
-                    window.renderCmsDashboard();
-                }
-                window.dispatchEvent(new Event('qc_posts_updated'));
-            }, (err) => {
-                console.warn("Aviso ao sincronizar posts do Firestore:", err);
-            });
-        } catch (e) {
-            console.warn("Erro ao registrar snapshot listener de posts no Firestore:", e);
-        }
-    }
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof window.initFirestorePostsListener === 'function') {
-        window.initFirestorePostsListener();
-    }
-});

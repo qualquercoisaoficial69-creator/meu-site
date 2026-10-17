@@ -361,6 +361,11 @@ window.renderCmsCarousel = function() {
     const nextButton = carousel?.querySelector('.carousel-next-btn');
     const emptyPostsState = document.getElementById('homePostsEmpty');
     if (!carousel || !cardsContainer || !dotsContainer) return;
+    if (!postsLoaded) {
+        carousel.hidden = true;
+        if (emptyPostsState) emptyPostsState.hidden = true;
+        return;
+    }
 
     const posts = getStoredPosts();
     const featuredPosts = posts.filter(post => post.showInCarousel === true);
@@ -714,34 +719,43 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================
 
 const DEFAULT_POSTS = [];
+let postsCache = [];
+let postsLoaded = false;
+let postsLoadPromise = null;
 
-// Carrega postagens do storage ou inicializa com as oficiais
 function getStoredPosts() {
-    try {
-        const stored = localStorage.getItem('qc_posts_v3');
-        if (stored !== null) {
-            const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed)) return parsed;
-        }
-    } catch (e) {
-        console.error('Erro ao ler posts:', e);
-    }
-    localStorage.setItem('qc_posts_v3', JSON.stringify(DEFAULT_POSTS));
-    if (DEFAULT_POSTS.length > 0 && typeof window.savePostToFirestore === 'function') {
-        DEFAULT_POSTS.forEach(p => window.savePostToFirestore(p));
-    }
-    return DEFAULT_POSTS;
+    return postsCache;
 }
 
 function saveStoredPosts(posts) {
-    try {
-        localStorage.setItem('qc_posts_v3', JSON.stringify(posts));
-        // Dispara evento para sincronizar feed e CMS se estiverem em abas diferentes
-        window.dispatchEvent(new Event('qc_posts_updated'));
-    } catch (e) {
-        console.error('Erro ao salvar posts:', e);
-    }
+    postsCache = Array.isArray(posts) ? posts : [];
+    postsLoaded = true;
+    window.dispatchEvent(new Event('qc_posts_updated'));
 }
+
+window.loadPosts = async function(force = false) {
+    if (postsLoaded && !force) return postsCache;
+    if (!postsLoadPromise) {
+        postsLoadPromise = window.loadPostsFromApi()
+            .then(posts => {
+                saveStoredPosts(posts);
+                return postsCache;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar publicações:', error);
+                throw error;
+            })
+            .finally(() => { postsLoadPromise = null; });
+    }
+    return postsLoadPromise;
+};
+
+window.addEventListener('qc_posts_loaded', event => {
+    postsCache = event.detail;
+    postsLoaded = true;
+    const editParam = new URLSearchParams(window.location.search).get('edit');
+    if (editParam && window.openEditPostModal) window.openEditPostModal(editParam);
+});
 
 // Lista de posts curtidos pelo usuário atual
 let userLikedPosts = JSON.parse(localStorage.getItem('qc_liked_posts') || '[]');
@@ -782,6 +796,10 @@ window.renderHomeFeed = function(filterCategory = 'all', searchQuery = '') {
     const emptyState = document.getElementById('feedEmptyState');
     if (!feedContainer) return;
 
+    if (!postsLoaded) {
+        feedContainer.innerHTML = '<div class="cms-empty-state"><p>Carregando publicações…</p></div>';
+        return;
+    }
     const posts = getStoredPosts();
     let filtered = posts.filter(post => {
         const matchCategory = filterCategory === 'all' || post.category === filterCategory;
@@ -876,7 +894,7 @@ window.renderHomeFeed = function(filterCategory = 'all', searchQuery = '') {
                         <button type="button" class="ig-action-btn like-btn ${liked ? 'liked' : ''}" onclick="togglePostLike('${post.id}', this)" aria-label="Curtir">
                             <i class="${liked ? 'fas fa-heart' : 'far fa-heart'}"></i>
                         </button>
-                        <button type="button" class="ig-action-btn" onclick="alert('Comentários em tempo real habilitados! Para o lançamento com Firebase você poderá interagir direto!')" aria-label="Comentar">
+                        <button type="button" class="ig-action-btn" onclick="alert('Os comentários ainda não estão disponíveis.')" aria-label="Comentar">
                             <i class="far fa-comment"></i>
                         </button>
                         <button type="button" class="ig-action-btn" onclick="sharePostLink('${post.id}')" aria-label="Compartilhar">
@@ -912,6 +930,11 @@ window.renderCmsDashboard = function(filterCategory = 'all', searchQuery = '') {
     const carouselPostsElem = document.getElementById('carouselPostsCount');
     const carouselStatus = document.getElementById('cmsCarouselStatus');
     if (!cmsGrid) return;
+
+    if (!postsLoaded) {
+        cmsGrid.innerHTML = '<p>Carregando publicações…</p>';
+        return;
+    }
 
     const posts = getStoredPosts();
     const carouselPosts = posts.filter(post => post.showInCarousel === true);
@@ -985,40 +1008,39 @@ window.renderCmsDashboard = function(filterCategory = 'all', searchQuery = '') {
 };
 
 // --- CURTIR / LIKES EM TEMPO REAL ---
-window.togglePostLike = function(postId, button) {
+window.togglePostLike = async function(postId, button) {
     const posts = getStoredPosts();
     const post = posts.find(p => p.id === postId);
     if (!post) return;
 
     const likedIndex = userLikedPosts.indexOf(postId);
     const counterElem = document.getElementById(`likes-count-${postId}`);
-
-    if (likedIndex > -1) {
-        // Descurte
-        userLikedPosts.splice(likedIndex, 1);
-        post.likes = Math.max(0, (post.likes || 1) - 1);
-        if (button) {
-            button.classList.remove('liked');
-            const icon = button.querySelector('i');
-            if (icon) icon.className = 'far fa-heart';
+    if (!window.getCurrentUser?.()) {
+        try {
+            await window.loginWithGoogle();
+        } catch {
+            return;
         }
-    } else {
-        // Curte
-        userLikedPosts.push(postId);
-        post.likes = (post.likes || 0) + 1;
-        if (button) {
-            button.classList.add('liked');
-            const icon = button.querySelector('i');
-            if (icon) icon.className = 'fas fa-heart';
-        }
+        if (!window.getCurrentUser?.()) return;
     }
-
-    if (counterElem) counterElem.textContent = post.likes;
-    localStorage.setItem('qc_liked_posts', JSON.stringify(userLikedPosts));
-    saveStoredPosts(posts);
-
-    if (typeof window.updatePostLikesInFirestore === 'function') {
-        window.updatePostLikesInFirestore(postId, post.likes);
+    if (button) button.disabled = true;
+    try {
+        const result = await window.updatePostLikesInFirestore(postId);
+        post.likes = Math.max(0, (post.likes || 0) + (result.liked ? 1 : -1));
+        if (result.liked && likedIndex < 0) userLikedPosts.push(postId);
+        if (!result.liked && likedIndex >= 0) userLikedPosts.splice(likedIndex, 1);
+        if (button) {
+            button.classList.toggle('liked', result.liked);
+            const icon = button.querySelector('i');
+            if (icon) icon.className = result.liked ? 'fas fa-heart' : 'far fa-heart';
+        }
+        if (counterElem) counterElem.textContent = post.likes;
+        localStorage.setItem('qc_liked_posts', JSON.stringify(userLikedPosts));
+        saveStoredPosts(posts);
+    } catch (error) {
+        alert(error.message);
+    } finally {
+        if (button) button.disabled = false;
     }
 };
 
@@ -1103,18 +1125,18 @@ window.closeDeleteConfirmModal = function() {
     postToDeleteId = null;
 };
 
-function executeDeletePost(postId) {
+async function executeDeletePost(postId) {
     const user = window.getCurrentUser ? window.getCurrentUser() : null;
     if (!window.isUserCreator || !window.isUserCreator(user)) {
         alert("Atenção: Apenas administradores e criadores autorizados podem excluir publicações!");
         return;
     }
-    let posts = getStoredPosts();
-    posts = posts.filter(p => p.id !== postId);
-    saveStoredPosts(posts);
-
-    if (typeof window.deletePostFromFirestore === 'function') {
-        window.deletePostFromFirestore(postId);
+    try {
+        await window.deletePostFromFirestore(postId);
+        saveStoredPosts(getStoredPosts().filter(post => post.id !== postId));
+    } catch (error) {
+        alert(`Não foi possível excluir a publicação: ${error.message}`);
+        return;
     }
 
     closeDeleteConfirmModal();
@@ -1125,9 +1147,11 @@ function executeDeletePost(postId) {
 
 const confirmDeleteBtn = document.getElementById('confirmDeleteActionBtn');
 if (confirmDeleteBtn) {
-    confirmDeleteBtn.addEventListener('click', () => {
+    confirmDeleteBtn.addEventListener('click', async () => {
         if (postToDeleteId) {
-            executeDeletePost(postToDeleteId);
+            confirmDeleteBtn.disabled = true;
+            await executeDeletePost(postToDeleteId);
+            confirmDeleteBtn.disabled = false;
         }
     });
 }
@@ -1273,14 +1297,13 @@ async function commitMediaToGitHub(file, postTitle) {
     if (!firebaseUser) throw new Error('Faça login novamente para enviar uma mídia.');
 
     const base64Content = await fileToBase64Pure(file);
-    const idToken = await firebaseUser.getIdToken();
     const res = await fetch('/api/upload-media', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${await firebaseUser.getIdToken()}`
         },
         body: JSON.stringify({
-            idToken,
             fileName: file.name,
             contentType: file.type,
             content: base64Content,
@@ -1290,7 +1313,7 @@ async function commitMediaToGitHub(file, postTitle) {
 
     if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || `Erro no commit da API do GitHub: ${res.status}`);
+        throw new Error(err.error || `Erro no envio da imagem: ${res.status}`);
     }
 
     return res.json();
@@ -1360,56 +1383,34 @@ window.handleSavePost = async function(e) {
         'Qualquer Coisa Rápido': 'imagens/Logo_colorida.png'
     };
 
-    let posts = getStoredPosts();
+    const posts = getStoredPosts();
+    const existingPost = editId ? posts.find(post => post.id === editId) : null;
+    const postToSync = {
+        ...(existingPost || {}),
+        id: editId || `post-${Date.now()}`,
+        title,
+        category,
+        author,
+        authorAvatar: authorAvatars[author] || 'imagens/Logo_colorida.png',
+        mediaUrl,
+        caption,
+        showInCarousel,
+        likes: existingPost?.likes || 0,
+        date: existingPost?.date || new Date().toISOString(),
+        lastEdited: editId ? new Date().toISOString() : undefined,
+        ...(commitData ? { githubCommit: commitData.commitSha, githubCommitUrl: commitData.commitHtmlUrl } : {})
+    };
 
-    if (editId) {
-        // MODO EDIÇÃO: Atualiza o post existente
-        const postIndex = posts.findIndex(p => p.id === editId);
-        if (postIndex > -1) {
-            posts[postIndex] = {
-                ...posts[postIndex],
-                title,
-                category,
-                author,
-                authorAvatar: authorAvatars[author] || 'imagens/Logo_colorida.png',
-                mediaUrl,
-                caption,
-                showInCarousel,
-                lastEdited: new Date().toISOString()
-            };
-            if (commitData) {
-                posts[postIndex].githubCommit = commitData.commitSha;
-                posts[postIndex].githubCommitUrl = commitData.commitHtmlUrl;
-            }
-        }
-    } else {
-        // MODO CRIAÇÃO: Adiciona nova postagem no topo
-        const newPost = {
-            id: `post-${Date.now()}`,
-            title,
-            category,
-            author,
-            authorAvatar: authorAvatars[author] || 'imagens/Logo_colorida.png',
-            mediaUrl,
-            caption,
-            showInCarousel,
-            likes: 0,
-            date: new Date().toISOString()
-        };
-        if (commitData) {
-            newPost.githubCommit = commitData.commitSha;
-            newPost.githubCommitUrl = commitData.commitHtmlUrl;
-        }
-        posts.unshift(newPost);
+    try {
+        await window.savePostToFirestore(postToSync);
+    } catch (error) {
+        alert(`Não foi possível salvar a publicação: ${error.message}`);
+        return;
     }
-
-    saveStoredPosts(posts);
-
-    // Sincroniza o post salvo no Firestore para persistência global em tempo real
-    const postToSync = editId ? posts.find(p => p.id === editId) : posts[0];
-    if (postToSync && typeof window.savePostToFirestore === 'function') {
-        window.savePostToFirestore(postToSync);
-    }
+    const nextPosts = editId
+        ? posts.map(post => post.id === editId ? postToSync : post)
+        : [postToSync, ...posts];
+    saveStoredPosts(nextPosts);
 
     closeCmsPostModal();
 
@@ -1543,9 +1544,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Renderiza se os containers existirem na página atual
     if (document.getElementById('cmsCarousel')) window.renderCmsCarousel();
-    if (document.getElementById('cmsPostsList')) {
-        window.renderCmsDashboard();
-    }
+    if (document.getElementById('cmsPostsList')) window.renderCmsDashboard();
+
+    window.loadPosts().catch(error => {
+        const feedContainer = document.getElementById('homeFeedPosts');
+        const cmsGrid = document.getElementById('cmsPostsList');
+        if (feedContainer) feedContainer.innerHTML = `<div class="cms-empty-state"><p>Não foi possível carregar as publicações: ${escapeCarouselText(error.message)}</p></div>`;
+        if (cmsGrid) cmsGrid.innerHTML = `<p>Não foi possível carregar as publicações: ${escapeCarouselText(error.message)}</p>`;
+    });
 
     // Busca ao vivo na Home
     const feedSearch = document.getElementById('catalogSearch');
@@ -1571,13 +1577,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('qc_posts_updated', () => {
         if (document.getElementById('cmsCarousel')) window.renderCmsCarousel();
         if (document.getElementById('cmsPostsList')) window.renderCmsDashboard();
+        if (document.getElementById('homeFeedPosts')) window.renderHomeFeed();
     });
 
     // Se vier com ?edit=postId na URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const editParam = urlParams.get('edit');
-    if (editParam && window.openEditPostModal) {
-        setTimeout(() => window.openEditPostModal(editParam), 250);
-    }
 });
 
