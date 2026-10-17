@@ -1082,6 +1082,7 @@ window.promptDeletePost = function(postId) {
     const modal = document.getElementById('cmsDeleteConfirmModal');
     if (modal) {
         modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
     } else {
         if (confirm('Tem certeza que deseja excluir esta publicação do site?')) {
             executeDeletePost(postId);
@@ -1091,7 +1092,11 @@ window.promptDeletePost = function(postId) {
 
 window.closeDeleteConfirmModal = function() {
     const modal = document.getElementById('cmsDeleteConfirmModal');
-    if (modal) modal.classList.remove('active');
+    if (modal) {
+        if (modal.contains(document.activeElement)) document.activeElement.blur();
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    }
     postToDeleteId = null;
 };
 
@@ -1153,7 +1158,10 @@ window.openNewPostModal = async function() {
     if (submitBtnText) submitBtnText.textContent = 'Salvar publicação';
     if (previewImg) previewImg.src = 'imagens/unique_soul_cenario.png';
     if (typeof window.updateGitHubStatusUI === 'function') window.updateGitHubStatusUI();
-    if (modal) modal.classList.add('active');
+    if (modal) {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+    }
 };
 
 // Abrir modal de edição com dados pré-carregados (Restrito a criadores)
@@ -1193,12 +1201,19 @@ window.openEditPostModal = function(postId) {
     if (urlInput) urlInput.value = post.mediaUrl;
     if (previewImg) previewImg.src = post.mediaUrl;
 
-    if (modal) modal.classList.add('active');
+    if (modal) {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+    }
 };
 
 window.closeCmsPostModal = function() {
     const modal = document.getElementById('cmsPostModal');
-    if (modal) modal.classList.remove('active');
+    if (modal) {
+        if (modal.contains(document.activeElement)) document.activeElement.blur();
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    }
 };
 
 // --- ENVIO PROTEGIDO DE MÍDIA VIA VERCEL ---
@@ -1216,12 +1231,19 @@ window.updateGitHubStatusUI = function() {
 
 window.openGitHubTokenModal = function() {
     const modal = document.getElementById('githubTokenModal');
-    if (modal) modal.classList.add('active');
+    if (modal) {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+    }
 };
 
 window.closeGitHubTokenModal = function() {
     const modal = document.getElementById('githubTokenModal');
-    if (modal) modal.classList.remove('active');
+    if (modal) {
+        if (modal.contains(document.activeElement)) document.activeElement.blur();
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    }
 };
 
 // Converte arquivo para Base64 puro
