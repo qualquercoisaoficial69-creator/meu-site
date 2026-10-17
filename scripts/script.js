@@ -359,9 +359,12 @@ window.renderCmsCarousel = function() {
     const dotsContainer = carousel?.querySelector('.carousel-dots');
     const previousButton = carousel?.querySelector('.carousel-prev-btn');
     const nextButton = carousel?.querySelector('.carousel-next-btn');
+    const emptyPostsState = document.getElementById('homePostsEmpty');
     if (!carousel || !cardsContainer || !dotsContainer) return;
 
-    const featuredPosts = getStoredPosts().filter(post => post.showInCarousel === true);
+    const posts = getStoredPosts();
+    const featuredPosts = posts.filter(post => post.showInCarousel === true);
+    if (emptyPostsState) emptyPostsState.hidden = posts.length > 0;
     carousel.hidden = featuredPosts.length === 0;
     if (!featuredPosts.length) return;
 
