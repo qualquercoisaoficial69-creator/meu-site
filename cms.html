@@ -154,8 +154,8 @@
                             <p>Crie, edite ou exclua publicações com mídia. Marque as que devem aparecer no carrossel da página inicial.</p>
                         </div>
                         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-                            <button type="button" class="btn-github-status disconnected" id="githubStatusBtn" onclick="openGitHubTokenModal()" title="Configurar Token do GitHub para commits reais">
-                                <i class="fab fa-github"></i> <span id="githubStatusText">Conectar GitHub (Commits)</span>
+                            <button type="button" class="btn-github-status connected" id="githubStatusBtn" onclick="openGitHubTokenModal()" title="Ver como o envio protegido funciona">
+                                <i class="fas fa-shield-alt"></i> <span id="githubStatusText">Envio protegido</span>
                             </button>
                             <button type="button" class="btn-spotlight-play" onclick="openNewPostModal()" style="display:inline-flex;align-items:center;gap:8px;">
                                 <i class="fas fa-camera"></i> PUBLICAR NOVIDADE
@@ -264,7 +264,7 @@
                         <div class="cms-media-overlay" id="cmsMediaDropPrompt">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span>Clique para carregar mídia ou arraste aqui</span>
-                            <small>PNG, JPG, GIF ou WebP</small>
+                            <small>PNG, JPG, GIF ou WebP • até 3 MB</small>
                         </div>
                         <input type="file" id="cmsMediaFileInput" accept="image/*" style="display:none;" onchange="handleMediaFileSelect(event)">
                     </div>
@@ -272,24 +272,6 @@
                     <div class="github-sync-indicator" id="githubSyncIndicator">
                         <i class="fab fa-github"></i>
                         <span>A mídia selecionada será <strong>commitada no repositório</strong> em <code>imagens/posts/</code></span>
-                    </div>
-
-                    <!-- CAMPO VISÍVEL PARA COLAR O TOKEN DO GITHUB -->
-                    <div class="github-token-inline-card" style="background:rgba(20,4,40,0.85);border:1px solid rgba(0,255,255,0.25);border-radius:14px;padding:12px;margin:12px 0;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                            <label for="cmsDirectGitHubTokenInput" style="font-size:0.8rem;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:6px;margin:0;">
-                                <i class="fab fa-github"></i> Token do GitHub (Para Commits):
-                            </label>
-                            <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:var(--yellow);text-decoration:underline;">
-                                <i class="fas fa-external-link-alt"></i> Gerar Token
-                            </a>
-                        </div>
-                        <div style="display:flex;gap:8px;">
-                            <input type="password" id="cmsDirectGitHubTokenInput" class="cms-input-field" placeholder="Cole seu token ghp_... aqui" style="padding:6px 12px;font-size:0.82rem;" onchange="window.setGitHubToken(this.value)">
-                            <button type="button" class="btn-spotlight-play" style="padding:6px 14px;font-size:0.8rem;white-space:nowrap;" onclick="window.saveDirectGitHubToken()">
-                                Salvar
-                            </button>
-                        </div>
                     </div>
 
                     <div class="cms-url-input-wrap">
@@ -381,7 +363,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE CONFIGURAÇÃO DO GITHUB TOKEN (PARA COMMITS REAIS) -->
+    <!-- MODAL DE ENVIO PROTEGIDO DE MÍDIAS -->
     <div class="game-modal-overlay" id="githubTokenModal" aria-hidden="true" role="dialog" aria-modal="true">
         <div class="game-modal-box" style="max-width:540px;padding:32px;">
             <button type="button" class="modal-close-btn" onclick="closeGitHubTokenModal()" aria-label="Fechar janela">
@@ -390,34 +372,24 @@
             <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
                 <i class="fab fa-github" style="font-size:2.2rem;color:var(--cyan);"></i>
                 <div>
-                    <h3 style="font-family:'Orbitron',sans-serif;color:#fff;margin:0;font-size:1.25rem;">Conectar GitHub (Commits Reais)</h3>
+                    <h3 style="font-family:'Orbitron',sans-serif;color:#fff;margin:0;font-size:1.25rem;">Envio Protegido de Mídias</h3>
                     <span style="font-size:0.8rem;color:rgba(255,255,255,0.6);">qualquercoisaoficial69-creator/meu-site • branch main</span>
                 </div>
             </div>
             
             <p style="font-size:0.88rem;color:rgba(255,255,255,0.75);line-height:1.5;">
-                Para o CMS criar <strong>commits de verdade</strong> de cada imagem no repositório, conecte seu <strong>Personal Access Token (PAT)</strong> do GitHub com permissão de escrita.
+                As imagens são enviadas ao repositório por uma função protegida da Vercel. O token do GitHub fica guardado no servidor e não é exibido para a equipe.
             </p>
 
             <div class="github-token-instruction-box">
-                <strong>Passo a passo rápido para gerar o token:</strong>
-                <ol>
-                    <li>Acesse: <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener noreferrer" style="color:var(--cyan);text-decoration:underline;">github.com/settings/tokens/new</a></li>
-                    <li>Dê um nome para a nota (ex: <code>CMS-Unique-Soul</code>) e marque a caixinha <strong>repo</strong>.</li>
-                    <li>Role até o final da página e clique em <strong>Generate token</strong>.</li>
-                    <li>Copie o código gerado (começa com <code>ghp_</code>) e cole abaixo:</li>
-                </ol>
-            </div>
-
-            <div class="cms-form-group" style="margin-bottom:20px;">
-                <label for="githubTokenInput" class="cms-form-label">Cole seu GitHub Personal Access Token (PAT):</label>
-                <input type="password" id="githubTokenInput" class="cms-input-field" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+                <strong>Como funciona:</strong>
+                <p style="margin:8px 0 0;">Faça login com um e-mail autorizado e publique normalmente. Nenhum token precisa ser colado neste CMS.</p>
             </div>
 
             <div style="display:flex;gap:12px;justify-content:flex-end;">
                 <button type="button" class="btn-cms-cancel" onclick="closeGitHubTokenModal()">Cancelar</button>
-                <button type="button" class="btn-spotlight-play" onclick="handleSaveGitHubToken()" style="display:inline-flex;align-items:center;gap:8px;">
-                    <i class="fas fa-check"></i> Salvar e Conectar
+                <button type="button" class="btn-spotlight-play" onclick="closeGitHubTokenModal()" style="display:inline-flex;align-items:center;gap:8px;">
+                    <i class="fas fa-check"></i> Entendi
                 </button>
             </div>
         </div>
