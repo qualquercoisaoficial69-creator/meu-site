@@ -66,12 +66,12 @@
                                 <span class="fast-launch-status">Publicar Mídia</span>
                             </div>
                         </a>
-                        <a href="home.html" class="fast-launch-item" title="Ver Feed Público">
+                        <a href="home.html" class="fast-launch-item" title="Ver página inicial">
                             <div class="fast-launch-thumb" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);color:#fff;">
                                 <i class="fas fa-eye"></i>
                             </div>
                             <div class="fast-launch-info">
-                                <span class="fast-launch-name">Ver Feed</span>
+                                <span class="fast-launch-name">Ver página inicial</span>
                                 <span class="fast-launch-status">Visualizar Site</span>
                             </div>
                         </a>
@@ -137,7 +137,7 @@
                             </button>
                             <br>
                             <a href="home.html" class="btn-back-home">
-                                <i class="fas fa-arrow-left"></i> Voltar ao Feed Público
+                                <i class="fas fa-arrow-left"></i> Voltar à página inicial
                             </a>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
                             <div class="cms-hero-text">
                                 <span class="about-store-badge"><i class="fas fa-sparkles"></i> CREATOR STUDIO</span>
                             <h2>Gerenciador de <span>Publicações & Mídias</span></h2>
-                            <p>Crie, edite ou exclua posts com mídia no feed do site estilo Instagram. As mídias ficam vinculadas ao seu repositório.</p>
+                            <p>Crie, edite ou exclua publicações com mídia. Marque as que devem aparecer no carrossel da página inicial.</p>
                         </div>
                         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
                             <button type="button" class="btn-github-status disconnected" id="githubStatusBtn" onclick="openGitHubTokenModal()" title="Configurar Token do GitHub para commits reais">
@@ -241,7 +241,7 @@
                     <i class="fas fa-feather-alt" style="color:var(--cyan);font-size:1.4rem;"></i>
                     <h3 id="cmsModalTitleText">Nova Publicação</h3>
                 </div>
-                <span class="spotlight-cat" id="cmsModalSubtitleText">Estilo Instagram • feed público</span>
+                <span class="spotlight-cat" id="cmsModalSubtitleText">Publicação do site</span>
             </div>
 
             <form id="cmsPostForm" onsubmit="handleSavePost(event)" class="cms-form-grid">
@@ -336,14 +336,20 @@
                     </div>
 
                     <div class="cms-form-group">
-                        <label for="postCaptionTextarea" class="cms-form-label">Legenda / Texto da Publicação (Estilo Instagram) *</label>
+                        <label for="postCaptionTextarea" class="cms-form-label">Legenda / Texto da Publicação *</label>
                         <textarea id="postCaptionTextarea" class="cms-textarea-field" rows="5" placeholder="Escreva aqui a descrição, novidades, detalhes do desenvolvimento, hashtags... Ex: Finalmente concluímos a paleta de cores dos vitrais góticos! O que acharam? #UniqueSoul #IndieDev" required></textarea>
+                    </div>
+
+                    <div class="cms-form-group">
+                        <label class="cms-form-label" for="postShowInCarousel">
+                            <input type="checkbox" id="postShowInCarousel"> Exibir esta publicação no carrossel da página inicial
+                        </label>
                     </div>
 
                     <div class="cms-form-actions">
                         <button type="button" class="btn-cms-cancel" onclick="closeCmsPostModal()">Cancelar</button>
                         <button type="submit" class="btn-spotlight-play" id="cmsSubmitBtn">
-                            <i class="fas fa-check"></i> <span id="cmsSubmitBtnText">Publicar no Feed</span>
+                            <i class="fas fa-check"></i> <span id="cmsSubmitBtnText">Salvar publicação</span>
                         </button>
                     </div>
                 </div>
@@ -357,7 +363,7 @@
         <div class="game-modal-box" style="max-width:440px;padding:32px 28px;text-align:center;">
             <i class="fas fa-exclamation-triangle" style="font-size:3rem;color:var(--yellow);margin-bottom:16px;"></i>
             <h3 style="font-family:'Orbitron',sans-serif;color:#fff;margin-bottom:8px;">Excluir Publicação?</h3>
-            <p style="color:rgba(255,255,255,0.7);font-size:0.9rem;margin-bottom:24px;">Esta ação removerá a publicação do feed público do site imediatamente. Você tem certeza?</p>
+            <p style="color:rgba(255,255,255,0.7);font-size:0.9rem;margin-bottom:24px;">Esta ação removerá a publicação do site imediatamente. Você tem certeza?</p>
             <div style="display:flex;gap:12px;justify-content:center;">
                 <button type="button" class="btn-cms-cancel" onclick="closeDeleteConfirmModal()">Cancelar</button>
                 <button type="button" class="btn-cms-danger" id="confirmDeleteActionBtn">

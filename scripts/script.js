@@ -263,12 +263,6 @@ const GAMES_DATA = {
 
 // --- CARROSSEL 3D FANNED ---
 let carouselCurrentIndex = 0;
-const carouselCards = [
-    { id: 'unique-soul', title: 'Unique Soul', cat: 'RPG / INVESTIGAÇÃO', badge: 'DESTAQUE PRINCIPAL', bg: 'imagens/unique_soul_cenario.png', desc: 'Em um mundo onde todos possuem suas próprias cores, seus fragmentos de memória são a única bússola para desvendar sua origem.' },
-    { id: 'catedral-almas', title: 'A Catedral das Cores', cat: 'ATMOSFERA & LORE', badge: 'ARTE CONCEITUAL', bg: 'imagens/unique_soul_cenario.png', desc: 'O santuário gótico onde as almas fragmentadas convergem e os vitrais revelam os mistérios do reino.' },
-    { id: 'qualquer-coisa-quest', title: 'Qualquer Coisa Quest', cat: 'AÇÃO / ROGUELITE', badge: 'PROTÓTIPO INDIE', bg: 'imagens/Qualquer_coisa_corpo_inteiro.png', desc: 'O mascote oficial da Qualquer Coisa Rápido em uma aventura caótica e eletrizante cheia de habilidades únicas.' }
-];
-
 function initFannedCarousel() {
     const fannedCards = document.querySelectorAll('.fanned-card');
     const dots = document.querySelectorAll('.carousel-dot');
@@ -352,6 +346,49 @@ function initFannedCarousel() {
 
     updateCarousel();
 }
+
+function escapeCarouselText(value) {
+    const element = document.createElement('div');
+    element.textContent = value || '';
+    return element.innerHTML;
+}
+
+window.renderCmsCarousel = function() {
+    const carousel = document.getElementById('cmsCarousel');
+    const cardsContainer = document.getElementById('cmsCarouselCards');
+    const dotsContainer = carousel?.querySelector('.carousel-dots');
+    const previousButton = carousel?.querySelector('.carousel-prev-btn');
+    const nextButton = carousel?.querySelector('.carousel-next-btn');
+    if (!carousel || !cardsContainer || !dotsContainer) return;
+
+    const featuredPosts = getStoredPosts().filter(post => post.showInCarousel === true);
+    carousel.hidden = featuredPosts.length === 0;
+    if (!featuredPosts.length) return;
+
+    carouselCurrentIndex = 0;
+    cardsContainer.innerHTML = featuredPosts.map((post, index) => `
+        <article class="fanned-card" data-index="${index}">
+            <img src="${escapeCarouselText(post.mediaUrl)}" alt="${escapeCarouselText(post.title)}" class="fanned-card-bg">
+            <div class="fanned-card-overlay">
+                <div class="spotlight-tags">
+                    <span class="spotlight-badge"><i class="fas fa-star" aria-hidden="true"></i> EM DESTAQUE</span>
+                    <span class="spotlight-cat">${escapeCarouselText(post.category || 'novidade').toUpperCase()}</span>
+                </div>
+                <h2 class="spotlight-title">${escapeCarouselText(post.title)}</h2>
+                <p class="spotlight-desc">${escapeCarouselText(post.caption)}</p>
+            </div>
+        </article>
+    `).join('');
+    dotsContainer.innerHTML = featuredPosts.map((post, index) => `
+        <button type="button" class="carousel-dot${index === 0 ? ' active' : ''}" onclick="goToCarouselCard(${index})" aria-label="Slide ${index + 1}"></button>
+    `).join('');
+
+    const showNavigation = featuredPosts.length > 1;
+    if (previousButton) previousButton.hidden = !showNavigation;
+    if (nextButton) nextButton.hidden = !showNavigation;
+    dotsContainer.hidden = !showNavigation;
+    initFannedCarousel();
+};
 
 // --- MODAL DE DETALHES DO JOGO ---
 window.openGameModal = function(gameId) {
@@ -938,7 +975,7 @@ window.renderCmsDashboard = function(filterCategory = 'all', searchQuery = '') {
                     <button type="button" class="btn-cms-delete" onclick="promptDeletePost('${post.id}')" title="Excluir postagem">
                         <i class="fas fa-trash-alt"></i> Excluir
                     </button>
-                    <a href="home.html#card-${post.id}" class="btn-cms-view" title="Ver no site público">
+                    <a href="home.html" class="btn-cms-view" title="Ver página inicial">
                         <i class="fas fa-external-link-alt"></i>
                     </a>
                 </div>
@@ -1116,7 +1153,7 @@ window.openNewPostModal = async function() {
     if (form) form.reset();
     if (editId) editId.value = '';
     if (titleText) titleText.textContent = 'Nova Publicação';
-    if (submitBtnText) submitBtnText.textContent = 'Publicar no Feed';
+    if (submitBtnText) submitBtnText.textContent = 'Salvar publicação';
     if (previewImg) previewImg.src = 'imagens/unique_soul_cenario.png';
     if (typeof window.updateGitHubStatusUI === 'function') window.updateGitHubStatusUI();
     if (modal) modal.classList.add('active');
@@ -1143,6 +1180,7 @@ window.openEditPostModal = function(postId) {
     const catSelect = document.getElementById('postCategorySelect');
     const authorSelect = document.getElementById('postAuthorSelect');
     const captionTextarea = document.getElementById('postCaptionTextarea');
+    const showInCarousel = document.getElementById('postShowInCarousel');
     const urlInput = document.getElementById('cmsMediaUrlInput');
     const previewImg = document.getElementById('cmsMediaPreviewImg');
 
@@ -1154,6 +1192,7 @@ window.openEditPostModal = function(postId) {
     if (catSelect) catSelect.value = post.category || 'devlog';
     if (authorSelect) authorSelect.value = post.author || 'Qualquer Coisa Rápido';
     if (captionTextarea) captionTextarea.value = post.caption;
+    if (showInCarousel) showInCarousel.checked = post.showInCarousel === true;
     if (urlInput) urlInput.value = post.mediaUrl;
     if (previewImg) previewImg.src = post.mediaUrl;
 
@@ -1351,6 +1390,7 @@ window.handleSavePost = async function(e) {
     const category = document.getElementById('postCategorySelect')?.value;
     const author = document.getElementById('postAuthorSelect')?.value;
     const caption = document.getElementById('postCaptionTextarea')?.value.trim();
+    const showInCarousel = document.getElementById('postShowInCarousel')?.checked === true;
     const previewImg = document.getElementById('cmsMediaPreviewImg');
     const submitBtn = document.getElementById('cmsSubmitBtn');
 
@@ -1413,6 +1453,7 @@ window.handleSavePost = async function(e) {
                 authorAvatar: authorAvatars[author] || 'imagens/Logo_colorida.png',
                 mediaUrl,
                 caption,
+                showInCarousel,
                 lastEdited: new Date().toISOString()
             };
             if (commitData) {
@@ -1430,6 +1471,7 @@ window.handleSavePost = async function(e) {
             authorAvatar: authorAvatars[author] || 'imagens/Logo_colorida.png',
             mediaUrl,
             caption,
+            showInCarousel,
             likes: 0,
             date: new Date().toISOString()
         };
@@ -1451,12 +1493,12 @@ window.handleSavePost = async function(e) {
     closeCmsPostModal();
 
     if (window.renderCmsDashboard) window.renderCmsDashboard();
-    if (window.renderHomeFeed) window.renderHomeFeed();
+    if (window.renderCmsCarousel) window.renderCmsCarousel();
 
     if (commitData) {
         alert(`🎉 Publicação postada com sucesso!\n\n🚀 COMMIT REALIZADO NO GITHUB:\n• Arquivo: ${commitData.path}\n• Commit SHA: ${commitData.commitSha.substring(0, 7)}\n• Mensagem: cms: upload da mídia via Creator Studio\n\nAcesse o repositório para conferir o novo commit!`);
     } else {
-        alert(editId ? 'Publicação atualizada com sucesso!' : 'Publicação criada e adicionada ao feed com sucesso!');
+        alert(editId ? 'Publicação atualizada com sucesso!' : 'Publicação criada com sucesso!');
     }
 };
 
@@ -1574,9 +1616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Renderiza se os containers existirem na página atual
-    if (document.getElementById('homeFeedPosts')) {
-        window.renderHomeFeed();
-    }
+    if (document.getElementById('cmsCarousel')) window.renderCmsCarousel();
     if (document.getElementById('cmsPostsList')) {
         window.renderCmsDashboard();
     }
@@ -1603,7 +1643,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sincronização entre abas
     window.addEventListener('qc_posts_updated', () => {
-        if (document.getElementById('homeFeedPosts')) window.renderHomeFeed();
+        if (document.getElementById('cmsCarousel')) window.renderCmsCarousel();
         if (document.getElementById('cmsPostsList')) window.renderCmsDashboard();
     });
 

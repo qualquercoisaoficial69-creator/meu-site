@@ -139,73 +139,9 @@
 
                 <!-- VIEW 1: HOME (HERO + CATÁLOGO) -->
                 <div class="gamestore-view active-view" id="view-home">
-                    <!-- HERO: 3D FANNED CAROUSEL (INSPIRADO NA REFERÊNCIA) COM UNIQUE SOUL EM DESTAQUE -->
-                    <section class="fanned-carousel-container" aria-label="Jogos em Destaque">
-                    <div class="fanned-carousel">
-                        
-                        <!-- CARD 1: A Catedral das Cores (Esquerda) -->
-                        <div class="fanned-card card-prev" data-index="0">
-                            <img src="imagens/unique_soul_cenario.png" alt="A Catedral das Cores" class="fanned-card-bg">
-                            <div class="fanned-card-overlay">
-                                <div class="spotlight-tags">
-                                    <span class="spotlight-badge" style="background:var(--cyan);color:#080112;">CENÁRIO PRINCIPAL</span>
-                                    <span class="spotlight-cat">ATMOSFERA & LORE</span>
-                                </div>
-                                <h2 class="spotlight-title">A CATEDRAL DAS CORES</h2>
-                                <p class="spotlight-desc">O santuário gótico onde as almas fragmentadas convergem e revelam os segredos do reino de Unique Soul.</p>
-                                <div class="spotlight-actions">
-                                    <button type="button" class="btn-spotlight-play" onclick="openGameModal('catedral-almas')">
-                                        <i class="fas fa-eye" aria-hidden="true"></i> EXPLORAR
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CARD 2: UNIQUE SOUL (CENTRAL - DESTAQUE MÁXIMO) -->
-                        <div class="fanned-card card-active" data-index="1">
-                            <img src="imagens/unique_soul_capa.png" alt="Capa Oficial de Unique Soul" class="fanned-card-bg">
-                            <div class="fanned-card-overlay">
-                                <div class="spotlight-tags">
-                                    <span class="spotlight-badge"><i class="fas fa-fire"></i> DESTAQUE PRINCIPAL</span>
-                                    <span class="spotlight-cat">RPG / INVESTIGAÇÃO • ALPHA 0.1</span>
-                                </div>
-                                <h2 class="spotlight-title">UNIQUE SOUL</h2>
-                                <p class="spotlight-desc">Toda alma tem uma história. Em um universo onde você precisa enfrentar julgamentos e preconceitos, seus fragmentos de memória são a única bússola.</p>
-                                <div class="spotlight-actions">
-                                    <button type="button" class="btn-spotlight-play" onclick="openGameModal('unique-soul')">
-                                        <i class="fas fa-play" aria-hidden="true"></i> CONHECER O JOGO
-                                    </button>
-                                    <a href="jogo.html?game=unique-soul" class="btn-spotlight-details">
-                                        <i class="fas fa-info-circle" aria-hidden="true"></i> VER DETALHES
-                                    </a>
-                                    <button type="button" class="btn-spotlight-heart" onclick="toggleWishlist('unique-soul', this)" title="Favoritar Unique Soul" aria-label="Favoritar">
-                                        <i class="fas fa-heart" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CARD 3: Qualquer Coisa Quest (Direita) -->
-                        <div class="fanned-card card-next" data-index="2">
-                            <img src="imagens/Qualquer_coisa_corpo_inteiro.png" alt="Qualquer Coisa Quest" class="fanned-card-bg" style="object-fit:contain;background:#18062b;">
-                            <div class="fanned-card-overlay">
-                                <div class="spotlight-tags">
-                                    <span class="spotlight-badge" style="background:var(--magenta);color:#fff;">PROTÓTIPO INDIE</span>
-                                    <span class="spotlight-cat">AÇÃO / ROGUELITE</span>
-                                </div>
-                                <h2 class="spotlight-title">QUALQUER COISA QUEST</h2>
-                                <p class="spotlight-desc">O mascote oficial da Qualquer Coisa Rápido em combates dinâmicos e desafiadores cheios de personalidade.</p>
-                                <div class="spotlight-actions">
-                                    <button type="button" class="btn-spotlight-play" onclick="openGameModal('qualquer-coisa-quest')">
-                                        <i class="fas fa-play" aria-hidden="true"></i> JOGAR PROTÓTIPO
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Controles do Carrossel 3D -->
+                    <!-- Renderizado somente quando houver posts marcados no CMS -->
+                    <section class="fanned-carousel-container" id="cmsCarousel" aria-label="Publicações em destaque" hidden>
+                    <div class="fanned-carousel" id="cmsCarouselCards"></div>
                     <button type="button" class="carousel-nav-btn carousel-prev-btn" onclick="prevCarouselCard()" aria-label="Anterior">
                         <i class="fas fa-chevron-left" aria-hidden="true"></i>
                     </button>
@@ -214,47 +150,7 @@
                     </button>
 
                     <div class="carousel-dots">
-                        <span class="carousel-dot" onclick="goToCarouselCard(0)" aria-label="Slide 1"></span>
-                        <span class="carousel-dot active" onclick="goToCarouselCard(1)" aria-label="Slide 2"></span>
-                        <span class="carousel-dot" onclick="goToCarouselCard(2)" aria-label="Slide 3"></span>
-                    </div>
-                </section>
-
-                <!-- FEED DINÂMICO DE PUBLICAÇÕES (ESTILO INSTAGRAM GERENCIADO PELO CMS) -->
-                <section class="gamestore-catalog-section" aria-label="Feed de Publicações e Devlog">
-                    <div class="catalog-header-bar">
-                        <div class="catalog-title-group">
-                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                                <h3>FEED DE PUBLICAÇÕES & DEVLOG</h3>
-                                <span class="spotlight-cat" style="font-size:0.68rem;padding:3px 10px;"><i class="fas fa-broadcast-tower" style="color:var(--cyan);margin-right:4px;"></i> FEED AO VIVO</span>
-                            </div>
-                            <p>Novidades, artes conceituais e devlogs de Unique Soul. Curta, comente e acompanhe tudo!</p>
-                        </div>
-
-                        <div class="catalog-filter-tabs">
-                            <button type="button" class="catalog-tab active" data-filter="all" onclick="filterFeedCategory('all', this)">Todas</button>
-                            <button type="button" class="catalog-tab" data-filter="devlog" onclick="filterFeedCategory('devlog', this)">Devlog</button>
-                            <button type="button" class="catalog-tab" data-filter="arte" onclick="filterFeedCategory('arte', this)">Artes</button>
-                            <button type="button" class="catalog-tab" data-filter="jogo" onclick="filterFeedCategory('jogo', this)">Jogos</button>
-                            <button type="button" class="catalog-tab" data-filter="musica" onclick="filterFeedCategory('musica', this)">Música</button>
-                        </div>
-                    </div>
-
-                    <!-- CONTAINER DO FEED DE POSTS DINÂMICOS ESTILO INSTAGRAM -->
-                    <div class="instagram-feed-container" id="homeFeedPosts">
-                        <!-- Renderizado dinamicamente via JS -->
-                    </div>
-
-                    <!-- ESTADO VAZIO CASO NENHUM POST EXISTA -->
-                    <div class="cms-empty-state" id="feedEmptyState" style="display: none;">
-                        <div class="empty-feed-icon-box">
-                            <i class="fas fa-feather-alt"></i>
-                        </div>
-                        <h4 class="empty-feed-title">Ainda não há postagens</h4>
-                        <p class="empty-feed-desc">Fique de olho! Em breve novas postagens, artes conceituais e novidades de Unique Soul aparecerão aqui.</p>
-                        <a href="cms.html" class="btn-spotlight-play creator-only" style="display:none;align-items:center;gap:8px;margin-top:14px;">
-                            <i class="fas fa-plus-circle"></i> Criar Primeira Publicação no CMS
-                        </a>
+                        <!-- Indicadores criados pelo CMS -->
                     </div>
                 </section>
                 </div> <!-- Fim de #view-home -->
