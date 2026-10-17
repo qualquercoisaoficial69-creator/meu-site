@@ -710,22 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Suporta: Criar, Editar, Excluir, Curtir, Upload e Categorias
 // ============================================================
 
-const DEFAULT_POSTS = [
-    {
-        id: 'post-1792027411289',
-        title: 'Teste de Publicações',
-        category: 'devlog',
-        author: 'Brenno',
-        authorRole: 'Fundador & Dev',
-        authorAvatar: 'imagens/brenno-icon.jpeg',
-        mediaUrl: 'imagens/posts/post_1792027411289_teste_de_publica__es.jpg',
-        caption: 'Publicação oficial de teste! A mídia foi commitada e salva diretamente no repositório do GitHub. 🎮✨ #UniqueSoul #IndieDev',
-        likes: 1,
-        githubCommit: '7c8a6a9a69f2cc5b4483aa565263c84f3fa76c43',
-        githubCommitUrl: 'https://github.com/qualquercoisaoficial69-creator/meu-site/commit/7c8a6a9a69f2cc5b4483aa565263c84f3fa76c43',
-        date: '2026-10-14T22:23:32.000Z'
-    }
-];
+const DEFAULT_POSTS = [];
 
 // Carrega postagens do storage ou inicializa com as oficiais
 function getStoredPosts() {
@@ -733,7 +718,7 @@ function getStoredPosts() {
         const stored = localStorage.getItem('qc_posts_v3');
         if (stored !== null) {
             const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            if (Array.isArray(parsed)) return parsed;
         }
     } catch (e) {
         console.error('Erro ao ler posts:', e);
