@@ -1549,8 +1549,17 @@ document.addEventListener('DOMContentLoaded', () => {
     window.loadPosts().catch(error => {
         const feedContainer = document.getElementById('homeFeedPosts');
         const cmsGrid = document.getElementById('cmsPostsList');
+        const homeEmptyState = document.getElementById('homePostsEmpty');
         if (feedContainer) feedContainer.innerHTML = `<div class="cms-empty-state"><p>Não foi possível carregar as publicações: ${escapeCarouselText(error.message)}</p></div>`;
         if (cmsGrid) cmsGrid.innerHTML = `<p>Não foi possível carregar as publicações: ${escapeCarouselText(error.message)}</p>`;
+        if (homeEmptyState) {
+            homeEmptyState.hidden = false;
+            homeEmptyState.innerHTML = `
+                <i class="fas fa-circle-exclamation" aria-hidden="true"></i>
+                <h2>Não foi possível carregar as publicações</h2>
+                <p>${escapeCarouselText(error.message || 'Verifique sua conexão e tente novamente.')}</p>
+            `;
+        }
     });
 
     // Busca ao vivo na Home
