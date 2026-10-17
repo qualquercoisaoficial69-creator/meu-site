@@ -921,14 +921,25 @@ window.renderCmsDashboard = function(filterCategory = 'all', searchQuery = '') {
     const emptyState = document.getElementById('cmsEmptyState');
     const totalPostsElem = document.getElementById('totalPostsCount');
     const totalLikesElem = document.getElementById('totalLikesCount');
+    const carouselPostsElem = document.getElementById('carouselPostsCount');
+    const carouselStatus = document.getElementById('cmsCarouselStatus');
     if (!cmsGrid) return;
 
     const posts = getStoredPosts();
+    const carouselPosts = posts.filter(post => post.showInCarousel === true);
     let totalLikes = 0;
     posts.forEach(p => { totalLikes += (p.likes || 0); });
 
     if (totalPostsElem) totalPostsElem.textContent = posts.length;
     if (totalLikesElem) totalLikesElem.textContent = totalLikes;
+    if (carouselPostsElem) carouselPostsElem.textContent = carouselPosts.length;
+    if (carouselStatus) {
+        const hasCarouselPosts = carouselPosts.length > 0;
+        carouselStatus.classList.toggle('is-empty', !hasCarouselPosts);
+        carouselStatus.innerHTML = hasCarouselPosts
+            ? `<i class="fas fa-check-circle"></i> ${carouselPosts.length} publicaç${carouselPosts.length === 1 ? 'ão aparece' : 'ões aparecem'} no carrossel da página inicial.`
+            : '<i class="fas fa-info-circle"></i> O carrossel está oculto na página inicial. Marque uma publicação para exibi-lo.';
+    }
 
     let filtered = posts.filter(post => {
         const matchCategory = filterCategory === 'all' || post.category === filterCategory;
@@ -954,6 +965,7 @@ window.renderCmsDashboard = function(filterCategory = 'all', searchQuery = '') {
                 <div class="cms-card-thumb-wrap">
                     <img src="${post.mediaUrl}" alt="${post.title}" class="cms-card-thumb">
                     <span class="card-tag-badge">${post.category.toUpperCase()}</span>
+                    ${post.showInCarousel === true ? '<span class="cms-carousel-badge"><i class="fas fa-star"></i> No carrossel</span>' : ''}
                 </div>
                 <div class="cms-card-info">
                     <span class="cms-meta-date"><i class="far fa-calendar-alt"></i> ${new Date(post.date).toLocaleDateString('pt-BR')} • ${post.author}</span>
@@ -1115,7 +1127,7 @@ function executeDeletePost(postId) {
     closeDeleteConfirmModal();
 
     if (window.renderCmsDashboard) window.renderCmsDashboard();
-    if (window.renderHomeFeed) window.renderHomeFeed();
+    if (window.renderCmsCarousel) window.renderCmsCarousel();
 }
 
 const confirmDeleteBtn = document.getElementById('confirmDeleteActionBtn');

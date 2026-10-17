@@ -3976,6 +3976,35 @@ html, body {
     font-weight: 600;
 }
 
+.cms-carousel-status {
+    padding: 13px 16px;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 12px;
+    background: rgba(0, 255, 255, 0.08);
+    color: var(--cyan);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.cms-carousel-status.is-empty {
+    border-color: rgba(255, 221, 0, 0.35);
+    background: rgba(255, 221, 0, 0.08);
+    color: var(--yellow);
+}
+
+.cms-carousel-badge {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: var(--magenta);
+    color: var(--white);
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
 /* Seção de Gerenciamento de Posts */
 .cms-posts-manager-section {
     display: flex;
